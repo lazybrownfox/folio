@@ -49,9 +49,13 @@ const {
           d.classList.add("js");
           if (!r) {
             d.classList.add("armed");
-            // failsafe: never leave content hidden if the bundle fails to run
+            // failsafe: if the bundle never boots (no `reveal-ready`), reveal
+            // everything so content is never stranded hidden. When the bundle
+            // does run, ScrollTrigger handles reveals and this no-ops (no jank).
             setTimeout(function () {
-              d.classList.add("loaded");
+              if (!d.classList.contains("reveal-ready")) {
+                d.classList.add("reveal-all");
+              }
             }, 2500);
           }
         } catch (e) {}

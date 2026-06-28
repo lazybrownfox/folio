@@ -46,26 +46,45 @@ function stopLenis() {
   lenis = null;
 }
 
-/* ------------------------------------------------------------- Base reveals */
+/* ------------------------------------------------------------- Base reveals
+   Reveals are driven by a CSS class (`.is-in`), NOT GSAP inline opacity. A GSAP
+   "from {opacity:0}" tween leaves an *inline* style that no CSS failsafe can
+   override — so if ScrollTrigger ever fails to fire (e.g. the 100svh hero makes
+   `refresh()` throw), every element stays stranded at opacity:0 and the whole
+   page reads as blank. Class-driven reveals + a `.reveal-all` failsafe make that
+   impossible: content can never get permanently stuck hidden. */
 function buildReveals() {
-  if (prefersReduced) return; // CSS already shows everything
+  if (prefersReduced) return; // reduced-motion CSS already shows everything
   html.classList.add("armed");
-  gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((el) => {
+  html.classList.add("reveal-ready"); // signal the head-script failsafe that JS is alive
+
+  const els = gsap.utils.toArray<HTMLElement>("[data-reveal]");
+  els.forEach((el) => {
     const delay = Number(el.dataset.revealDelay ?? 0);
-    gsap.fromTo(
-      el,
-      { opacity: 0, y: 24 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        delay,
-        ease: "power2.out",
-        scrollTrigger: { trigger: el, start: "top 88%", once: true },
-      },
-    );
+    if (delay) el.style.transitionDelay = `${delay}s`;
+    ScrollTrigger.create({
+      trigger: el,
+      start: "top 88%",
+      once: true,
+      onEnter: () => el.classList.add("is-in"),
+    });
   });
-  html.classList.add("loaded");
+
+  // If positioning throws (the known 100svh refresh quirk), triggers never fire.
+  // Bail to the failsafe so the content still shows.
+  try {
+    ScrollTrigger.refresh();
+  } catch {
+    html.classList.add("reveal-all");
+    return;
+  }
+
+  // onEnter does not fire for triggers already active on first paint — reveal
+  // anything in (or near) view on load directly.
+  const vh = window.innerHeight;
+  els.forEach((el) => {
+    if (el.getBoundingClientRect().top < vh * 0.88) el.classList.add("is-in");
+  });
 }
 
 /* ----------------------------------------------- Story-only scenes */

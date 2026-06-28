@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+/* SNCF·LIVE board face (scoped to the departures board via .sncf). Only the
+   Regular (400) weight exists, so bold board text is browser-synthesised. */
+@font-face {
+  font-family: "Achemine";
+  src: url("/fonts/achemine.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ----------------------------------------------------------------------------
    Design tokens — dark, technical, dev-tool register. Single accent = easy swap.
    (Accent default: electric mint-green, nods to Nalo green but brighter for dark UI.)
@@ -81,10 +91,20 @@
 html.armed [data-reveal] {
   opacity: 0;
   transform: translateY(24px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
-html.armed.loaded [data-reveal] {
+/* `.is-in` is toggled per element by ScrollTrigger; `.reveal-all` is the failsafe
+   (added if the bundle never runs, or if ScrollTrigger throws). Both come after
+   the `.armed` rule so they win the specificity tie. */
+html.armed [data-reveal].is-in,
+html.reveal-all [data-reveal] {
   opacity: 1;
   transform: none;
+}
+html.reveal-all [data-reveal] {
+  transition: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

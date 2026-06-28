@@ -6,6 +6,7 @@ import ProjectionDataviz from "../components/dataviz/ProjectionChart.tsx";
 import MotionGrid from "../components/MotionGrid.astro";
 import AlbaShowcase from "../components/AlbaShowcase.tsx";
 import WorkGallery from "../components/WorkGallery.tsx";
+import SncfBoard from "../components/SncfBoard.astro";
 
 const heroTags = [
   "+10 Years XP",
@@ -234,27 +235,21 @@ const brand = [
     kicker="Technical UI"
     title="Technical interfaces where legibility is non-negotiable."
   >
-    <div
-      data-reveal
-      class="mb-10 grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:items-center"
-    >
-      <figure class="overflow-hidden rounded-lg border border-line bg-bg-elev/40">
-        <img
-          src="/work/sncf-display.jpg"
-          alt="SNCF real-time station display redesign"
-          loading="lazy"
-          decoding="async"
-          width="595"
-          height="842"
-          class="w-full"
-        />
-      </figure>
-      <p class="max-w-2xl text-lg text-muted">
-        Real-time passenger displays for railway stations, designed around
-        hierarchy, distance and stress. In dense public environments, legibility
-        is not a polish layer. <span class="text-fg">It is the product.</span>
-      </p>
+    <p data-reveal class="mb-8 max-w-2xl text-lg text-muted">
+      Real-time passenger displays for railway stations, designed around
+      hierarchy, distance and stress. In dense public environments, legibility
+      is not a polish layer. <span class="text-fg">It is the product.</span>
+    </p>
+
+    <div data-reveal class="mb-10">
+      <SncfBoard />
     </div>
+
+    <p data-reveal class="mb-10 max-w-2xl text-sm text-faint">
+      Not a screenshot — a live rebuild of the departures board, on the real
+      design-system tokens. Statuses, platform numbers and the clock update on
+      their own; the board flips through pages the way a station screen does.
+    </p>
     <div
       data-reveal
       class="mb-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3"

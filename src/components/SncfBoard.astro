@@ -1,0 +1,665 @@
+---
+/**
+ * Live recreation of an SNCF real-time departures board (TVD — Tableau Visuel
+ * des Départs), rebuilt from the "SNCF · LIVE" design system. Colours are the
+ * exact design-system tokens (Départ/blue + Information red/orange); the
+ * proprietary "Achemine" face falls back to the folio sans.
+ *
+ * It is *running*, not a screenshot: the board auto-paginates through pages of
+ * departures with a Solari split-flap flip, and the clock ticks. Pure
+ * Astro + a small GSAP script — no React island (keeps the JS budget lean).
+ */
+type Status = "ontime" | "approach" | "delayed" | "cancelled" | "bus";
+
+interface Dep {
+  time: string;
+  status: Status;
+  statusText?: string;
+  type: string;
+  num: string;
+  name: string;
+  via: string;
+  full?: boolean;
+  voie?: string | null;
+}
+
+const LABEL: Record<Status, string> = {
+  ontime: "À l’heure",
+  approach: "À l’approche",
+  delayed: "Retardé",
+  cancelled: "Supprimé",
+  bus: "Car de substitution",
+};
+
+// Gare de Nantes — plausible real departures, echoing the reference board.
+const pages: Dep[][] = [
+  [
+    { time: "12:14", status: "approach", type: "TER", num: "858386", name: "Rennes", via: "Direct", voie: "11" },
+    { time: "12:15", status: "cancelled", type: "TGV INOUI", num: "8926", name: "Paris Montparnasse", via: "via Angers Saint-Laud", voie: null },
+    { time: "12:18", status: "ontime", type: "TER", num: "858877", name: "Les Sables-d’Olonne", via: "via Clisson › Montaigu", voie: "7" },
+    { time: "12:21", status: "ontime", type: "TER", num: "808566", name: "Le Croisic", via: "via Savenay › Saint-Nazaire", full: true, voie: "5" },
+    { time: "12:41", status: "ontime", type: "TER", num: "876712", name: "Orléans", via: "via Ancenis › Angers Saint-Laud", voie: "2" },
+  ],
+  [
+    { time: "12:48", status: "ontime", type: "TER", num: "857120", name: "Pornic", via: "via Sainte-Pazanne", voie: "3" },
+    { time: "12:52", status: "approach", type: "TGV INOUI", num: "8740", name: "Paris Montparnasse", via: "Direct", voie: "9" },
+    { time: "12:55", status: "delayed", statusText: "Retardé +10 min", type: "TER", num: "858901", name: "La Roche-sur-Yon", via: "via Montaigu", voie: "6" },
+    { time: "13:02", status: "ontime", type: "TER", num: "808210", name: "St-Gilles-Croix-de-Vie", via: "via Challans", voie: "4" },
+    { time: "13:10", status: "ontime", type: "OUIGO", num: "7641", name: "Lyon Part-Dieu", via: "via Massy TGV", full: true, voie: "12" },
+  ],
+  [
+    { time: "13:14", status: "ontime", type: "TER", num: "859330", name: "Rennes", via: "via Redon", voie: "11" },
+    { time: "13:18", status: "approach", type: "TER", num: "808577", name: "Le Croisic", via: "via Saint-Nazaire", voie: "5" },
+    { time: "13:22", status: "ontime", type: "TGV INOUI", num: "8932", name: "Paris Montparnasse", via: "via Angers Saint-Laud", voie: "8" },
+    { time: "13:30", status: "delayed", statusText: "Retardé +20 min", type: "INTERCITÉS", num: "3841", name: "Bordeaux Saint-Jean", via: "via La Roche-sur-Yon", voie: "2" },
+    { time: "13:35", status: "bus", statusText: "Car TER", type: "CAR", num: "—", name: "Pornic", via: "via Sainte-Pazanne", voie: "R" },
+  ],
+];
+
+const first = pages[0];
+const label = (d: Dep) => d.statusText ?? LABEL[d.status];
+// Cross glyph isn't in the Achemine subset, so the cancelled-platform mark is an SVG.
+const CROSS =
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+---
+
+<figure
+  class="sncf"
+  role="img"
+  aria-label="Live recreation of an SNCF real-time departures board, cycling through scheduled departures from Nantes."
+>
+  <div class="sncf-screen">
+    <div class="sncf-head">
+      <div class="sncf-brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="5" y="3" width="14" height="13" rx="3" />
+          <path d="M5 11h14" />
+          <path d="M9 16l-2 4M15 16l2 4" />
+          <circle cx="9" cy="13.5" r="0.9" fill="currentColor" stroke="none" />
+          <circle cx="15" cy="13.5" r="0.9" fill="currentColor" stroke="none" />
+        </svg>
+        <span>Départs</span>
+      </div>
+      <div class="sncf-dots" data-dots>
+        {pages.map((_, i) => <span class:list={["sncf-pg", { "is-active": i === 0 }]} />)}
+      </div>
+      <div class="sncf-clock" data-clock>12:10</div>
+    </div>
+
+    <div class="sncf-rows" data-rows>
+      {
+        first.map((d) => (
+          <div class="sncf-row" data-cancelled={d.status === "cancelled" ? "" : null}>
+            <div class="sncf-flip">
+              <div class="sncf-when">
+                <span class="sncf-time" data-f="time">{d.time}</span>
+                <span class="sncf-status" data-status={d.status}>
+                  <span class="sncf-ico" />
+                  <span data-f="statusText">{label(d)}</span>
+                </span>
+              </div>
+
+              <div class="sncf-train">
+                <span class="sncf-type" data-f="type">{d.type}</span>
+                <span class="sncf-num" data-f="num">{d.num}</span>
+              </div>
+
+              <div class="sncf-dest">
+                <span class="sncf-name" data-f="name">{d.name}</span>
+                <span class="sncf-via" data-f="via">{d.via}</span>
+              </div>
+
+              <div class="sncf-right">
+                <span class="sncf-badge" data-show={d.full ? "" : null}>Train complet</span>
+                <span class="sncf-voie" data-cancelled={d.status === "cancelled" ? "" : null}>
+                  <span class="sncf-voie-k">Voie</span>
+                  <span
+                    class="sncf-voie-n"
+                    data-f="voie"
+                    set:html={d.status === "cancelled" ? CROSS : (d.voie ?? "")}
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <span class="sncf-live"><span class="sncf-live-dot" aria-hidden="true"></span>live · recreated in the browser</span>
+
+  <script type="application/json" data-sncf-pages set:html={JSON.stringify(pages)} is:inline></script>
+</figure>
+
+<style>
+  .sncf {
+    --sncf-bg: #0f0f3b; /* Départ/blue-900 */
+    --sncf-row: #22275d; /* Départ/blue-700 */
+    --sncf-row-2: #2a2f68;
+    --sncf-head: #2f356f; /* Départ/blue-500 */
+    --sncf-line: #4b5182; /* Départ/blue-400 */
+    --sncf-dim: #bbbed2; /* Départ/blue-100 */
+    --sncf-faint: #818baf; /* Départ/blue-200 */
+    --sncf-ink: #f4f5fb;
+    --sncf-cyan: #40cfff; /* Départ/blue-accent */
+    --sncf-red: #ff5269; /* Information/red */
+    --sncf-orange: #ff9f50; /* Information/orange */
+
+    /* The real SNCF face. Regular only → bold board text is faux-bold. */
+    font-family: "Achemine", var(--font-sans);
+
+    /* Match the SNCF·LIVE Figma component width (960px), centered. */
+    margin-inline: auto;
+    width: 100%;
+    max-width: 60rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .sncf-screen {
+    overflow: hidden;
+    border-radius: 0.9rem;
+    border: 1px solid rgba(64, 207, 255, 0.18);
+    background: var(--sncf-bg);
+    box-shadow:
+      0 1.5rem 4rem rgba(0, 0, 0, 0.5),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  }
+
+  /* ---------------------------------------------------------------- header */
+  .sncf-head {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.7rem clamp(0.8rem, 2.4vw, 1.3rem);
+    background: var(--sncf-head);
+    border-bottom: 1px solid var(--sncf-bg);
+  }
+  .sncf-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--sncf-ink);
+    font-weight: 800;
+    font-size: clamp(0.95rem, 2vw, 1.25rem);
+    letter-spacing: -0.01em;
+  }
+  .sncf-brand svg {
+    width: 1.3em;
+    height: 1.3em;
+    color: var(--sncf-cyan);
+  }
+  .sncf-dots {
+    display: inline-flex;
+    gap: 0.45rem;
+    justify-self: center;
+  }
+  .sncf-pg {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--sncf-faint);
+    opacity: 0.4;
+    transition:
+      opacity 0.3s ease,
+      background-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+  .sncf-pg.is-active {
+    background: var(--sncf-cyan);
+    opacity: 1;
+    box-shadow: 0 0 0.5rem rgba(64, 207, 255, 0.7);
+  }
+  .sncf-clock {
+    justify-self: end;
+    color: var(--sncf-ink);
+    font-weight: 800;
+    font-size: clamp(0.95rem, 2vw, 1.25rem);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+
+  /* ----------------------------------------------------------------- rows */
+  .sncf-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 2px;
+    perspective: 1400px;
+  }
+  .sncf-row {
+    background: var(--sncf-row);
+    border-radius: 0.35rem;
+  }
+  .sncf-row:nth-child(even) {
+    background: var(--sncf-row-2);
+  }
+  .sncf-flip {
+    display: grid;
+    grid-template-columns: minmax(5.5rem, auto) minmax(4rem, auto) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(0.6rem, 2.2vw, 1.5rem);
+    padding: clamp(0.5rem, 1.5vw, 0.85rem) clamp(0.7rem, 2.2vw, 1.15rem);
+    transform-origin: center;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+
+  /* col 1 — time + status */
+  .sncf-when {
+    display: flex;
+    flex-direction: column;
+  }
+  .sncf-time {
+    color: var(--sncf-ink);
+    font-weight: 800;
+    font-size: clamp(1.25rem, 2.7vw, 2rem);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+  .sncf-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.32em;
+    margin-top: 0.4rem;
+    color: var(--sncf-dim);
+    font-size: clamp(0.74rem, 1.2vw, 0.84rem);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .sncf-ico {
+    display: inline-flex;
+    width: 1.05em;
+    height: 1.05em;
+    flex: none;
+  }
+  .sncf-ico :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+  /* pre-JS / no-JS fallback: a coloured dot in place of the injected icon */
+  .sncf-ico:empty::before {
+    content: "";
+    margin: auto;
+    width: 0.6em;
+    height: 0.6em;
+    border-radius: 999px;
+    background: currentColor;
+  }
+  .sncf-status[data-status="ontime"] .sncf-ico {
+    color: var(--sncf-cyan);
+  }
+  .sncf-status[data-status="approach"] {
+    color: var(--sncf-cyan);
+  }
+  .sncf-status[data-status="approach"] .sncf-ico {
+    color: var(--sncf-cyan);
+    animation: sncf-pulse 1.3s ease-in-out infinite;
+  }
+  .sncf-status[data-status="delayed"],
+  .sncf-status[data-status="bus"] {
+    color: var(--sncf-orange);
+  }
+  .sncf-status[data-status="delayed"] .sncf-ico,
+  .sncf-status[data-status="bus"] .sncf-ico {
+    color: var(--sncf-orange);
+  }
+  .sncf-status[data-status="cancelled"] {
+    color: var(--sncf-red);
+  }
+  .sncf-status[data-status="cancelled"] .sncf-ico {
+    color: var(--sncf-red);
+  }
+
+  /* col 2 — operator + number */
+  .sncf-train {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    color: var(--sncf-dim);
+  }
+  .sncf-type {
+    color: var(--sncf-ink);
+    font-weight: 700;
+    font-size: clamp(0.7rem, 1.3vw, 0.85rem);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .sncf-num {
+    color: var(--sncf-dim);
+    font-size: clamp(0.72rem, 1.2vw, 0.82rem);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* col 3 — destination + via */
+  .sncf-dest {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .sncf-name {
+    overflow: hidden;
+    color: var(--sncf-ink);
+    font-weight: 800;
+    font-size: clamp(1.05rem, 2.4vw, 1.7rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .sncf-via {
+    overflow: hidden;
+    color: var(--sncf-dim);
+    font-size: clamp(0.78rem, 1.5vw, 1rem);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .sncf-row[data-cancelled] .sncf-name {
+    color: var(--sncf-red);
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+  }
+
+  /* col 4 — badge + voie */
+  .sncf-right {
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(0.4rem, 1.5vw, 0.8rem);
+  }
+  .sncf-badge {
+    display: none;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--sncf-line);
+    border-radius: 0.35rem;
+    color: var(--sncf-dim);
+    font-size: 0.66rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .sncf-badge[data-show] {
+    display: inline-block;
+  }
+  .sncf-voie {
+    display: inline-flex;
+    min-width: 2.7rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.18rem 0.45rem;
+    border: 1.5px solid rgba(255, 255, 255, 0.62);
+    border-radius: 0.4rem;
+    line-height: 1;
+  }
+  .sncf-voie-k {
+    color: var(--sncf-dim);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .sncf-voie-n {
+    margin-top: 0.1rem;
+    color: var(--sncf-ink);
+    font-weight: 800;
+    font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+    font-variant-numeric: tabular-nums;
+  }
+  .sncf-voie[data-cancelled] {
+    border-color: transparent;
+    padding: 0;
+  }
+  .sncf-voie[data-cancelled] .sncf-voie-k {
+    display: none;
+  }
+  .sncf-voie[data-cancelled] .sncf-voie-n {
+    color: var(--sncf-red);
+    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+  }
+  .sncf-voie[data-cancelled] .sncf-voie-n :global(svg) {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  /* ----------------------------------------------------------- live label */
+  .sncf-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    align-self: flex-start;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-faint);
+  }
+  .sncf-live-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--sncf-cyan);
+    box-shadow: 0 0 0.4rem rgba(64, 207, 255, 0.8);
+    animation: sncf-pulse 1.4s ease-in-out infinite;
+  }
+
+  @keyframes sncf-pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.35;
+      transform: scale(0.78);
+    }
+  }
+
+  /* responsive: drop the operator/number column on narrow screens */
+  @media (max-width: 560px) {
+    .sncf-flip {
+      grid-template-columns: minmax(4.5rem, auto) minmax(0, 1fr) auto;
+    }
+    .sncf-train {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sncf-live-dot,
+    .sncf-status .sncf-ico {
+      animation: none !important;
+    }
+  }
+</style>
+
+<script>
+  import gsap from "gsap";
+
+  type Status = "ontime" | "approach" | "delayed" | "cancelled" | "bus";
+  interface Dep {
+    time: string;
+    status: Status;
+    statusText?: string;
+    type: string;
+    num: string;
+    name: string;
+    via: string;
+    full?: boolean;
+    voie?: string | null;
+  }
+
+  const LABEL: Record<Status, string> = {
+    ontime: "À l’heure",
+    approach: "À l’approche",
+    delayed: "Retardé",
+    cancelled: "Supprimé",
+    bus: "Car de substitution",
+  };
+
+  // Status glyphs (stroke = currentColor; coloured by CSS per data-status).
+  const ICONS: Record<Status, string> = {
+    ontime:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+    approach:
+      '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="currentColor"/></svg>',
+    delayed:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>',
+    cancelled:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+    bus:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="12" rx="2"/><path d="M4 11h16"/><path d="M7 16v3M17 16v3"/></svg>',
+  };
+
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function setup(root: HTMLElement) {
+    const blob = root.querySelector<HTMLScriptElement>("[data-sncf-pages]");
+    if (!blob) return;
+    const pages = JSON.parse(blob.textContent || "[]") as Dep[][];
+    if (!pages.length) return;
+
+    const rows = Array.from(root.querySelectorAll<HTMLElement>(".sncf-row"));
+    const dots = Array.from(root.querySelectorAll<HTMLElement>(".sncf-pg"));
+    const clockEl = root.querySelector<HTMLElement>("[data-clock]");
+
+    const baseMinutes = 12 * 60 + 10; // 12:10
+    let idx = 0;
+    let cycleId = 0;
+    let clockId = 0;
+    let elapsed = 0;
+
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const fmt = (mins: number, colon: boolean) =>
+      `${pad(Math.floor(mins / 60) % 24)}${colon ? ":" : " "}${pad(mins % 60)}`;
+
+    function paint(row: HTMLElement, d: Dep) {
+      const set = (k: string, v: string) => {
+        const el = row.querySelector<HTMLElement>(`[data-f="${k}"]`);
+        if (el) el.textContent = v;
+      };
+      set("time", d.time);
+      set("type", d.type);
+      set("num", d.num);
+      set("name", d.name);
+      set("via", d.via);
+
+      const status = row.querySelector<HTMLElement>(".sncf-status");
+      if (status) {
+        status.setAttribute("data-status", d.status);
+        const txt = status.querySelector<HTMLElement>("[data-f='statusText']");
+        if (txt) txt.textContent = d.statusText ?? LABEL[d.status];
+        const ico = status.querySelector<HTMLElement>(".sncf-ico");
+        if (ico) ico.innerHTML = ICONS[d.status] ?? "";
+      }
+
+      const cancelled = d.status === "cancelled";
+      row.toggleAttribute("data-cancelled", cancelled);
+
+      const badge = row.querySelector<HTMLElement>(".sncf-badge");
+      if (badge) badge.toggleAttribute("data-show", !!d.full);
+
+      const voie = row.querySelector<HTMLElement>(".sncf-voie");
+      const voieN = row.querySelector<HTMLElement>(".sncf-voie-n");
+      if (voie) voie.toggleAttribute("data-cancelled", cancelled);
+      if (voieN) {
+        if (cancelled) voieN.innerHTML = ICONS.cancelled;
+        else voieN.textContent = d.voie ?? "";
+      }
+    }
+
+    function show(i: number, animate: boolean) {
+      const page = pages[i];
+      dots.forEach((d, j) => d.classList.toggle("is-active", j === i));
+      rows.forEach((row, r) => {
+        const d = page[r];
+        if (!d) return;
+        if (!animate) {
+          paint(row, d);
+          return;
+        }
+        const flip = row.querySelector<HTMLElement>(".sncf-flip");
+        if (!flip) {
+          paint(row, d);
+          return;
+        }
+        gsap.to(flip, {
+          rotateX: -90,
+          duration: 0.22,
+          ease: "power2.in",
+          delay: r * 0.06,
+          onComplete() {
+            paint(row, d);
+            gsap.fromTo(
+              flip,
+              { rotateX: 90 },
+              { rotateX: 0, duration: 0.34, ease: "power2.out" },
+            );
+          },
+        });
+      });
+    }
+
+    function startClock() {
+      if (clockId || !clockEl) return;
+      clockId = window.setInterval(() => {
+        elapsed += 1;
+        clockEl.textContent = fmt(
+          baseMinutes + Math.floor(elapsed / 60),
+          elapsed % 2 === 0,
+        );
+      }, 1000);
+    }
+    function stopClock() {
+      clearInterval(clockId);
+      clockId = 0;
+    }
+    function startCycle() {
+      if (cycleId) return;
+      cycleId = window.setInterval(() => {
+        idx = (idx + 1) % pages.length;
+        show(idx, true);
+      }, 5200);
+    }
+    function stopCycle() {
+      clearInterval(cycleId);
+      cycleId = 0;
+    }
+
+    // Paint page 0 (injects status glyphs over the SSR text); never animate first.
+    show(0, false);
+
+    if (reduce) {
+      if (clockEl) clockEl.textContent = fmt(baseMinutes, true);
+      return; // static board, no cycling
+    }
+
+    let visible = false;
+    const run = () => {
+      if (visible && !document.hidden) {
+        startClock();
+        startCycle();
+      } else {
+        stopClock();
+        stopCycle();
+      }
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        visible = entries[0]?.isIntersecting ?? false;
+        run();
+      },
+      { threshold: 0.2 },
+    );
+    io.observe(root);
+
+    document.addEventListener("visibilitychange", run);
+  }
+
+  document.querySelectorAll<HTMLElement>(".sncf").forEach(setup);
+</script>
