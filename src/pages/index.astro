@@ -1,0 +1,327 @@
+---
+import Base from "../layouts/Base.astro";
+import Section from "../components/Section.astro";
+import NetContributionsChart from "../components/dataviz/NetContributionsChart.tsx";
+import ProjectionDataviz from "../components/dataviz/ProjectionChart.tsx";
+import MotionGrid from "../components/MotionGrid.astro";
+import AlbaShowcase from "../components/AlbaShowcase.tsx";
+import WorkGallery from "../components/WorkGallery.tsx";
+
+const heroTags = [
+  "+10 Years XP",
+  "design systems",
+  "branding",
+  "dataviz",
+  "motion",
+];
+
+const brand = [
+  { img: "kaskad", name: "kaskad", tag: "DA · brand · web · 2023", scale: 1.18 },
+  { img: "blacksails", name: "Black Sales", tag: "brand · product", scale: 1.22 },
+  { img: "ple", name: "Plé", tag: "identity", scale: 1.0, pos: "0% 50%" },
+  { img: "plume", name: "Plume", tag: "identity", scale: 1.16 },
+  { img: "beroe", name: "beroé", tag: "brand", scale: 1.12 },
+];
+---
+
+<Base>
+  <!-- 00 · HERO -------------------------------------------------------------->
+  <section
+    id="hero"
+    class="relative flex min-h-[100svh] flex-col justify-center px-5 pt-24 sm:px-8"
+  >
+    <div class="relative mx-auto w-full max-w-6xl">
+      <!-- Readymag-style bracket annotations (motif). Lines draw in Story mode. -->
+      <p data-reveal class="tag mb-6">
+        Founding designer · Paris
+      </p>
+
+      <h1
+        data-reveal
+        data-reveal-delay="0.05"
+        class="max-w-5xl font-extrabold leading-[0.95] tracking-tight text-balance"
+        style="font-size: var(--text-display)"
+      >
+        I turn product ambiguity<br />into <span class="text-accent">systems</span>.
+      </h1>
+
+      <p
+        data-reveal
+        data-reveal-delay="0.1"
+        class="mt-8 max-w-2xl text-lg text-muted sm:text-xl"
+      >
+        I’m François-Henri Dupuich, designer based in Paris. I work across
+        interface design, design systems and product delivery, with performance
+        constraints in mind.
+      </p>
+
+      <ul
+        data-reveal
+        data-reveal-delay="0.15"
+        class="mt-10 flex flex-wrap gap-x-3 gap-y-2"
+      >
+        {
+          heroTags.map((t) => (
+            <li class="tag rounded-full border border-line px-3 py-1">{t}</li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div
+      class="pointer-events-none absolute inset-x-0 bottom-6 mx-auto w-full max-w-6xl px-5 sm:px-8"
+    >
+      <span class="tag">scroll ↓</span>
+    </div>
+  </section>
+
+  <!-- 01 · MANIFESTO --------------------------------------------------------->
+  <Section
+    id="manifesto"
+    index="01"
+    kicker="Manifesto"
+    title="Interface, system, delivery."
+  >
+    <div class="grid gap-10 md:grid-cols-2">
+      <p data-reveal class="text-lg leading-relaxed text-muted">
+        Good product design does not stop at the screen. I work through the
+        <span class="text-fg">&#32;interface</span>, the tokens and rules beneath
+        it, and the <span class="text-fg">&#32;constraints</span> that decide
+        whether a product can ship, scale, and stay coherent.
+      </p>
+      <p
+        data-reveal
+        data-reveal-delay="0.05"
+        class="text-lg leading-relaxed text-muted"
+      >
+        I learned to design under tight resources: smaller teams, limited
+        assets, real performance budgets. That made code, tooling and AI part of
+        the <span class="text-fg">&#32;craft</span>. This showcase follows the same
+        principle: lean, fast, measured.
+      </p>
+    </div>
+  </Section>
+
+  <!-- 02 · DATAVIZ (live) ---------------------------------------------------->
+  <Section
+    id="dataviz"
+    index="02"
+    kicker="Dataviz · live"
+    title="Turning abstract finance into something you can read."
+  >
+    <p data-reveal class="mb-8 max-w-2xl text-lg text-muted">
+      This interactive chart breaks a balance into net invested capital and
+      gains. It makes a counter-intuitive case visible: net invested capital can
+      go negative while the balance remains positive. Switch scenarios, then
+      hover any point to see why.
+    </p>
+    <div data-reveal>
+      <NetContributionsChart client:visible />
+    </div>
+
+    <p data-reveal class="mb-8 mt-20 max-w-2xl text-lg text-muted">
+      The second chart models a long-horizon projection with a
+      <span class="text-fg">&#32;progressive-derisking</span> path. Toggle the
+      strategy to compare a steadier route with a higher-risk curve; the
+      probability cone, IRR cards and risk score update in real time.
+    </p>
+    <div data-reveal>
+      <ProjectionDataviz client:visible />
+    </div>
+  </Section>
+
+  <!-- 03 · OPTIMISATION / CRAFT ---------------------------------------------->
+  <Section
+    id="craft"
+    index="03"
+    kicker="Motion design · in code"
+    title="Product motion built in code."
+  >
+    <p data-reveal class="mb-10 max-w-2xl text-lg text-muted">
+      Motion inserts for an investment app release: interface states,
+      transitions and <span class="text-fg">live charts built with Recharts</span>.
+      They were authored in React and Remotion, the same language as the
+      product, then exported here as video.
+    </p>
+
+    <div data-reveal>
+      <MotionGrid />
+    </div>
+  </Section>
+
+  <!-- 04 · SYSTEMS (DS + ops) ------------------------------------------------>
+  <Section
+    id="systems"
+    index="04"
+    kicker="Design systems & ops"
+    title="Design systems for the interface and the way teams work."
+  >
+    <div class="grid gap-10 md:grid-cols-2">
+      <div data-reveal>
+        <h3 class="mb-3 font-semibold">Interface system</h3>
+        <p class="text-muted">
+          Tokens, variants, property-first naming, Storybook and Chromatic: a
+          design system treated as a product, not a folder of components.
+        </p>
+      </div>
+      <div data-reveal data-reveal-delay="0.05">
+        <h3 class="mb-3 font-semibold">Team system</h3>
+        <p class="text-muted">
+          Design ops for handoff, tooling, rituals and quality checks: the
+          habits that make design usable inside product cycles.
+        </p>
+      </div>
+    </div>
+
+    <p data-reveal class="mb-6 mt-14 max-w-2xl text-lg text-muted">
+      <span class="text-fg">Alba</span> — the design system I built and run at
+      Nalo. Real tokens, components and theming, here as living code rather than
+      screenshots. Scroll through the block to watch the token set re-map:
+    </p>
+    <div data-reveal>
+      <AlbaShowcase client:visible />
+    </div>
+  </Section>
+
+  <!-- 05 · BRAND ------------------------------------------------------------->
+  <Section
+    id="brand"
+    index="05"
+    kicker="Branding & identities"
+    title="Identities for products, brands and tech tools."
+  >
+    <p data-reveal class="mb-8 max-w-2xl text-lg text-muted">
+      Brand and art direction across product identities, open-source tooling and
+      community projects. The work spans polished launches and small technical
+      ecosystems, with a feel for how developer culture should look and sound.
+    </p>
+    <div
+      data-reveal
+      class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5"
+    >
+      {
+        brand.map((b) => (
+          <figure class="group relative aspect-[3/4] overflow-hidden rounded-lg border border-line bg-bg-elev/40 transition-colors hover:border-line-strong">
+            <img
+              src={`/work/${b.img}.jpg`}
+              alt={b.name}
+              loading="lazy"
+              decoding="async"
+              width="595"
+              height="842"
+              style={`transform: scale(${b.scale}); transform-origin: center; object-position: ${b.pos ?? "center"}`}
+              class="absolute inset-0 h-full w-full object-cover transition-transform duration-500"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
+            <figcaption class="absolute inset-x-0 bottom-0 flex flex-col p-3">
+              <span class="text-sm text-fg">{b.name}</span>
+              <span class="tag mt-1">{b.tag}</span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+    <p data-reveal class="mt-6 max-w-2xl text-sm text-faint">
+      Also: legacy marks for Snatch &amp; Zou (Rust CLI download tools),
+      multilayer-perceptron (Erlang), and PluXML community templates.
+    </p>
+  </Section>
+
+  <!-- 06 · SNCF -------------------------------------------------------------->
+  <Section
+    id="track"
+    index="06"
+    kicker="Technical UI"
+    title="Technical interfaces where legibility is non-negotiable."
+  >
+    <div
+      data-reveal
+      class="mb-10 grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:items-center"
+    >
+      <figure class="overflow-hidden rounded-lg border border-line bg-bg-elev/40">
+        <img
+          src="/work/sncf-display.jpg"
+          alt="SNCF real-time station display redesign"
+          loading="lazy"
+          decoding="async"
+          width="595"
+          height="842"
+          class="w-full"
+        />
+      </figure>
+      <p class="max-w-2xl text-lg text-muted">
+        Real-time passenger displays for railway stations, designed around
+        hierarchy, distance and stress. In dense public environments, legibility
+        is not a polish layer. <span class="text-fg">It is the product.</span>
+      </p>
+    </div>
+    <div
+      data-reveal
+      class="mb-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
+    >
+      {
+        [
+          ["/work/sncf/folio-ux-10.png", "SNCF station display interface detail"],
+          ["/work/sncf/folio-ux-23.png", "SNCF technical UI scenario"],
+          ["/work/sncf/info-train.png", "SNCF train information screen"],
+        ].map(([src, alt]) => (
+          <figure class="overflow-hidden rounded-lg border border-line bg-bg-elev/40">
+            <img
+              src={src}
+              alt={alt}
+              loading="lazy"
+              decoding="async"
+              class="aspect-video h-full w-full object-contain p-3"
+            />
+          </figure>
+        ))
+      }
+    </div>
+  </Section>
+
+  <!-- 07 · SELECTED WORK ----------------------------------------------------->
+  <Section
+    id="work"
+    index="07"
+    kicker="Selected work"
+    title="Selected work."
+  >
+    <p data-reveal class="mb-8 max-w-2xl text-lg text-muted">
+      Ten years across product, design systems, brand and open source. A compact
+      index of work, with just enough context to read the shape of each project.
+    </p>
+    <div data-reveal>
+      <WorkGallery client:visible />
+    </div>
+  </Section>
+
+  <!-- 08 · CONTACT ----------------------------------------------------------->
+  <Section
+    id="contact"
+    index="08"
+    kicker="Contact"
+    title="Need a founding designer with range?"
+  >
+    <p data-reveal class="mb-8 max-w-2xl text-lg text-muted">
+      Looking for a founding or first designer who can own the product surface,
+      the system beneath it and the shipping rhythm around it? Let’s talk.
+    </p>
+    <div data-reveal class="flex flex-wrap gap-4">
+      <a
+        href="mailto:francoishenri.dupuich@gmail.com"
+        class="rounded-full bg-accent px-5 py-2.5 font-mono text-sm text-bg transition-transform hover:-translate-y-0.5"
+      >
+        francoishenri.dupuich@gmail.com
+      </a>
+    </div>
+  </Section>
+
+  <footer class="border-t border-line px-5 py-10 sm:px-8">
+    <div
+      class="mx-auto flex w-full max-w-6xl items-center justify-between text-faint"
+    >
+      <span class="tag">© 2026 FHD</span>
+      <span class="tag">built lean with Astro + GSAP</span>
+    </div>
+  </footer>
+</Base>

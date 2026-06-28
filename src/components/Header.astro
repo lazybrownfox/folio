@@ -1,0 +1,37 @@
+---
+const anchors = [
+  { id: "#dataviz", label: "Dataviz" },
+  { id: "#craft", label: "Motion" },
+  { id: "#systems", label: "Systems" },
+  { id: "#brand", label: "Brand" },
+  { id: "#work", label: "Work" },
+  { id: "#contact", label: "Contact" },
+];
+---
+<header
+  class="fixed inset-x-0 top-0 z-50 flex items-center justify-between gap-4 px-5 py-3 sm:px-8"
+>
+  <a href="#top" class="group flex items-center gap-2" aria-label="Back to top">
+    <span
+      class="inline-block h-2.5 w-2.5 rounded-full bg-accent transition-transform group-hover:scale-125"
+    ></span>
+    <span class="font-mono text-sm tracking-wide text-fg">FHD</span>
+  </a>
+
+  <nav
+    data-anchors
+    aria-label="Sections"
+    class="pointer-events-auto hidden items-center gap-5 md:flex"
+  >
+    {
+      anchors.map((a) => (
+        <a
+          href={a.id}
+          class="font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:text-fg"
+        >
+          {a.label}
+        </a>
+      ))
+    }
+  </nav>
+</header>

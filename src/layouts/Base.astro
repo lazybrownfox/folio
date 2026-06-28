@@ -1,0 +1,82 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Analytics from "@vercel/analytics/astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "François-Henri Dupuich — Product Designer",
+  description = "Product designer for early teams and complex products. I turn ambiguity into interface systems, design ops and shippable product work.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-mode="story">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Fonts (subset/self-host in the M6 perf pass) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    <!-- Anti-FOUC: set mode + arm reveals before first paint. -->
+    <script is:inline>
+      (function () {
+        try {
+          var d = document.documentElement;
+          var m = localStorage.getItem("folio-mode");
+          var r = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          d.dataset.mode = m || (r ? "libre" : "story");
+          d.classList.add("js");
+          if (!r) {
+            d.classList.add("armed");
+            // failsafe: never leave content hidden if the bundle fails to run
+            setTimeout(function () {
+              d.classList.add("loaded");
+            }, 2500);
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+
+  <body>
+    <a
+      href="#top"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded focus:bg-accent focus:px-3 focus:py-2 focus:text-bg"
+      >Skip to content</a
+    >
+
+    <Header />
+
+    <main id="top">
+      <slot />
+    </main>
+
+    <Analytics />
+    <SpeedInsights />
+
+    <script>
+      import "../scripts/site.ts";
+    </script>
+  </body>
+</html>

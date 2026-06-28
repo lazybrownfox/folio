@@ -1,0 +1,42 @@
+---
+// Nalo "espace client" release-video motion inserts — UI + live-chart (Recharts)
+// animations authored in React / Remotion. Poster-first, played in view.
+const clips = [
+  { src: "allocation", label: "Allocation", note: "animated chart" },
+  { src: "projection", label: "Projection", note: "scenario curve" },
+  { src: "ressources", label: "Resources", note: "loading state" },
+  { src: "parametres", label: "Settings", note: "interface motion" },
+  { src: "icones", label: "Icons", note: "icon motion" },
+  { src: "envoi-documents", label: "Document upload", note: "upload flow" },
+];
+---
+<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+  {
+    clips.map((c) => (
+      <figure
+        class="group relative aspect-video overflow-hidden rounded-lg border border-line bg-bg-elev/40"
+      >
+        <video
+          data-motion
+          class="h-full w-full object-cover"
+          poster={`/motion/posters/${c.src}.jpg`}
+          muted
+          loop
+          playsinline
+          preload="none"
+          aria-label={`Motion insert — ${c.label}`}
+        >
+          <source src={`/motion/${c.src}.mp4`} type="video/mp4" />
+        </video>
+        <figcaption
+          class="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-black/75 to-transparent p-3"
+        >
+          <span class="text-sm text-fg">{c.label}</span>
+          <span class="font-mono text-[0.7rem] uppercase tracking-wider text-muted">
+            {c.note}
+          </span>
+        </figcaption>
+      </figure>
+    ))
+  }
+</div>

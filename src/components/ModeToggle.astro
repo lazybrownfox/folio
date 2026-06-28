@@ -1,0 +1,49 @@
+---
+// Segmented Story / Libre control. State is driven client-side by site.ts via
+// aria-pressed; default markup matches the SSR default mode (story).
+---
+<div
+  class="inline-flex items-center rounded-full border border-line bg-bg-elev/70 p-0.5 backdrop-blur"
+  role="group"
+  aria-label="Reading mode"
+>
+  <button
+    type="button"
+    data-mode-btn="story"
+    aria-pressed="true"
+    class="mode-btn"
+  >
+    Story
+  </button>
+  <button
+    type="button"
+    data-mode-btn="libre"
+    aria-pressed="false"
+    class="mode-btn"
+  >
+    Libre
+  </button>
+</div>
+
+<style>
+  .mode-btn {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    color: var(--color-muted);
+    cursor: pointer;
+    transition:
+      color 0.25s ease,
+      background-color 0.25s ease;
+  }
+  .mode-btn[aria-pressed="true"] {
+    color: var(--color-bg);
+    background-color: var(--color-accent);
+  }
+  .mode-btn:hover[aria-pressed="false"] {
+    color: var(--color-fg);
+  }
+</style>
