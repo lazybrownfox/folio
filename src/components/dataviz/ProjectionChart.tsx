@@ -424,7 +424,15 @@ export default function ProjectionDataviz() {
             >
               Progressive derisking {boost ? "on" : "off"}
             </span>
-            <Toggle checked={boost} onChange={setBoost} />
+            <Toggle
+              checked={boost}
+              onChange={(v) => {
+                window.posthog?.capture("projection_strategy_toggled", {
+                  strategy: v ? "secured" : "unsecured",
+                });
+                setBoost(v);
+              }}
+            />
           </div>
           <span
             style={{

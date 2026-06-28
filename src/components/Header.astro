@@ -27,6 +27,7 @@ const anchors = [
       anchors.map((a) => (
         <a
           href={a.id}
+          data-nav-label={a.label}
           class="font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:text-fg"
         >
           {a.label}
@@ -34,4 +35,15 @@ const anchors = [
       ))
     }
   </nav>
+
+  <script is:inline>
+    document.querySelectorAll('[data-nav-label]').forEach(function (link) {
+      link.addEventListener('click', function () {
+        window.posthog?.capture('nav_section_clicked', {
+          section: link.dataset.navLabel,
+          href: link.getAttribute('href'),
+        });
+      });
+    });
+  </script>
 </header>

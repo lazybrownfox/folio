@@ -142,7 +142,13 @@ export default function AlbaShowcase() {
             return (
               <button
                 key={m}
-                onClick={() => setDark(m === "Dark")}
+                onClick={() => {
+                  const nextDark = m === "Dark";
+                  if (dark !== nextDark) {
+                    window.posthog?.capture("alba_theme_toggled", { theme: m.toLowerCase() });
+                    setDark(nextDark);
+                  }
+                }}
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontSize: 11,
