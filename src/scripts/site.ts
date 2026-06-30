@@ -151,7 +151,48 @@ function wireAnchors() {
 }
 
 /* ---------------------------------------------- Lazy in-view motion videos */
+function enterFullscreen(v: HTMLVideoElement) {
+  type FsVideo = HTMLVideoElement & {
+    webkitRequestFullscreen?: () => Promise<void> | void;
+    webkitEnterFullscreen?: () => void;
+  };
+  const fv = v as FsVideo;
+  v.controls = true;
+  v.muted = true;
+  const req =
+    fv.requestFullscreen?.bind(fv) ??
+    fv.webkitRequestFullscreen?.bind(fv) ??
+    fv.webkitEnterFullscreen?.bind(fv);
+  try {
+    req?.();
+  } catch {
+    /* fullscreen rejected — playback still starts inline below */
+  }
+  void v.play().catch(() => {});
+}
+
 function initMotion() {
+  // Click / keyboard on a clip → fullscreen playback (regardless of reduced motion).
+  document.querySelectorAll<HTMLElement>("[data-fullscreen]").forEach((fig) => {
+    const v = fig.querySelector<HTMLVideoElement>("[data-motion]");
+    if (!v) return;
+    fig.addEventListener("click", () => enterFullscreen(v));
+    fig.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        enterFullscreen(v);
+      }
+    });
+  });
+
+  // Restore the quiet poster tiles after leaving fullscreen.
+  document.addEventListener("fullscreenchange", () => {
+    if (document.fullscreenElement || prefersReduced) return;
+    document
+      .querySelectorAll<HTMLVideoElement>("[data-motion]")
+      .forEach((v) => (v.controls = false));
+  });
+
   const vids = Array.from(
     document.querySelectorAll<HTMLVideoElement>("[data-motion]"),
   );
@@ -179,6 +220,20 @@ function initMotion() {
   vids.forEach((v) => io.observe(v));
 }
 
+/* ----------------- Cross-section "open project in gallery" event bridge ---- */
+function wireOpenWork() {
+  document.querySelectorAll<HTMLElement>("[data-open-work]").forEach((el) => {
+    el.addEventListener("click", () => {
+      const name = el.dataset.openWork;
+      if (name) {
+        window.dispatchEvent(
+          new CustomEvent("folio:open-work", { detail: { name } }),
+        );
+      }
+    });
+  });
+}
+
 /* --------------------------------------------------------------- Bootstrap */
 function init() {
   const saved = localStorage.getItem(STORAGE_KEY) as Mode | null;
@@ -188,6 +243,7 @@ function init() {
   trackScrolled();
   wireAnchors();
   initMotion();
+  wireOpenWork();
   applyMode(initial);
 
   document

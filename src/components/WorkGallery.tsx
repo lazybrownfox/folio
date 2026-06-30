@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
 type Work = {
   name: string;
@@ -6,13 +6,17 @@ type Work = {
   images: WorkImage[];
   fit?: "cover" | "contain";
   bg?: string;
-  summary: string;
+  summary?: string;
   role: string;
 };
 
 type WorkImage = {
   src: string;
   alt: string;
+  /** Optional video source. When set, the viewer plays it (poster = `src`). */
+  video?: string;
+  /** CSS aspect-ratio of the video (e.g. "452 / 928") so the viewer frames it exactly. */
+  videoAspect?: string;
   fit?: "cover" | "contain";
   bg?: string;
   position?: string;
@@ -22,17 +26,34 @@ const WORKS: Work[] = [
   {
     name: "Parions Sport",
     tag: "product · gaming",
-    images: [{ src: "/work/fdj.jpg", alt: "Parions Sport product interface" }],
+    images: [
+      {
+        src: "/work/video/posters/fdj.jpg",
+        alt: "Parions Sport product interface",
+        video: "/work/video/fdj.mp4",
+        videoAspect: "452 / 928",
+        fit: "contain",
+        bg: "#0a0d12",
+      },
+    ],
     summary:
-      "Product work for a gaming interface, exploring AI-assisted ideation and RGAA 4 constraints.",
+      "Gaming interface explored with AI-assisted ideation under RGAA 4 constraints.",
     role: "Product design · accessibility",
   },
   {
     name: "France TV",
     tag: "product · design system · broadcast",
-    images: [{ src: "/work/ftv.jpg", alt: "France TV product and design system work" }],
-    summary:
-      "Design system and product work for public broadcast interfaces, focused on consistency and design-to-dev handoff.",
+    images: [
+      {
+        src: "/work/video/posters/ftv.jpg",
+        alt: "France TV product and design system work",
+        video: "/work/video/ftv.mp4",
+        videoAspect: "592 / 1280",
+        fit: "contain",
+        bg: "#0a0d12",
+      },
+    ],
+    summary: "Design-system and product work for public-broadcast interfaces.",
     role: "Product design · design system",
   },
   {
@@ -40,10 +61,6 @@ const WORKS: Work[] = [
     tag: "technical UI",
     images: [
       { src: "/work/sncf.jpg", alt: "SNCF station UX work" },
-      {
-        src: "/work/sncf-display.jpg",
-        alt: "SNCF real-time station display redesign",
-      },
       {
         src: "/work/sncf/folio-ux-10.png",
         alt: "SNCF station display interface detail",
@@ -88,8 +105,6 @@ const WORKS: Work[] = [
     name: "Brevo",
     tag: "systems · ops",
     images: [{ src: "/work/brevo.jpg", alt: "Brevo design ops work" }],
-    summary:
-      "Design ops and system work around tooling, process and product consistency.",
     role: "Design ops · systems",
   },
   {
@@ -105,15 +120,36 @@ const WORKS: Work[] = [
     ],
     fit: "contain",
     bg: "#f5f4ef",
-    summary:
-      "Product design for mobility flows, balancing speed, clarity and operational constraints.",
     role: "Product design · mobile flows",
+  },
+  {
+    name: "CosmoConnected",
+    tag: "product · connected mobility",
+    images: [
+      {
+        src: "/work/video/posters/cosmoconnected.jpg",
+        alt: "COSMO Connected smart-bike-light app",
+        video: "/work/video/cosmoconnected.mp4",
+        videoAspect: "498 / 1080",
+        fit: "contain",
+        bg: "#0a0d12",
+      },
+    ],
+    summary: "App for COSMO's connected bike light — onboarding and device pairing.",
+    role: "Product design · mobile app",
   },
   {
     name: "AKT",
     tag: "product · fintech",
     images: [
-      { src: "/work/akt.jpg", alt: "AKT fintech product work" },
+      {
+        src: "/work/akt.jpg",
+        alt: "AKT fintech product work",
+        video: "/work/video/akt.mp4",
+        videoAspect: "768 / 1280",
+        fit: "contain",
+        bg: "#0a0d12",
+      },
       {
         src: "/work/akt/image-76.png",
         alt: "AKT fintech interface detail",
@@ -130,46 +166,48 @@ const WORKS: Work[] = [
         fit: "contain",
       },
     ],
-    summary:
-      "Product and fintech interface work, with a focus on structured decisions and trust.",
     role: "Product design · fintech",
-  },
-  {
-    name: "kaskad",
-    tag: "branding",
-    images: [{ src: "/work/kaskad.jpg", alt: "kaskad brand identity" }],
-    summary:
-      "Brand identity and web direction for a product with a sharper visual signal.",
-    role: "Art direction · brand",
   },
   {
     name: "Black Sales",
     tag: "branding",
     images: [{ src: "/work/blacksails.jpg", alt: "Black Sales brand identity" }],
-    summary:
-      "Brand identity work for a product with a direct, commercial voice.",
     role: "Brand identity",
   },
   {
     name: "Plé",
-    tag: "branding",
+    tag: "branding · audio",
     images: [
-      { src: "/work/plume.jpg", alt: "Plé identity poster" },
+      { src: "/work/ple-cover.jpg", alt: "Plé brand image" },
       {
         src: "/work/ple.jpg",
-        alt: "Plé horizontal identity composition",
+        alt: "Plé identity — logo and tagline",
         fit: "contain",
-        bg: "#f5efe4",
+        bg: "#1a1714",
       },
     ],
-    summary: "Identity work around a small, precise brand system.",
+    role: "Brand identity",
+  },
+  {
+    name: "Plume",
+    tag: "branding · mobility",
+    images: [
+      { src: "/work/plume-cover.jpg", alt: "Plume brand image" },
+      {
+        src: "/work/plume-slide.jpg",
+        alt: "Plume identity — last-mile mobility",
+        fit: "contain",
+        bg: "#0a0d12",
+      },
+    ],
     role: "Brand identity",
   },
   {
     name: "beroé",
     tag: "branding",
     images: [{ src: "/work/beroe.jpg", alt: "beroé brand identity" }],
-    summary: "Brand identity work built around naming, mark and visual tone.",
+    fit: "contain",
+    bg: "#cfcfcf",
     role: "Brand identity",
   },
   {
@@ -220,6 +258,31 @@ export default function WorkGallery() {
     () => (active ? `${active.name} project preview` : "Project preview"),
     [active],
   );
+  const prefersReduced = useMemo(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches,
+    [],
+  );
+
+  // Open a project from anywhere on the page (brand grid, SNCF images …).
+  useEffect(() => {
+    const onOpen = (event: Event) => {
+      const name = (event as CustomEvent<{ name?: string }>).detail?.name;
+      if (!name) return;
+      const index = WORKS.findIndex((w) => w.name === name);
+      if (index < 0) return;
+      window.posthog?.capture("work_project_opened", {
+        project_name: WORKS[index].name,
+        project_tag: WORKS[index].tag,
+      });
+      setActiveImageIndex(0);
+      setActiveIndex(index);
+    };
+    window.addEventListener("folio:open-work", onOpen as EventListener);
+    return () =>
+      window.removeEventListener("folio:open-work", onOpen as EventListener);
+  }, []);
 
   const close = () => {
     const index = activeIndex;
@@ -244,6 +307,12 @@ export default function WorkGallery() {
       });
       return next;
     });
+  };
+
+  const moveImage = (delta: number) => {
+    if (!active) return;
+    const total = active.images.length;
+    setActiveImageIndex((i) => (i + delta + total) % total);
   };
 
   useEffect(() => {
@@ -299,6 +368,11 @@ export default function WorkGallery() {
                 style={cardImage.position ? { objectPosition: cardImage.position } : undefined}
                 className={contain ? "work-card-img is-contain" : "work-card-img"}
               />
+              {cardImage.video && (
+                <span className="work-card-motion" aria-hidden="true">
+                  ▶ motion
+                </span>
+              )}
               <span className="work-card-shade" aria-hidden="true" />
               <span className="work-card-caption">
                 <span className="work-card-name">{work.name}</span>
@@ -320,24 +394,75 @@ export default function WorkGallery() {
           }}
         >
           <div className="work-viewer-panel" onMouseDown={(event) => event.stopPropagation()}>
-            <div
-              className="work-viewer-media"
-              style={
-                activeImage.bg || active.bg
-                  ? { background: activeImage.bg ?? active.bg }
-                  : undefined
-              }
+            <button
+              ref={closeRef}
+              type="button"
+              className="work-viewer-close"
+              onClick={close}
+              aria-label="Close project preview"
             >
-              <img
-                src={activeImage.src}
-                alt={activeImage.alt}
-                style={activeImage.position ? { objectPosition: activeImage.position } : undefined}
-                className={
-                  (activeImage.fit ?? active.fit) === "contain"
-                    ? "work-viewer-img is-contain"
-                    : "work-viewer-img"
-                }
-              />
+              ×
+            </button>
+            <div
+              className={
+                activeImage.video ? "work-viewer-media is-video" : "work-viewer-media"
+              }
+              style={{
+                ...(activeImage.bg || active.bg
+                  ? { background: activeImage.bg ?? active.bg }
+                  : {}),
+                ...(activeImage.video && activeImage.videoAspect
+                  ? ({ "--va": activeImage.videoAspect } as CSSProperties)
+                  : {}),
+              }}
+            >
+              <div className="work-viewer-stage">
+                {activeImage.video ? (
+                  <video
+                    key={activeImage.video}
+                    src={activeImage.video}
+                    poster={activeImage.src}
+                    className="work-viewer-img is-contain"
+                    muted
+                    loop
+                    playsInline
+                    controls
+                    autoPlay={!prefersReduced}
+                    aria-label={activeImage.alt}
+                  />
+                ) : (
+                  <img
+                    src={activeImage.src}
+                    alt={activeImage.alt}
+                    style={activeImage.position ? { objectPosition: activeImage.position } : undefined}
+                    className={
+                      (activeImage.fit ?? active.fit) === "contain"
+                        ? "work-viewer-img is-contain"
+                        : "work-viewer-img"
+                    }
+                  />
+                )}
+                {active.images.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      className="work-stage-arrow is-prev"
+                      onClick={() => moveImage(-1)}
+                      aria-label="Previous image"
+                    >
+                      ‹
+                    </button>
+                    <button
+                      type="button"
+                      className="work-stage-arrow is-next"
+                      onClick={() => moveImage(1)}
+                      aria-label="Next image"
+                    >
+                      ›
+                    </button>
+                  </>
+                )}
+              </div>
               {active.images.length > 1 && (
                 <div className="work-image-strip" aria-label={`${active.name} images`}>
                   {active.images.map((image, index) => (
@@ -350,6 +475,11 @@ export default function WorkGallery() {
                       aria-pressed={index === activeImageIndex}
                     >
                       <img src={image.src} alt="" loading="lazy" decoding="async" />
+                      {image.video && (
+                        <span className="work-image-strip-play" aria-hidden="true">
+                          ▶
+                        </span>
+                      )}
                     </button>
                   ))}
                 </div>
@@ -361,21 +491,19 @@ export default function WorkGallery() {
                 <span className="tag">
                   {String((activeIndex ?? 0) + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
                 </span>
-                <button
-                  ref={closeRef}
-                  type="button"
-                  className="work-icon-btn"
-                  onClick={close}
-                  aria-label="Close project preview"
-                >
-                  ×
-                </button>
+                {active.images.length > 1 && (
+                  <span className="tag work-viewer-imgcount">
+                    {String(activeImageIndex + 1).padStart(2, "0")} / {String(active.images.length).padStart(2, "0")}
+                  </span>
+                )}
               </div>
 
               <div>
                 <p className="tag work-viewer-tag">{active.tag}</p>
                 <h3>{active.name}</h3>
-                <p className="work-viewer-summary">{active.summary}</p>
+                {active.summary && (
+                  <p className="work-viewer-summary">{active.summary}</p>
+                )}
               </div>
 
               <div className="work-viewer-meta">

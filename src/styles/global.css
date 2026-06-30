@@ -255,8 +255,39 @@ html[data-mode="libre"] [data-connector] {
 
 .work-viewer-media {
   position: relative;
+  display: flex;
+  flex-direction: column;
   min-height: min(74svh, 46rem);
   background: var(--color-bg);
+}
+
+.work-viewer-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* Video media: frame the clip at its exact portrait ratio, centered on a dark
+   stage — never cover-cropped, on any viewport. `object-fit: contain` on the
+   element is the hard guarantee against cropping; the ratio'd stage just makes
+   it fill the frame nicely instead of letterboxing. */
+.work-viewer-media.is-video {
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding-block: clamp(0.75rem, 2vw, 1.5rem);
+  background: #0a0d12;
+}
+.work-viewer-media.is-video .work-viewer-stage {
+  flex: 0 0 auto;
+  height: min(70svh, 40rem);
+  width: auto;
+  max-width: 100%;
+  aspect-ratio: var(--va, 1 / 2);
+}
+.work-viewer-media.is-video .work-viewer-img {
+  padding: 0;
+  background: transparent;
 }
 
 .work-viewer-img {
@@ -265,26 +296,64 @@ html[data-mode="libre"] [data-connector] {
   height: 100%;
   object-fit: cover;
   object-position: top;
+  background: #000;
 }
 
 .work-viewer-img.is-contain {
   object-fit: contain;
   object-position: center;
   padding: clamp(0.75rem, 3vw, 2.25rem);
+  background: var(--color-bg);
+}
+
+/* image-navigation arrows on the stage */
+.work-stage-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(-50%);
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 999px;
+  background: rgba(5, 7, 10, 0.55);
+  backdrop-filter: blur(6px);
+  color: var(--color-fg);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.work-stage-arrow.is-prev {
+  left: clamp(0.5rem, 2vw, 1rem);
+}
+
+.work-stage-arrow.is-next {
+  right: clamp(0.5rem, 2vw, 1rem);
+}
+
+.work-stage-arrow:hover {
+  background: rgba(5, 7, 10, 0.82);
+  border-color: var(--color-accent);
 }
 
 .work-image-strip {
-  position: absolute;
-  inset-inline: clamp(0.75rem, 2vw, 1rem);
-  bottom: clamp(0.75rem, 2vw, 1rem);
+  flex: 0 0 auto;
   display: flex;
   gap: 0.5rem;
   overflow-x: auto;
-  padding-bottom: 0.15rem;
-  pointer-events: auto;
+  padding: 0.6rem;
+  background: color-mix(in srgb, var(--color-bg) 82%, #000);
+  border-top: 1px solid var(--color-line);
 }
 
 .work-image-strip button {
+  position: relative;
   flex: 0 0 auto;
   width: clamp(3rem, 7vw, 4.75rem);
   aspect-ratio: 4 / 3;
@@ -314,6 +383,91 @@ html[data-mode="libre"] [data-connector] {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.work-image-strip-play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 0.75rem;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* persistent close button — reachable on every viewport */
+.work-viewer-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 4;
+  display: inline-grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 999px;
+  background: rgba(5, 7, 10, 0.62);
+  backdrop-filter: blur(6px);
+  color: var(--color-fg);
+  font-size: 1.45rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.work-viewer-close:hover {
+  background: rgba(5, 7, 10, 0.88);
+  border-color: var(--color-accent);
+}
+
+/* "▶ motion" badge on cards that hold a video */
+.work-card-motion {
+  position: absolute;
+  top: 0.55rem;
+  left: 0.55rem;
+  z-index: 2;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: rgba(5, 7, 10, 0.6);
+  backdrop-filter: blur(4px);
+  color: var(--color-fg);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* modal open animation */
+@keyframes work-viewer-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes work-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.work-viewer {
+  animation: work-viewer-in 0.2s ease both;
+}
+
+.work-viewer-panel {
+  animation: work-panel-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .work-viewer-info {
@@ -362,9 +516,10 @@ html[data-mode="libre"] [data-connector] {
   max-width: 14ch;
   font-size: clamp(1.75rem, 3vw, 3.25rem);
   font-weight: 800;
-  line-height: 1;
+  line-height: 1.02;
   letter-spacing: 0;
   text-wrap: balance;
+  overflow-wrap: anywhere;
 }
 
 .work-viewer-summary {
@@ -438,7 +593,11 @@ html[data-mode="libre"] [data-connector] {
 
   .work-viewer-media {
     min-height: 0;
+  }
+
+  .work-viewer-stage {
     aspect-ratio: 4 / 5;
+    flex: 0 0 auto;
   }
 
   .work-viewer-info {
@@ -458,5 +617,10 @@ html[data-mode="libre"] [data-connector] {
   .work-icon-btn,
   .work-viewer-nav button {
     transition: none;
+  }
+
+  .work-viewer,
+  .work-viewer-panel {
+    animation: none;
   }
 }
