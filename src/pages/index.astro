@@ -304,12 +304,36 @@ const brand = [
     <div data-reveal class="flex flex-wrap gap-4">
       <a
         href="mailto:francoishenri.dupuich@gmail.com"
+        id="contact-email-link"
         class="rounded-full bg-accent px-5 py-2.5 font-mono text-sm text-bg transition-transform hover:-translate-y-0.5"
       >
         francoishenri.dupuich@gmail.com
       </a>
     </div>
   </Section>
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Contact email click — primary conversion
+      document.getElementById('contact-email-link')?.addEventListener('click', function () {
+        window.posthog?.capture('contact_email_clicked');
+      });
+
+      // Contact section viewed — top of conversion funnel
+      var contactSection = document.querySelector('#contact');
+      if (contactSection) {
+        var contactObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              window.posthog?.capture('contact_section_viewed');
+              contactObserver.disconnect();
+            }
+          });
+        }, { threshold: 0.3 });
+        contactObserver.observe(contactSection);
+      }
+    });
+  </script>
 
   <footer class="border-t border-line px-5 py-10 sm:px-8">
     <div

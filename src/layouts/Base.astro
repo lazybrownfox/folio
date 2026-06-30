@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import Header from "../components/Header.astro";
+import PostHog from "../components/posthog.astro";
 import Analytics from "@vercel/analytics/astro";
 import SpeedInsights from "@vercel/speed-insights/astro";
 
@@ -37,6 +38,8 @@ const {
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
     />
+
+    <PostHog />
 
     <!-- Anti-FOUC: set mode + arm reveals before first paint. -->
     <script is:inline>

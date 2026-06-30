@@ -109,7 +109,7 @@ function syncToggle(mode: Mode) {
     });
 }
 
-function applyMode(mode: Mode) {
+function applyMode(mode: Mode, shouldTrack = false) {
   html.dataset.mode = mode;
   if (mode === "story") {
     startLenis();
@@ -121,6 +121,9 @@ function applyMode(mode: Mode) {
   syncToggle(mode);
   localStorage.setItem(STORAGE_KEY, mode);
   safeRefresh();
+  if (shouldTrack) {
+    window.posthog?.capture("mode_toggled", { mode });
+  }
 }
 
 /* --------------------------------------------------- "scrolled" + anchors */
@@ -190,9 +193,10 @@ function init() {
   document
     .querySelectorAll<HTMLButtonElement>("[data-mode-btn]")
     .forEach((b) => {
-      b.addEventListener("click", () =>
-        applyMode(b.dataset.modeBtn as Mode),
-      );
+      b.addEventListener("click", () => {
+        const nextMode = b.dataset.modeBtn as Mode;
+        applyMode(nextMode, html.dataset.mode !== nextMode);
+      });
     });
 
   window.addEventListener("resize", safeRefresh);

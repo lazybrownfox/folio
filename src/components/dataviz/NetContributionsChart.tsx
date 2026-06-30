@@ -168,7 +168,16 @@ export default function NetContributionsChart() {
           return (
             <button
               key={id}
-              onClick={() => setSel(id)}
+              onClick={() => {
+                if (id !== sel) {
+                  window.posthog?.capture("dataviz_scenario_switched", {
+                    scenario_id: id,
+                    scenario_name: scenarios[id].name,
+                    previous_scenario_id: sel,
+                  });
+                  setSel(id);
+                }
+              }}
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: 12,

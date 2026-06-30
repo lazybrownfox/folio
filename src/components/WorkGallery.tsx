@@ -223,6 +223,9 @@ export default function WorkGallery() {
 
   const close = () => {
     const index = activeIndex;
+    if (index != null) {
+      window.posthog?.capture('work_project_closed', { project_name: WORKS[index].name });
+    }
     setActiveIndex(null);
     if (index != null) {
       requestAnimationFrame(() => buttonRefs.current[index]?.focus());
@@ -233,7 +236,13 @@ export default function WorkGallery() {
     setActiveImageIndex(0);
     setActiveIndex((index) => {
       if (index == null) return index;
-      return (index + delta + count) % count;
+      const next = (index + delta + count) % count;
+      window.posthog?.capture('work_project_navigated', {
+        from_project: WORKS[index].name,
+        to_project: WORKS[next].name,
+        direction: delta > 0 ? 'next' : 'previous',
+      });
+      return next;
     });
   };
 
@@ -273,6 +282,10 @@ export default function WorkGallery() {
               className="work-card"
               style={cardImage.bg || work.bg ? { background: cardImage.bg ?? work.bg } : undefined}
               onClick={() => {
+                window.posthog?.capture('work_project_opened', {
+                  project_name: work.name,
+                  project_tag: work.tag,
+                });
                 setActiveIndex(index);
                 setActiveImageIndex(0);
               }}
