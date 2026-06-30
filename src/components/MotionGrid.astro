@@ -14,11 +14,15 @@ const clips = [
   {
     clips.map((c) => (
       <figure
-        class="group relative aspect-video overflow-hidden rounded-lg border border-line bg-bg-elev/40"
+        data-fullscreen
+        role="button"
+        tabindex="0"
+        aria-label={`Play ${c.label} fullscreen`}
+        class="group relative aspect-video cursor-pointer overflow-hidden rounded-lg border border-line bg-bg-elev/40 transition-colors hover:border-line-strong"
       >
         <video
           data-motion
-          class="h-full w-full object-cover"
+          class="pointer-events-none h-full w-full object-cover"
           poster={`/motion/posters/${c.src}.jpg`}
           muted
           loop
@@ -28,6 +32,12 @@ const clips = [
         >
           <source src={`/motion/${c.src}.mp4`} type="video/mp4" />
         </video>
+        <span
+          class="pointer-events-none absolute right-2.5 top-2.5 grid h-8 w-8 place-items-center rounded-full border border-line bg-black/55 text-fg opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
+          aria-hidden="true"
+        >
+          ⤢
+        </span>
         <figcaption
           class="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-black/75 to-transparent p-3"
         >

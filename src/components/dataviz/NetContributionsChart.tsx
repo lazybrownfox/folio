@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ComposedChart,
   Area,
@@ -154,10 +154,37 @@ function CustomTooltip({ active, payload }: any) {
 
 export default function NetContributionsChart() {
   const ids = Object.keys(scenarios);
-  const [sel, setSel] = useState("B");
+  const [sel, setSel] = useState(ids[0]);
+  // Auto-cycle through scenarios every 4s until the visitor picks one.
+  const [autoplay, setAutoplay] = useState(true);
   const sc = scenarios[sel];
   const data = transform(sc.data);
   const present = new Set(data.map((d) => caseOf(d).n));
+
+  useEffect(() => {
+    if (!autoplay) return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    const t = setInterval(() => {
+      setSel((cur) => ids[(ids.indexOf(cur) + 1) % ids.length]);
+    }, 4000);
+    return () => clearInterval(t);
+  }, [autoplay]);
+
+  const reduce =
+    typeof window !== "undefined" &&
+    !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+  const pick = (id: string) => {
+    setAutoplay(false); // any click stops the carousel for good
+    if (id !== sel) {
+      window.posthog?.capture("dataviz_scenario_switched", {
+        scenario_id: id,
+        scenario_name: scenarios[id].name,
+        previous_scenario_id: sel,
+      });
+      setSel(id);
+    }
+  };
 
   return (
     <div>
@@ -168,16 +195,7 @@ export default function NetContributionsChart() {
           return (
             <button
               key={id}
-              onClick={() => {
-                if (id !== sel) {
-                  window.posthog?.capture("dataviz_scenario_switched", {
-                    scenario_id: id,
-                    scenario_name: scenarios[id].name,
-                    previous_scenario_id: sel,
-                  });
-                  setSel(id);
-                }
-              }}
+              onClick={() => pick(id)}
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: 12,
@@ -206,7 +224,7 @@ export default function NetContributionsChart() {
       >
         <div style={{ width: "100%", height: 380 }}>
           <ResponsiveContainer>
-            <ComposedChart data={data} margin={{ top: 16, right: 12, left: 0, bottom: 4 }}>
+            <ComposedChart key={sel} data={data} margin={{ top: 16, right: 12, left: 0, bottom: 4 }}>
               <CartesianGrid vertical={false} stroke={C.grid} />
               <XAxis
                 dataKey="label"
@@ -228,10 +246,10 @@ export default function NetContributionsChart() {
                 content={<CustomTooltip />}
                 cursor={{ stroke: C.axis, strokeDasharray: "3 3" }}
               />
-              <Area dataKey="invested_band" stroke="none" fill={C.invested} fillOpacity={0.2} isAnimationActive={false} connectNulls activeDot={false} />
-              <Area dataKey="gains_band" stroke="none" fill={C.gains} fillOpacity={0.24} isAnimationActive={false} connectNulls={false} activeDot={false} />
-              <Area dataKey="losses_band" stroke="none" fill={C.losses} fillOpacity={0.24} isAnimationActive={false} connectNulls={false} activeDot={false} />
-              <Line dataKey="balance" stroke={C.line} strokeWidth={2.5} dot={false} isAnimationActive={false} />
+              <Area dataKey="invested_band" stroke="none" fill={C.invested} fillOpacity={0.2} isAnimationActive={!reduce} animationBegin={0} animationDuration={650} animationEasing="ease-out" connectNulls activeDot={false} />
+              <Area dataKey="gains_band" stroke="none" fill={C.gains} fillOpacity={0.24} isAnimationActive={!reduce} animationBegin={120} animationDuration={650} animationEasing="ease-out" connectNulls={false} activeDot={false} />
+              <Area dataKey="losses_band" stroke="none" fill={C.losses} fillOpacity={0.24} isAnimationActive={!reduce} animationBegin={120} animationDuration={650} animationEasing="ease-out" connectNulls={false} activeDot={false} />
+              <Line dataKey="balance" stroke={C.line} strokeWidth={2.5} dot={false} isAnimationActive={!reduce} animationBegin={260} animationDuration={900} animationEasing="ease-out" />
             </ComposedChart>
           </ResponsiveContainer>
         </div>

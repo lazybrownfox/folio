@@ -17,11 +17,10 @@ const heroTags = [
 ];
 
 const brand = [
-  { img: "kaskad", name: "kaskad", tag: "DA · brand · web · 2023", scale: 1.18 },
-  { img: "blacksails", name: "Black Sales", tag: "brand · product", scale: 1.22 },
-  { img: "ple", name: "Plé", tag: "identity", scale: 1.0, pos: "0% 50%" },
-  { img: "plume", name: "Plume", tag: "identity", scale: 1.16 },
-  { img: "beroe", name: "beroé", tag: "brand", scale: 1.12 },
+  { img: "blacksails", name: "Black Sales", tag: "brand · product", scale: 1.22, work: "Black Sales" },
+  { img: "ple-cover", name: "Plé", tag: "audio identity", scale: 1.0, work: "Plé" },
+  { img: "plume-cover", name: "Plume", tag: "mobility identity", scale: 1.0, work: "Plume" },
+  { img: "beroe", name: "beroé", tag: "brand", scale: 1.12, work: "beroé" },
 ];
 ---
 
@@ -198,11 +197,16 @@ const brand = [
     </p>
     <div
       data-reveal
-      class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5"
+      class="grid grid-cols-2 gap-3 sm:grid-cols-4"
     >
       {
         brand.map((b) => (
-          <figure class="group relative aspect-[3/4] overflow-hidden rounded-lg border border-line bg-bg-elev/40 transition-colors hover:border-line-strong">
+          <button
+            type="button"
+            data-open-work={b.work}
+            aria-label={`Open ${b.name}`}
+            class="group relative aspect-[3/4] cursor-pointer overflow-hidden rounded-lg border border-line bg-bg-elev/40 text-left transition-colors hover:border-line-strong"
+          >
             <img
               src={`/work/${b.img}.jpg`}
               alt={b.name}
@@ -210,15 +214,15 @@ const brand = [
               decoding="async"
               width="595"
               height="842"
-              style={`transform: scale(${b.scale}); transform-origin: center; object-position: ${b.pos ?? "center"}`}
-              class="absolute inset-0 h-full w-full object-cover transition-transform duration-500"
+              style={`transform: scale(${b.scale}); transform-origin: center; object-position: center`}
+              class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
             <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
             <figcaption class="absolute inset-x-0 bottom-0 flex flex-col p-3">
               <span class="text-sm text-fg">{b.name}</span>
               <span class="tag mt-1">{b.tag}</span>
             </figcaption>
-          </figure>
+          </button>
         ))
       }
     </div>
@@ -260,15 +264,20 @@ const brand = [
           ["/work/sncf/folio-ux-23.png", "SNCF technical UI scenario"],
           ["/work/sncf/info-train.png", "SNCF train information screen"],
         ].map(([src, alt]) => (
-          <figure class="overflow-hidden rounded-lg border border-line bg-bg-elev/40">
+          <button
+            type="button"
+            data-open-work="SNCF · station UX"
+            aria-label="Open SNCF · station UX"
+            class="group cursor-pointer overflow-hidden rounded-lg border border-line bg-bg-elev/40 transition-colors hover:border-line-strong"
+          >
             <img
               src={src}
               alt={alt}
               loading="lazy"
               decoding="async"
-              class="aspect-video h-full w-full object-contain p-3"
+              class="aspect-video h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-[1.03]"
             />
-          </figure>
+          </button>
         ))
       }
     </div>
@@ -286,7 +295,7 @@ const brand = [
       index of work, with just enough context to read the shape of each project.
     </p>
     <div data-reveal>
-      <WorkGallery client:visible />
+      <WorkGallery client:load />
     </div>
   </Section>
 
