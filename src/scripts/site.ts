@@ -87,6 +87,35 @@ function buildReveals() {
   });
 }
 
+/* ------------------------------------------------- Profile statement scrub
+   The scroll drives the sentence in, word by word (Polar-style). Words are
+   dimmed via the `.st-armed` class added HERE, right before the trigger is
+   created — so if this never runs (or throws), the text is simply readable.
+   `.reveal-all` also forces the words on (see global.css). */
+function buildStatement() {
+  if (prefersReduced) return;
+  const st = document.querySelector<HTMLElement>("[data-statement]");
+  if (!st) return;
+  const words = st.querySelectorAll<HTMLElement>(".st-w");
+  if (!words.length) return;
+  try {
+    st.classList.add("st-armed");
+    gsap.to(words, {
+      opacity: 1,
+      ease: "none",
+      stagger: 0.08,
+      scrollTrigger: {
+        trigger: st,
+        start: "top 80%",
+        end: "bottom 45%",
+        scrub: 0.3,
+      },
+    });
+  } catch {
+    st.classList.remove("st-armed");
+  }
+}
+
 /* ----------------------------------------------- Story-only scenes */
 let storyTriggers: ScrollTrigger[] = [];
 
@@ -240,6 +269,7 @@ function init() {
   const initial: Mode = saved ?? (prefersReduced ? "libre" : "story");
 
   buildReveals();
+  buildStatement();
   trackScrolled();
   wireAnchors();
   initMotion();

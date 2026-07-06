@@ -534,9 +534,6 @@ const CROSS =
 
 <script>
   import gsap from "gsap";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-  gsap.registerPlugin(ScrollTrigger);
 
   type Status = "ontime" | "approach" | "delayed" | "cancelled" | "bus";
   interface Dep {
@@ -733,11 +730,12 @@ const CROSS =
     // scrolls up through the viewport, starting around mid-screen.
     let revealTl: gsap.core.Timeline | null = null;
     // Failsafe: a GSAP `opacity:0` from-state leaves an inline style nothing can
-    // override, so if ScrollTrigger never fires the rows would be stranded
+    // override, so if the scrub never runs the rows would be stranded
     // invisible. If the board is in view but still unrevealed, force it visible.
     const forceReveal = () => {
       if (revealed) return;
-      revealTl?.scrollTrigger?.kill();
+      revealTl?.kill(); // also stops the manual scrub from re-hiding rows
+      revealTl = null;
       gsap.set(flips, { clearProps: "transform,opacity" });
       revealed = true;
       run();
@@ -752,16 +750,13 @@ const CROSS =
         }
       };
       try {
-        revealTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: root,
-            start: "top 62%",
-            end: "top 15%",
-            scrub: 0.4,
-            onUpdate: (self) => sync(self.progress),
-            onRefresh: (self) => sync(self.progress),
-          },
-        });
+        /* Manual scrub, driven by layout position. The board lives in a
+           sticky case-card: live rects freeze while the card is pinned, so a
+           ScrollTrigger refresh landing mid-pin caches corrupted bounds (the
+           documented breakage). offsetTop chains give the unstuck layout
+           position at any scroll, so drive the timeline from that instead. */
+        const card = root.closest<HTMLElement>(".case-card") ?? root;
+        revealTl = gsap.timeline({ paused: true });
         flips.forEach((flip, i) => {
           revealTl!.fromTo(
             flip,
@@ -770,8 +765,42 @@ const CROSS =
             i,
           );
         });
+
+        let docTop = 0;
+        const measure = () => {
+          docTop = 0;
+          let el: HTMLElement | null = card;
+          while (el) {
+            docTop += el.offsetTop;
+            el = el.offsetParent as HTMLElement | null;
+          }
+        };
+        const update = () => {
+          if (!revealTl) return;
+          const vh = window.innerHeight;
+          // finish before the card pins (sticky top), or at 35% viewport,
+          // whichever comes first on the way up
+          const st = parseFloat(getComputedStyle(card).top);
+          const pinPx = Number.isNaN(st) ? 0 : st;
+          const endPx = Math.max(vh * 0.35, pinPx ? pinPx + vh * 0.08 : 0);
+          const startY = docTop - vh * 0.88; // card top at 88% of the viewport
+          const endY = docTop - endPx;
+          const p = Math.min(
+            1,
+            Math.max(0, (window.scrollY - startY) / Math.max(1, endY - startY)),
+          );
+          revealTl.progress(p);
+          sync(p);
+        };
+        measure();
+        update();
+        window.addEventListener("scroll", update, { passive: true });
+        window.addEventListener("resize", () => {
+          measure();
+          update();
+        });
       } catch {
-        forceReveal(); // ScrollTrigger setup failed — never leave rows hidden
+        forceReveal(); // scrub setup failed — never leave rows hidden
       }
     } else {
       revealed = true;

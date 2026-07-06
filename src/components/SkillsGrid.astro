@@ -1,0 +1,79 @@
+---
+// Six capabilities, Polar-style: a short name, one confident line, and a
+// small ambient animation per card. Animations are pure CSS (styles in
+// global.css, "skills" block), loop slowly, and are disabled under
+// prefers-reduced-motion where the final state shows instead.
+---
+<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+  <article data-reveal class="skill-card">
+    <div class="skill-anim" aria-hidden="true">
+      <div class="sa-product">
+        <span class="sa-block sa-b1"></span>
+        <span class="sa-block sa-b2"></span>
+        <span class="sa-block sa-b3"></span>
+      </div>
+    </div>
+    <h3 class="skill-name">Product Design</h3>
+    <p class="skill-desc">From ambiguity to shipped — SaaS, fintech, mobility.</p>
+  </article>
+
+  <article data-reveal data-reveal-delay="0.05" class="skill-card">
+    <div class="skill-anim" aria-hidden="true">
+      <div class="sa-systems">
+        <span class="sa-pill">Aa</span>
+        <span class="sa-dots"><i></i><i></i><i></i></span>
+      </div>
+    </div>
+    <h3 class="skill-name">Design Systems</h3>
+    <p class="skill-desc">Tokens, variants and theming, treated as a product.</p>
+  </article>
+
+  <article data-reveal data-reveal-delay="0.1" class="skill-card">
+    <div class="skill-anim" aria-hidden="true">
+      <div class="sa-brand">
+        <span class="sa-mark"></span>
+        <span class="sa-lines"><i></i><i></i></span>
+      </div>
+    </div>
+    <h3 class="skill-name">Branding</h3>
+    <p class="skill-desc">Identities for products, brands and developer tools.</p>
+  </article>
+
+  <article data-reveal data-reveal-delay="0.15" class="skill-card">
+    <div class="skill-anim" aria-hidden="true">
+      <div class="sa-board">
+        <span class="sa-live"></span>
+        <span class="sa-time">09:41</span>
+        <span class="sa-dest"><span>Paris</span><span>Uranus</span><span>Nostromo</span></span>
+        <span class="sa-voie"><b class="sa-flip"><span>4</span><span>12</span></b></span>
+      </div>
+    </div>
+    <h3 class="skill-name">Technical UI</h3>
+    <p class="skill-desc">Legibility under stress — screens read by a million travellers.</p>
+  </article>
+
+  <article data-reveal data-reveal-delay="0.2" class="skill-card">
+    <div class="skill-anim" aria-hidden="true">
+      <div class="sa-motion">
+        <svg viewBox="0 0 120 40" aria-hidden="true">
+          <path class="sa-curve" d="M4,36 C40,36 60,6 116,6" fill="none" />
+        </svg>
+        <span class="sa-ball"></span>
+      </div>
+    </div>
+    <h3 class="skill-name">Motion</h3>
+    <p class="skill-desc">Product motion written in code — React, Remotion, GSAP.</p>
+  </article>
+
+  <article data-reveal data-reveal-delay="0.25" class="skill-card">
+    <div class="skill-anim" aria-hidden="true">
+      <div class="sa-ai">
+        <span class="sa-prompt">▸</span>
+        <span class="sa-type">design → tokens → code</span>
+        <span class="sa-caret"></span>
+      </div>
+    </div>
+    <h3 class="skill-name">AI Workflow</h3>
+    <p class="skill-desc">Agents and design-to-code pipelines, part of the daily craft.</p>
+  </article>
+</div>

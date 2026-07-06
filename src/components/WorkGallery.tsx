@@ -245,10 +245,17 @@ const WORKS: Work[] = [
   },
 ];
 
+// Only branding work opens in the viewer for now; everything else keeps its
+// hover reveal as a teaser (full case studies shared on request — a cursor
+// tooltip says so).
+const canOpen = (work: Work) => work.tag.includes("branding");
+
 export default function WorkGallery() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const buttonRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const tipRef = useRef<HTMLDivElement | null>(null);
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const active = activeIndex == null ? null : WORKS[activeIndex];
   const activeImage = active?.images[activeImageIndex] ?? active?.images[0] ?? null;
@@ -271,7 +278,7 @@ export default function WorkGallery() {
       const name = (event as CustomEvent<{ name?: string }>).detail?.name;
       if (!name) return;
       const index = WORKS.findIndex((w) => w.name === name);
-      if (index < 0) return;
+      if (index < 0 || !canOpen(WORKS[index])) return;
       window.posthog?.capture("work_project_opened", {
         project_name: WORKS[index].name,
         project_tag: WORKS[index].tag,
@@ -337,50 +344,105 @@ export default function WorkGallery() {
 
   return (
     <div className="work-gallery">
-      <div className="work-grid">
-        {WORKS.map((work, index) => {
-          const cardImage = work.images[0];
-          const contain = (cardImage.fit ?? work.fit) === "contain";
-          return (
-            <button
-              key={work.name}
-              ref={(node) => {
-                buttonRefs.current[index] = node;
-              }}
-              type="button"
-              className="work-card"
-              style={cardImage.bg || work.bg ? { background: cardImage.bg ?? work.bg } : undefined}
-              onClick={() => {
-                window.posthog?.capture('work_project_opened', {
-                  project_name: work.name,
-                  project_tag: work.tag,
-                });
-                setActiveIndex(index);
-                setActiveImageIndex(0);
-              }}
-              aria-label={`Open ${work.name}`}
-            >
+      <div className="work-index-zone">
+        {/* full-bleed backdrop: the hovered project floods the section */}
+        <div
+          className={
+            hoverIndex == null ? "work-index-bg" : "work-index-bg is-active"
+          }
+          aria-hidden="true"
+        >
+          {WORKS.map((work, index) => {
+            const image = work.images[0];
+            const contain = (image.fit ?? work.fit) === "contain";
+            return (
               <img
-                src={cardImage.src}
+                key={work.name}
+                src={image.src}
                 alt=""
                 loading="lazy"
                 decoding="async"
-                style={cardImage.position ? { objectPosition: cardImage.position } : undefined}
-                className={contain ? "work-card-img is-contain" : "work-card-img"}
+                style={
+                  contain && (image.bg ?? work.bg)
+                    ? { backgroundColor: image.bg ?? work.bg }
+                    : undefined
+                }
+                className={[
+                  contain ? "is-contain" : "",
+                  index === hoverIndex ? "is-on" : "",
+                ]
+                  .join(" ")
+                  .trim() || undefined}
               />
-              {cardImage.video && (
-                <span className="work-card-motion" aria-hidden="true">
-                  ▶ motion
-                </span>
-              )}
-              <span className="work-card-shade" aria-hidden="true" />
-              <span className="work-card-caption">
-                <span className="work-card-name">{work.name}</span>
-                <span className="tag work-card-tag">{work.tag}</span>
-              </span>
-            </button>
-          );
-        })}
+            );
+          })}
+        </div>
+
+        <ul className="work-index">
+          {WORKS.map((work, index) => {
+            const [domain, ...tagRest] = work.tag
+              .split("·")
+              .map((part) => part.trim());
+            const meta = tagRest.join(" · ") || work.role;
+            const hasMotion = work.images.some((image) => image.video);
+            const openable = canOpen(work);
+            return (
+              <li key={work.name}>
+                <button
+                  ref={(node) => {
+                    buttonRefs.current[index] = node;
+                  }}
+                  type="button"
+                  className="work-row"
+                  onMouseEnter={() => setHoverIndex(index)}
+                  onMouseLeave={() => {
+                    setHoverIndex((i) => (i === index ? null : i));
+                    tipRef.current?.classList.remove("is-on");
+                  }}
+                  onMouseMove={
+                    openable
+                      ? undefined
+                      : (event) => {
+                          const tip = tipRef.current;
+                          if (!tip) return;
+                          tip.style.transform = `translate(${event.clientX + 14}px, ${event.clientY + 10}px)`;
+                          tip.classList.add("is-on");
+                        }
+                  }
+                  onFocus={() => setHoverIndex(index)}
+                  onBlur={() =>
+                    setHoverIndex((i) => (i === index ? null : i))
+                  }
+                  onClick={() => {
+                    window.posthog?.capture(
+                      openable ? 'work_project_opened' : 'work_project_teased',
+                      { project_name: work.name, project_tag: work.tag },
+                    );
+                    if (!openable) return;
+                    setActiveIndex(index);
+                    setActiveImageIndex(0);
+                  }}
+                  aria-disabled={!openable}
+                  aria-label={openable ? `Open ${work.name}` : `${work.name} — available on request`}
+                  style={openable ? undefined : { cursor: "default" }}
+                >
+                  <span className="work-row-name">
+                    {work.name}
+                    {domain && <i className="work-row-domain">{domain}</i>}
+                  </span>
+                  <span className="work-row-meta">
+                    {meta}
+                    {hasMotion && " · ▶"}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div ref={tipRef} className="work-tip" aria-hidden="true">
+          available on request
+        </div>
       </div>
 
       {active && activeImage && (

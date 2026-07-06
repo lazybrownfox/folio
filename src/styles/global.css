@@ -11,26 +11,28 @@
 }
 
 /* ----------------------------------------------------------------------------
-   Design tokens — dark, technical, dev-tool register. Single accent = easy swap.
-   (Accent default: electric mint-green, nods to Nalo green but brighter for dark UI.)
+   Design tokens — "galerie de nuit": warm charcoal + ivory + a single gilded
+   accent, serif display voice. The live demos (charts, SNCF board, Alba) keep
+   their own hardcoded palettes on purpose — they are the exhibits, not the frame.
 ---------------------------------------------------------------------------- */
 @theme {
   --font-sans: "Rethink Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
 
-  --color-bg: #0b0e12;
-  --color-bg-elev: #12161c;
-  --color-fg: #e7ecf1;
-  --color-muted: #8a95a3;
-  --color-faint: #5b6573;
-  --color-accent: #46e0b0;
-  --color-accent-dim: #2a8d6f;
-  --color-line: rgba(231, 236, 241, 0.08);
-  --color-line-strong: rgba(231, 236, 241, 0.16);
+  --color-bg: #141210;
+  --color-bg-elev: #1c1916;
+  --color-fg: #ede7dc;
+  --color-muted: #a69d8f;
+  --color-faint: #6f685c;
+  --color-accent: #c9a26a;
+  --color-accent-dim: #8f7248;
+  --color-line: rgba(237, 231, 220, 0.1);
+  --color-line-strong: rgba(237, 231, 220, 0.2);
 
-  /* fluid type scale */
-  --text-display: clamp(2.75rem, 7vw, 7rem);
-  --text-h2: clamp(1.75rem, 3.5vw, 3rem);
+  /* fluid type scale (display sizes are set for the serif voice) */
+  --text-display: clamp(2.9rem, 7.4vw, 6.6rem);
+  --text-h2: clamp(1.9rem, 3.8vw, 3.1rem);
 }
 
 @layer base {
@@ -73,11 +75,22 @@
     border-radius: 2px;
   }
 
-  /* Mono utility tags (KB / ms / %) */
+  /* Mono utility tags — demoted to quiet captions under the live demos.
+     Chrome (nav, kickers, buttons) is sans; this survives only where a
+     technical footnote is the point. */
   .tag {
     font-family: var(--font-mono);
     font-size: 0.72rem;
     letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  /* Sans section kicker — replaces the mono kicker in the section chrome */
+  .kicker {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--color-muted);
   }
@@ -141,90 +154,186 @@ html[data-mode="libre"] [data-connector] {
 }
 
 /* ----------------------------------------------------------------------------
-   Selected work gallery
+   Selected work — monumental index. The gallery is a giant typographic list;
+   hovering (or focusing) a row floods the section with that project's visual.
+   Click keeps opening the existing modal viewer.
 ---------------------------------------------------------------------------- */
-.work-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
-}
-
-@media (min-width: 640px) {
-  .work-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1024px) {
-  .work-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-.work-card {
+.work-index-zone {
   position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 3 / 4;
+}
+
+/* full-bleed backdrop layer behind the rows */
+.work-index-bg {
+  position: absolute;
+  inset: -3rem calc(50% - 50vw);
   overflow: hidden;
-  border: 1px solid var(--color-line);
-  border-radius: 0.5rem;
-  background: color-mix(in srgb, var(--color-bg-elev) 40%, transparent);
-  color: inherit;
-  cursor: pointer;
-  text-align: left;
-  transition:
-    border-color 0.25s ease,
-    transform 0.25s ease;
+  pointer-events: none;
 }
 
-.work-card:hover {
-  border-color: var(--color-line-strong);
-  transform: translateY(-2px);
-}
-
-.work-card-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top;
-  transition: transform 0.5s ease;
-}
-
-.work-card:hover .work-card-img:not(.is-contain) {
-  transform: scale(1.03);
-}
-
-.work-card-img.is-contain {
+/* The hovered visual shows as a modest panel, viewport-centered right —
+   displayed small and dimmed on purpose: the source images are not
+   full-bleed material and pixelate when blown up. */
+.work-index-bg img {
+  position: fixed;
+  top: 50%;
+  right: clamp(1.5rem, 7vw, 8rem);
+  transform: translateY(-50%);
+  width: auto;
+  height: min(46vh, 23rem);
+  max-width: min(36vw, 28rem);
   object-fit: contain;
-  object-position: center;
-  padding: 0.85rem;
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
-.work-card-shade {
-  position: absolute;
+.work-index-bg img.is-on {
+  opacity: 0.82;
+}
+
+/* logo-type visuals keep a small chip of their own ground colour */
+.work-index-bg img.is-contain {
+  padding: 1.6rem;
+}
+
+@media (max-width: 900px) {
+  .work-index-bg img {
+    display: none;
+  }
+}
+
+/* heavy veil over the whole layer (image included) while a visual is up —
+   it keeps the type readable AND tones the image down further. Painted only
+   while active: permanent, it dims the copy above the list (the layer
+   bleeds 3rem past the zone). */
+.work-index-bg::after {
+  content: "";
+  position: fixed;
   inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  background: color-mix(in srgb, var(--color-bg) 55%, transparent);
 }
 
-.work-card-caption {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
+.work-index-bg.is-active::after {
+  opacity: 1;
+}
+
+.work-index {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.work-index li {
+  border-bottom: 1px solid var(--color-line);
+}
+
+.work-index li:first-child {
+  border-top: 1px solid var(--color-line);
+}
+
+.work-row {
   display: flex;
-  flex-direction: column;
-  padding: 1rem;
+  align-items: baseline;
+  gap: 1.25rem;
+  width: 100%;
+  padding: clamp(1.2rem, 2.6vw, 1.9rem) 0.2rem;
+  background: none;
+  border: 0;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    padding-left 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 0.3s ease;
 }
 
-.work-card-name {
+/* hovering the list dims siblings; the active row stays full */
+.work-index:hover .work-row:not(:hover):not(:focus-visible) {
+  opacity: 0.45;
+}
+
+.work-row:hover,
+.work-row:focus-visible {
+  padding-left: clamp(0.5rem, 2vw, 1.4rem);
+}
+
+.work-row-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 5.2vw, 4.1rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
   color: var(--color-fg);
-  font-size: 0.875rem;
+  text-wrap: balance;
 }
 
-.work-card-tag {
-  margin-top: 0.25rem;
+.work-row:hover .work-row-name,
+.work-row:focus-visible .work-row-name {
+  color: #fff;
+}
+
+.work-row-domain {
+  margin-left: 0.65em;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.45em;
+  color: var(--color-accent);
+  vertical-align: 0.5em;
+  white-space: nowrap;
+}
+
+/* cursor-following hint on rows whose case opens on request only */
+.work-tip {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 60;
+  pointer-events: none;
+  padding: 0.32rem 0.75rem;
+  border-radius: 999px;
+  background: var(--color-fg);
+  color: var(--color-bg);
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.work-tip.is-on {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-index-bg::after,
+  .work-tip {
+    transition: none;
+  }
+}
+
+.work-row-meta {
+  flex: 0 0 auto;
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+
+@media (max-width: 640px) {
+  .work-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.45rem;
+  }
+
+  .work-row-meta {
+    margin-left: 0;
+  }
 }
 
 .work-viewer {
@@ -234,7 +343,7 @@ html[data-mode="libre"] [data-connector] {
   display: grid;
   place-items: center;
   padding: clamp(0.75rem, 2.5vw, 2rem);
-  background: rgba(5, 7, 10, 0.86);
+  background: rgba(16, 14, 12, 0.86);
   cursor: zoom-out;
 }
 
@@ -318,7 +427,7 @@ html[data-mode="libre"] [data-connector] {
   height: 2.75rem;
   border: 1px solid var(--color-line-strong);
   border-radius: 999px;
-  background: rgba(5, 7, 10, 0.55);
+  background: rgba(16, 14, 12, 0.55);
   backdrop-filter: blur(6px);
   color: var(--color-fg);
   font-size: 1.6rem;
@@ -338,7 +447,7 @@ html[data-mode="libre"] [data-connector] {
 }
 
 .work-stage-arrow:hover {
-  background: rgba(5, 7, 10, 0.82);
+  background: rgba(16, 14, 12, 0.82);
   border-color: var(--color-accent);
 }
 
@@ -407,7 +516,7 @@ html[data-mode="libre"] [data-connector] {
   place-items: center;
   border: 1px solid var(--color-line-strong);
   border-radius: 999px;
-  background: rgba(5, 7, 10, 0.62);
+  background: rgba(16, 14, 12, 0.62);
   backdrop-filter: blur(6px);
   color: var(--color-fg);
   font-size: 1.45rem;
@@ -419,27 +528,10 @@ html[data-mode="libre"] [data-connector] {
 }
 
 .work-viewer-close:hover {
-  background: rgba(5, 7, 10, 0.88);
+  background: rgba(16, 14, 12, 0.88);
   border-color: var(--color-accent);
 }
 
-/* "▶ motion" badge on cards that hold a video */
-.work-card-motion {
-  position: absolute;
-  top: 0.55rem;
-  left: 0.55rem;
-  z-index: 2;
-  padding: 0.2rem 0.5rem;
-  border: 1px solid var(--color-line);
-  border-radius: 999px;
-  background: rgba(5, 7, 10, 0.6);
-  backdrop-filter: blur(4px);
-  color: var(--color-fg);
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
 
 /* modal open animation */
 @keyframes work-viewer-in {
@@ -505,7 +597,7 @@ html[data-mode="libre"] [data-connector] {
 
 .work-icon-btn:hover {
   border-color: var(--color-line-strong);
-  background: rgba(231, 236, 241, 0.06);
+  background: rgba(237, 231, 220, 0.06);
 }
 
 .work-viewer-tag {
@@ -514,8 +606,9 @@ html[data-mode="libre"] [data-connector] {
 
 .work-viewer-info h3 {
   max-width: 14ch;
-  font-size: clamp(1.75rem, 3vw, 3.25rem);
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3.2vw, 3.4rem);
+  font-weight: 400;
   line-height: 1.02;
   letter-spacing: 0;
   text-wrap: balance;
@@ -558,10 +651,8 @@ html[data-mode="libre"] [data-connector] {
   background: transparent;
   color: var(--color-fg);
   cursor: pointer;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-size: 0.82rem;
+  font-weight: 600;
   transition:
     background-color 0.2s ease,
     border-color 0.2s ease;
@@ -569,7 +660,7 @@ html[data-mode="libre"] [data-connector] {
 
 .work-viewer-nav button:hover {
   border-color: var(--color-line-strong);
-  background: rgba(231, 236, 241, 0.06);
+  background: rgba(237, 231, 220, 0.06);
 }
 
 .work-viewer-nav span {
@@ -611,8 +702,8 @@ html[data-mode="libre"] [data-connector] {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .work-card,
-  .work-card-img,
+  .work-row,
+  .work-index-bg img,
   .work-image-strip button,
   .work-icon-btn,
   .work-viewer-nav button {
@@ -623,4 +714,508 @@ html[data-mode="libre"] [data-connector] {
   .work-viewer-panel {
     animation: none;
   }
+}
+
+/* ----------------------------------------------------------------------------
+   Profile statement — the scroll drives the sentence in, word by word
+   (Polar-style scrub). JS adds `.st-armed` right before creating the
+   ScrollTrigger, so words are only dimmed when the scrub is actually live;
+   `.reveal-all` and reduced-motion force everything readable.
+---------------------------------------------------------------------------- */
+.statement {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3.5vw, 3rem);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--color-fg);
+  text-wrap: balance;
+}
+
+.statement .st-w {
+  opacity: 1;
+}
+
+.statement.st-armed .st-w {
+  opacity: 0.14;
+}
+
+html.reveal-all .statement .st-w {
+  opacity: 1 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statement .st-w {
+    opacity: 1 !important;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Skills grid — Polar-style capability cards with small ambient animations.
+   All animation is CSS-only and gated behind prefers-reduced-motion: the
+   static end state reads fine on its own.
+---------------------------------------------------------------------------- */
+.skill-card {
+  border: 1px solid var(--color-line);
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--color-bg-elev) 55%, transparent);
+  padding: 1.1rem 1.25rem 1.35rem;
+  transition: border-color 0.25s ease;
+}
+
+.skill-card:hover {
+  border-color: var(--color-line-strong);
+}
+
+.skill-name {
+  margin-top: 1.05rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.skill-desc {
+  margin-top: 0.35rem;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.skill-anim {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 5.5rem;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: 0.5rem;
+  background: var(--color-bg);
+}
+
+/* 1 · Product Design — blocks assembling into a layout */
+.sa-product {
+  position: relative;
+  width: 64px;
+  height: 44px;
+}
+
+.sa-block {
+  position: absolute;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--color-fg) 8%, transparent);
+}
+
+.sa-b1 { left: 0; top: 0; width: 64px; height: 10px; }
+.sa-b2 { left: 0; top: 14px; width: 38px; height: 30px; }
+.sa-b3 {
+  left: 42px; top: 14px; width: 22px; height: 30px;
+  border-color: var(--color-accent-dim);
+  background: color-mix(in srgb, var(--color-accent) 24%, transparent);
+}
+
+/* 2 · Design Systems — a component re-theming + token dots */
+.sa-systems {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sa-pill {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 28px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--color-fg);
+  color: var(--color-bg);
+}
+
+.sa-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.sa-dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.sa-dots i:nth-child(1) { background: var(--color-accent); }
+.sa-dots i:nth-child(2) { background: #c05a32; }
+.sa-dots i:nth-child(3) { background: var(--color-fg); }
+
+/* 3 · Branding — ideation: the lockup keeps recomposing (mark shape and
+   colour change, the wordmark swaps sides and reflows) */
+.sa-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sa-mark {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 auto;
+  background: var(--color-accent);
+  border-radius: 4px;
+}
+
+.sa-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 46px;
+  flex: 0 0 auto;
+}
+
+.sa-lines i {
+  height: 4px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--color-fg) 32%, transparent);
+}
+
+.sa-lines i:first-child { width: 46px; }
+.sa-lines i:last-child { width: 30px; }
+
+/* 4 · Technical UI — an anonymous transit-style information row */
+.sa-board {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0.5rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid var(--color-line);
+  background: color-mix(in srgb, var(--color-bg-elev) 80%, #000);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+.sa-live {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.sa-time { color: var(--color-accent); }
+
+/* destination split-flaps between Paris / Uranus / Nostromo */
+.sa-dest {
+  position: relative;
+  display: inline-block;
+  width: 8ch;
+  height: 1.2em;
+  color: var(--color-fg);
+  perspective: 120px;
+}
+
+.sa-dest span {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: rotateX(90deg);
+}
+
+/* static fallback (and pre-animation state): first destination shows */
+.sa-dest span:first-child {
+  opacity: 1;
+  transform: none;
+}
+
+.sa-voie {
+  border: 1px solid var(--color-line-strong);
+  border-radius: 3px;
+  padding: 0.05em 0.4em;
+}
+
+.sa-flip {
+  position: relative;
+  display: inline-block;
+  width: 2ch;
+  height: 1.15em;
+  font-weight: 400;
+}
+
+.sa-flip span {
+  position: absolute;
+  inset: 0;
+  text-align: center;
+}
+
+.sa-flip span:last-child { opacity: 0; }
+
+/* 4 · Motion — an ease curve with a ball riding it */
+.sa-motion {
+  position: relative;
+  width: 120px;
+  height: 40px;
+}
+
+.sa-motion svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sa-curve {
+  stroke: var(--color-line-strong);
+  stroke-width: 1.5;
+}
+
+.sa-ball {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  offset-path: path("M4,36 C40,36 60,6 116,6");
+  offset-distance: 100%;
+}
+
+/* 5 · AI Workflow — a prompt line typing itself */
+.sa-ai {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--color-muted);
+}
+
+.sa-prompt { color: var(--color-accent); }
+
+.sa-type {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 22ch;
+}
+
+.sa-caret {
+  width: 1px;
+  height: 0.9rem;
+  background: var(--color-fg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sa-b1 { animation: sa-slot 5.5s ease-in-out infinite; }
+  .sa-b2 { animation: sa-slot 5.5s 0.35s ease-in-out infinite; }
+  .sa-b3 { animation: sa-slot 5.5s 0.7s ease-in-out infinite; }
+
+  .sa-pill { animation: sa-theme 6s ease-in-out infinite; }
+  .sa-dots i { animation: sa-dot 6s ease-in-out infinite; }
+  .sa-dots i:nth-child(2) { animation-delay: 2s; }
+  .sa-dots i:nth-child(3) { animation-delay: 4s; }
+
+  .sa-mark { animation: sa-shape 9s ease-in-out infinite; }
+  .sa-lines { animation: sa-side 9s ease-in-out infinite; }
+  .sa-lines i:first-child { animation: sa-line1 9s ease-in-out infinite; }
+  .sa-lines i:last-child { animation: sa-line2 9s ease-in-out infinite; }
+
+  .sa-live { animation: sa-blink-soft 2.4s ease-in-out infinite; }
+  .sa-flip span { animation: sa-swap 6s ease-in-out infinite; }
+  .sa-flip span:last-child { animation-delay: -3s; }
+  .sa-dest span { animation: sa-dest-swap 9s ease-in-out infinite; }
+  .sa-dest span:nth-child(2) { animation-delay: 3s; }
+  .sa-dest span:nth-child(3) { animation-delay: 6s; }
+
+  .sa-curve {
+    stroke-dasharray: 140;
+    stroke-dashoffset: 140;
+    animation: sa-draw 4.5s ease-in-out infinite;
+  }
+  .sa-ball { animation: sa-ride 4.5s cubic-bezier(0.3, 0, 0.2, 1) infinite; }
+
+  .sa-type { animation: sa-typing 6.5s steps(22) infinite; }
+  .sa-caret { animation: sa-blink 1.1s steps(1) infinite; }
+}
+
+@keyframes sa-slot {
+  0%, 10% { opacity: 0; transform: translateY(8px); }
+  22%, 80% { opacity: 1; transform: none; }
+  92%, 100% { opacity: 0; transform: translateY(8px); }
+}
+
+@keyframes sa-theme {
+  0%, 42% { background: var(--color-fg); color: var(--color-bg); }
+  50%, 92% { background: #2a2119; color: var(--color-fg); }
+  100% { background: var(--color-fg); color: var(--color-bg); }
+}
+
+@keyframes sa-dot {
+  0%, 100% { transform: none; opacity: 0.55; }
+  8%, 22% { transform: translateY(-3px); opacity: 1; }
+  30% { transform: none; opacity: 0.55; }
+}
+
+@keyframes sa-blink-soft {
+  50% { opacity: 0.25; }
+}
+
+/* four lockup ideas: square+doré / circle+terracotta (text reflows) /
+   text-first pill+ivory (mark jumps right) / rotated leaf+sage — then back */
+@keyframes sa-shape {
+  0%, 14% { border-radius: 4px; transform: none; background: var(--color-accent); }
+  22%, 36% { border-radius: 50%; transform: none; background: #c05a32; }
+  44%, 58% { border-radius: 999px; transform: translateX(58px) scaleX(1.35); background: var(--color-fg); }
+  66%, 80% { border-radius: 3px 50% 3px 50%; transform: rotate(45deg) scale(0.92); background: #8faf9a; }
+  88%, 100% { border-radius: 4px; transform: none; background: var(--color-accent); }
+}
+
+@keyframes sa-side {
+  0%, 36% { transform: none; }
+  44%, 58% { transform: translateX(-38px); }
+  66%, 100% { transform: none; }
+}
+
+@keyframes sa-line1 {
+  0%, 14% { width: 46px; }
+  22%, 36% { width: 30px; }
+  44%, 58% { width: 42px; }
+  66%, 80% { width: 36px; }
+  88%, 100% { width: 46px; }
+}
+
+@keyframes sa-line2 {
+  0%, 14% { width: 30px; }
+  22%, 36% { width: 44px; }
+  44%, 58% { width: 24px; }
+  66%, 80% { width: 40px; }
+  88%, 100% { width: 30px; }
+}
+
+@keyframes sa-swap {
+  0%, 42% { transform: rotateX(0); opacity: 1; }
+  50%, 92% { transform: rotateX(90deg); opacity: 0; }
+  100% { transform: rotateX(0); opacity: 1; }
+}
+
+/* three-way split-flap: each destination holds ~1/3 of the cycle */
+@keyframes sa-dest-swap {
+  0% { transform: rotateX(90deg); opacity: 0; }
+  4% { transform: rotateX(0); opacity: 1; }
+  30% { transform: rotateX(0); opacity: 1; }
+  35%, 100% { transform: rotateX(-90deg); opacity: 0; }
+}
+
+@keyframes sa-draw {
+  0% { stroke-dashoffset: 140; }
+  55%, 85% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 140; }
+}
+
+@keyframes sa-ride {
+  0% { offset-distance: 0%; opacity: 1; }
+  55%, 85% { offset-distance: 100%; opacity: 1; }
+  95%, 100% { offset-distance: 100%; opacity: 0; }
+}
+
+@keyframes sa-typing {
+  0% { width: 0; }
+  50%, 92% { width: 22ch; }
+  100% { width: 0; }
+}
+
+@keyframes sa-blink {
+  50% { opacity: 0; }
+}
+
+/* ----------------------------------------------------------------------------
+   Case deck — Brutally-Human-style stacked chapter cards. Each case is a
+   full-width, boldly-coloured card; scrolling slides the next card over the
+   previous one, whose meta strip stays pinned at the top like a binder tab.
+   Pure position:sticky — no JS, degrades to plain stacked cards on mobile.
+---------------------------------------------------------------------------- */
+.case-deck {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.case-card {
+  position: sticky;
+  overflow: hidden;
+  border-radius: 16px;
+  padding: 1.15rem clamp(1.4rem, 3vw, 2.4rem) clamp(1.4rem, 3vw, 2.2rem);
+  color: #f4efe5;
+}
+
+.case-card:nth-child(1) { top: 5rem; }
+.case-card:nth-child(2) { top: 8rem; }
+.case-card:nth-child(3) { top: 11rem; }
+
+.case-nalo { background: #c05a32; }
+.case-nalo2 { background: #1e5a48; }
+.case-sncf { background: #22275d; }
+
+.case-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.3rem;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.case-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.6vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.case-title i {
+  margin-left: 0.5em;
+  font-size: 0.52em;
+  font-style: italic;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+.case-lede {
+  margin-top: 0.9rem;
+  max-width: 58ch;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  opacity: 0.88;
+}
+
+/* the live demos keep their own dark world inside the coloured card */
+.case-plate {
+  margin-top: 1.4rem;
+  border-radius: 10px;
+  background: var(--color-bg);
+  padding: clamp(0.9rem, 2vw, 1.5rem);
+}
+
+.case-note {
+  margin-top: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+@media (max-width: 760px) {
+  .case-card {
+    position: static;
+  }
+}
+
+@media (max-height: 800px) {
+  .case-title { font-size: clamp(1.7rem, 3.6vw, 2.6rem); }
+  .case-lede { font-size: 0.92rem; }
 }
