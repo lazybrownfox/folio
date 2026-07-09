@@ -24,6 +24,13 @@ const {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
 
+    <!-- Do not index, do not train. Reinforced by robots.txt + X-Robots-Tag. -->
+    <meta
+      name="robots"
+      content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"
+    />
+    <meta name="googlebot" content="noindex, nofollow" />
+
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta property="og:type" content="website" />
