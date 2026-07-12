@@ -1,5 +1,7 @@
 # Astro Starter Kit: Minimal
 
+[![CodSpeed](https://img.shields.io/endpoint?url=https://codspeed.io/badge.json)](https://app.codspeed.io/lazybrownfox/folio?utm_source=badge)
+
 ```sh
 npm create astro@latest -- --template minimal
 ```
@@ -37,6 +39,19 @@ All commands are run from the root of the project, from a terminal:
 | `npm run preview`         | Preview your build locally, before deploying     |
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
+
+## 📈 Benchmarks
+
+Performance of the dataviz model logic (financial projection compounding, IRR
+solver, and net-contributions transforms) is tracked with
+[CodSpeed](https://codspeed.io) using [vitest](https://vitest.dev) benchmarks.
+
+```sh
+npm run bench
+```
+
+Benchmarks live in `bench/` and exercise the pure functions in `src/lib/`. They
+run automatically on every push and pull request via GitHub Actions.
 
 ## 👀 Want to learn more?
 

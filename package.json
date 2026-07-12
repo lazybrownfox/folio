@@ -10,7 +10,8 @@
     "build": "astro build",
     "check": "astro check",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "bench": "vitest bench --run"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.0",
@@ -30,6 +31,8 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
-    "typescript": "^6.0.3"
+    "@codspeed/vitest-plugin": "^5.7.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.10"
   }
 }
