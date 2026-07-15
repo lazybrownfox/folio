@@ -10,7 +10,13 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { scenarios, ALL_CASES, type Point } from "./scenarios";
+import { scenarios, ALL_CASES } from "./scenarios";
+import {
+  transform,
+  caseOf as caseOfRow,
+  message as messageForRow,
+  type Row,
+} from "../../lib/netContributions";
 
 /* Dark-adapted semantic palette (kept meaningful: invested / gains / losses). */
 const C = {
@@ -30,59 +36,8 @@ const eur = (n: number) => `${n < 0 ? "−" : ""}€${fmt(n)}`;
 const signed = (n: number) =>
   `${n > 0 ? "+" : n < 0 ? "−" : ""}€${fmt(n)}`;
 
-interface Row extends Point {
-  balance: number;
-  invested_band: [number, number];
-  gains_band: [number, number] | null;
-  losses_band: [number, number] | null;
-}
-
-function transform(data: Point[]): Row[] {
-  return data.map((d) => {
-    const balance = d.invested + d.gains;
-    const pv = d.gains;
-    return {
-      ...d,
-      balance,
-      invested_band: pv >= 0 ? [0, Math.max(d.invested, 0)] : [0, balance],
-      gains_band: pv >= 0 ? [d.invested, balance] : null,
-      losses_band: pv < 0 ? [balance, d.invested] : null,
-    };
-  });
-}
-
-interface CaseInfo {
-  n: number;
-  label: string;
-  color: string;
-}
-
-function caseOf(d: Row): CaseInfo {
-  const { invested, gains, balance } = d;
-  if (Math.abs(balance) < 1) return { n: 6, label: "Emptied", color: C.axis };
-  if (invested < -1) return { n: 5, label: "Withdrawals > deposits", color: C.line };
-  if (Math.abs(invested) <= 1) return { n: 4, label: "Stake recovered", color: C.gains };
-  if (gains < -1) return { n: 3, label: "Unrealized loss", color: C.losses };
-  if (Math.abs(gains) <= 1) return { n: 2, label: "Flat performance", color: C.axis };
-  return { n: 1, label: "Compounding", color: C.gains };
-}
-
-function message(d: Row): string {
-  switch (caseOf(d).n) {
-    case 5:
-      return "You have withdrawn more than you paid in. The remaining balance is gain; the negative invested figure is not a loss.";
-    case 4:
-      return "You recovered exactly your stake. The whole remaining balance is gain.";
-    case 3:
-      return "Unrealized loss: the balance has dropped below invested capital. The loss is only locked in if you sell.";
-    case 2:
-      return "Capital is invested, but performance is still flat.";
-    case 6:
-      return "Account emptied.";
-    default:
-      return "Invested capital and gains are rising together.";
-  }
-}
+const caseOf = (d: Row) => caseOfRow(d, C);
+const message = (d: Row) => messageForRow(d, C);
 
 function Swatch({ color, line }: { color: string; line?: boolean }) {
   return (
