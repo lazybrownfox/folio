@@ -8,6 +8,7 @@ import AlbaShowcase from "../components/AlbaShowcase.tsx";
 import WorkGallery from "../components/WorkGallery.tsx";
 import SncfBoard from "../components/SncfBoard.astro";
 import SkillsGrid from "../components/SkillsGrid.astro";
+import ApproachLedger from "../components/ApproachLedger.astro";
 
 const heroTags = [
   "+10 yrs",
@@ -274,10 +275,73 @@ const brand = [
     </div>
   </Section>
 
-  <!-- 07 · CONTACT ----------------------------------------------------------->
+  <!-- 07 · APPROACH (AI-native practice) -------------------------------------->
+  <Section
+    id="approach"
+    index="07"
+    kicker="Approach · AI-native"
+    title="Designing with agents, not around them."
+  >
+    <p data-reveal class="mb-4 max-w-2xl text-lg text-muted">
+      The work above was made in a practice where agents handle the mechanical
+      half — driving Figma, crawling live apps, wiring prototypes, reading the
+      logs — while <span class="text-fg">the judgement stays mine</span>. It
+      isn’t a side experiment. It’s how the days actually run, and it leaves a
+      trace I can count.
+    </p>
+
+    <div class="mt-12">
+      <ApproachLedger />
+    </div>
+
+    <div class="mt-16 grid gap-3 sm:grid-cols-2">
+      <article data-reveal class="approach-card">
+        <h3 class="approach-name">Design → code, both ways</h3>
+        <p class="approach-desc">
+          A live app gets crawled, rebuilt in Figma with the design system
+          already applied, then pushed back out as tokens. The round trip takes
+          an afternoon instead of a sprint.
+        </p>
+      </article>
+      <article data-reveal data-reveal-delay="0.05" class="approach-card">
+        <h3 class="approach-name">Systems work at scale</h3>
+        <p class="approach-desc">
+          Auditing thousands of colour fills across a library, re-mapping them
+          onto semantic tokens, generating component documentation page after
+          page — the parts that used to be too expensive to do properly.
+        </p>
+      </article>
+      <article data-reveal data-reveal-delay="0.1" class="approach-card">
+        <h3 class="approach-name">Prototypes that settle arguments</h3>
+        <p class="approach-desc">
+          When a product debate stalls on a hypothesis, I build the thing and we
+          look at it. The charts higher up this page started as exactly that.
+        </p>
+      </article>
+      <article data-reveal data-reveal-delay="0.15" class="approach-card">
+        <h3 class="approach-name">Research, compressed</h3>
+        <p class="approach-desc">
+          Hundreds of user verbatims clustered, tagged and turned into a report
+          in a day — so the qualitative signal actually reaches the design
+          instead of dying in a spreadsheet.
+        </p>
+      </article>
+    </div>
+
+    <aside data-reveal class="approach-caveat">
+      <span class="approach-caveat-label">What this doesn’t prove</span>
+      <p>
+        I haven’t shipped an AI feature to end users. These numbers describe how
+        I work, not a claim to have built someone’s model into a product. Read
+        them as craft, not credentials.
+      </p>
+    </aside>
+  </Section>
+
+  <!-- 08 · CONTACT ----------------------------------------------------------->
   <Section
     id="contact"
-    index="07"
+    index="08"
     kicker="Contact"
     title="Need a founding designer with range?"
   >

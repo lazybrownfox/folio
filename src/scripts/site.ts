@@ -116,6 +116,45 @@ function buildStatement() {
   }
 }
 
+/* ------------------------------------------------------- Approach counters
+   Count-up on the measured ledger. Strictly additive: the final value is
+   server-rendered, so if this never runs (no JS, reduced motion, a throw) the
+   numbers are simply correct. We only ever rewrite textContent while the tween
+   is live, and always land on the exact formatted string from the markup. */
+function buildCounters() {
+  if (prefersReduced) return;
+  const cells = document.querySelectorAll<HTMLElement>("[data-count]");
+  if (!cells.length) return;
+
+  cells.forEach((el) => {
+    const target = Number(el.dataset.count);
+    const final = el.dataset.countFinal ?? String(target);
+    if (!Number.isFinite(target)) return;
+
+    try {
+      const state = { n: 0 };
+      gsap.to(state, {
+        n: target,
+        duration: 1.4,
+        ease: "power2.out",
+        scrollTrigger: { trigger: el, start: "top 85%", once: true },
+        onStart: () => {
+          el.textContent = "0";
+        },
+        onUpdate: () => {
+          el.textContent = Math.round(state.n).toLocaleString("en-US");
+        },
+        // Never let rounding leave us one off the real, audited figure.
+        onComplete: () => {
+          el.textContent = final;
+        },
+      });
+    } catch {
+      el.textContent = final;
+    }
+  });
+}
+
 /* ----------------------------------------------- Story-only scenes */
 let storyTriggers: ScrollTrigger[] = [];
 
@@ -270,6 +309,7 @@ function init() {
 
   buildReveals();
   buildStatement();
+  buildCounters();
   trackScrolled();
   wireAnchors();
   initMotion();
