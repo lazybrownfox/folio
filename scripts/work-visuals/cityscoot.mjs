@@ -20,7 +20,6 @@ import {
 } from "./kit.mjs";
 
 const BLUE = "#1f5fd6";
-const BLUE_DK = "#12203a";
 const GREEN = "#2e9e5b";
 const AMBER = "#e0952f";
 const PAPER = "#f5f4ef";

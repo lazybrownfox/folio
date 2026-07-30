@@ -1,0 +1,56 @@
+---
+import type { WorkImage } from "../data/works";
+
+interface Props {
+  image: WorkImage;
+  /** Fallbacks inherited from the project when the image doesn't set them. */
+  fit?: "cover" | "contain";
+  bg?: string;
+  /** The hero plate runs a touch taller. */
+  size?: "hero" | "block";
+  eager?: boolean;
+}
+
+const { image, fit, bg, size = "block", eager = false } = Astro.props;
+
+const contain = (image.fit ?? fit) === "contain";
+const ground = image.bg ?? bg;
+const stageStyle = [
+  ground ? `background:${ground}` : "",
+  image.video && image.videoAspect ? `--va:${image.videoAspect}` : "",
+]
+  .filter(Boolean)
+  .join(";");
+---
+
+<figure class:list={["case-figure", size === "hero" && "is-hero"]}>
+  <div
+    class:list={["case-stage", contain && "is-contain", image.video && "is-video"]}
+    style={stageStyle}
+  >
+    {
+      image.video ? (
+        <video
+          data-motion
+          src={image.video}
+          poster={image.src}
+          preload="metadata"
+          muted
+          loop
+          playsinline
+          controls
+          aria-label={image.alt}
+        />
+      ) : (
+        <img
+          src={image.src}
+          alt={image.alt}
+          loading={eager ? "eager" : "lazy"}
+          decoding="async"
+          style={image.position ? `object-position:${image.position}` : undefined}
+        />
+      )
+    }
+  </div>
+  {image.caption && <figcaption class="case-caption">{image.caption}</figcaption>}
+</figure>

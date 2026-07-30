@@ -1,4 +1,9 @@
 ---
+// Case-study pages live under /work/<slug>, so anchors have to point back home
+// instead of hunting for sections that only exist on the index.
+const onHome = Astro.url.pathname === "/";
+const to = (hash: string) => (onHome ? hash : `/${hash}`);
+
 const anchors = [
   { id: "#cases", label: "Cases" },
   { id: "#craft", label: "Motion" },
@@ -12,7 +17,7 @@ const anchors = [
 <header
   class="fixed inset-x-0 top-0 z-50 flex items-center justify-between gap-4 px-5 py-3 sm:px-8"
 >
-  <a href="#top" class="group flex items-baseline" aria-label="Back to top">
+  <a href={to("#top")} class="group flex items-baseline" aria-label="Back to top">
     <span class="font-display text-xl text-fg">fhd</span>
     <span class="font-display text-xl italic text-accent">.</span>
   </a>
@@ -25,7 +30,7 @@ const anchors = [
     {
       anchors.map((a) => (
         <a
-          href={a.id}
+          href={to(a.id)}
           data-nav-label={a.label}
           class="text-sm font-semibold text-muted transition-colors hover:text-fg"
         >

@@ -253,11 +253,12 @@ function initMotion() {
     });
   });
 
-  // Restore the quiet poster tiles after leaving fullscreen.
+  // Restore the quiet poster tiles after leaving fullscreen. Scoped to the
+  // click-to-fullscreen tiles: case-study clips keep their own controls.
   document.addEventListener("fullscreenchange", () => {
     if (document.fullscreenElement || prefersReduced) return;
     document
-      .querySelectorAll<HTMLVideoElement>("[data-motion]")
+      .querySelectorAll<HTMLVideoElement>("[data-fullscreen] [data-motion]")
       .forEach((v) => (v.controls = false));
   });
 
@@ -288,20 +289,6 @@ function initMotion() {
   vids.forEach((v) => io.observe(v));
 }
 
-/* ----------------- Cross-section "open project in gallery" event bridge ---- */
-function wireOpenWork() {
-  document.querySelectorAll<HTMLElement>("[data-open-work]").forEach((el) => {
-    el.addEventListener("click", () => {
-      const name = el.dataset.openWork;
-      if (name) {
-        window.dispatchEvent(
-          new CustomEvent("folio:open-work", { detail: { name } }),
-        );
-      }
-    });
-  });
-}
-
 /* --------------------------------------------------------------- Bootstrap */
 function init() {
   const saved = localStorage.getItem(STORAGE_KEY) as Mode | null;
@@ -313,7 +300,6 @@ function init() {
   trackScrolled();
   wireAnchors();
   initMotion();
-  wireOpenWork();
   applyMode(initial);
 
   document

@@ -314,6 +314,17 @@ html[data-mode="libre"] [data-connector] {
   }
 }
 
+/* the only affordance in the list: this row leads to a case study */
+.work-row-read {
+  font-style: normal;
+  color: var(--color-accent);
+}
+
+.work-row:hover .work-row-read,
+.work-row:focus-visible .work-row-read {
+  color: #fff;
+}
+
 .work-row-meta {
   flex: 0 0 auto;
   margin-left: auto;
@@ -336,383 +347,324 @@ html[data-mode="libre"] [data-connector] {
   }
 }
 
-.work-viewer {
-  position: fixed;
-  inset: 0;
-  z-index: 80;
-  display: grid;
-  place-items: center;
-  padding: clamp(0.75rem, 2.5vw, 2rem);
-  background: rgba(16, 14, 12, 0.86);
-  cursor: zoom-out;
+@media (prefers-reduced-motion: reduce) {
+  .work-row,
+  .work-index-bg img {
+    transition: none;
+  }
 }
 
-.work-viewer-panel {
+/* ----------------------------------------------------------------------------
+   Case study pages (/work/<slug>) — a long read, not a modal: breadcrumb,
+   hero plate, then heading → explanation → visual blocks, prev/next, CTA.
+---------------------------------------------------------------------------- */
+.case {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 7.5rem clamp(1.25rem, 4vw, 2rem) 6rem;
+}
+
+.case-crumbs {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+
+.case-crumbs a {
+  color: var(--color-muted);
+  transition: color 0.2s ease;
+}
+
+.case-crumbs a:hover {
+  color: var(--color-fg);
+}
+
+.case-hero {
+  margin-top: clamp(2rem, 5vw, 3.5rem);
+}
+
+.case-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.9rem, 9vw, 6.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--color-fg);
+  margin-top: 0.6rem;
+}
+
+.case-lede {
+  max-width: 46rem;
+  margin-top: 1.2rem;
+  font-size: clamp(1.05rem, 1.8vw, 1.4rem);
+  line-height: 1.5;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
+
+.case-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  margin: 2.2rem 0 2.8rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--color-line);
+}
+
+.case-meta dd {
+  margin-top: 0.4rem;
+  max-width: 22rem;
+  font-size: 0.95rem;
+  color: var(--color-fg);
+}
+
+/* --- figures --- */
+.case-figure {
+  margin: 0;
+}
+
+.case-stage {
   position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(18rem, 0.55fr);
-  width: min(100%, 72rem);
-  max-height: calc(100svh - clamp(1.5rem, 5vw, 4rem));
   overflow: hidden;
-  border: 1px solid var(--color-line-strong);
+  border: 1px solid var(--color-line);
   border-radius: 0.75rem;
   background: var(--color-bg-elev);
-  cursor: default;
-  box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.55);
 }
 
-.work-viewer-media {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-height: min(74svh, 46rem);
-  background: var(--color-bg);
-}
-
-.work-viewer-stage {
-  position: relative;
-  flex: 1 1 auto;
-  min-height: 0;
-}
-
-/* Video media: frame the clip at its exact portrait ratio, centered on a dark
-   stage — never cover-cropped, on any viewport. `object-fit: contain` on the
-   element is the hard guarantee against cropping; the ratio'd stage just makes
-   it fill the frame nicely instead of letterboxing. */
-.work-viewer-media.is-video {
-  align-items: center;
-  justify-content: center;
-  min-height: 0;
-  padding-block: clamp(0.75rem, 2vw, 1.5rem);
-  background: #0a0d12;
-}
-.work-viewer-media.is-video .work-viewer-stage {
-  flex: 0 0 auto;
-  height: min(70svh, 40rem);
-  width: auto;
-  max-width: 100%;
-  aspect-ratio: var(--va, 1 / 2);
-}
-.work-viewer-media.is-video .work-viewer-img {
-  padding: 0;
-  background: transparent;
-}
-
-.work-viewer-img {
+.case-stage img,
+.case-stage video {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top;
-  background: #000;
+  height: auto;
 }
 
-.work-viewer-img.is-contain {
+/* Screens and slides are never cropped: they sit on their own ground colour,
+   with air around them, because that is how they were designed. Source files
+   are what they are — nothing is upscaled, so the plate hugs the visual
+   instead of stranding it in the middle of an empty rectangle. */
+.case-stage.is-contain {
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 4vw, 3rem);
+}
+
+.case-stage.is-contain img {
+  width: auto;
+  max-width: 100%;
+  max-height: min(76svh, 46rem);
   object-fit: contain;
-  object-position: center;
-  padding: clamp(0.75rem, 3vw, 2.25rem);
-  background: var(--color-bg);
 }
 
-/* image-navigation arrows on the stage */
-.work-stage-arrow {
-  position: absolute;
-  top: 50%;
-  z-index: 2;
-  transform: translateY(-50%);
-  display: inline-grid;
+.case-figure:has(.is-contain) {
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+/* Portrait clips keep their exact ratio (--va), centered, never letterboxed. */
+.case-stage.is-video {
+  display: grid;
   place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border: 1px solid var(--color-line-strong);
-  border-radius: 999px;
-  background: rgba(16, 14, 12, 0.55);
-  backdrop-filter: blur(6px);
-  color: var(--color-fg);
-  font-size: 1.6rem;
-  line-height: 1;
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease;
+  padding: clamp(1rem, 3vw, 2rem);
 }
 
-.work-stage-arrow.is-prev {
-  left: clamp(0.5rem, 2vw, 1rem);
+.case-stage.is-video video {
+  width: auto;
+  max-width: 100%;
+  max-height: min(76svh, 46rem);
+  aspect-ratio: var(--va, 16 / 9);
+  object-fit: contain;
+  border-radius: 0.4rem;
 }
 
-.work-stage-arrow.is-next {
-  right: clamp(0.5rem, 2vw, 1rem);
+.case-figure.is-hero .case-stage.is-contain img,
+.case-figure.is-hero .case-stage.is-video video {
+  max-height: min(80svh, 50rem);
 }
 
-.work-stage-arrow:hover {
-  background: rgba(16, 14, 12, 0.82);
-  border-color: var(--color-accent);
+.case-caption {
+  margin-top: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+  color: var(--color-faint);
 }
 
-.work-image-strip {
-  flex: 0 0 auto;
-  display: flex;
-  gap: 0.5rem;
-  overflow-x: auto;
-  padding: 0.6rem;
-  background: color-mix(in srgb, var(--color-bg) 82%, #000);
+/* --- blocks --- */
+.case-block {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  padding: clamp(3rem, 7vw, 5.5rem) 0;
   border-top: 1px solid var(--color-line);
 }
 
-.work-image-strip button {
-  position: relative;
-  flex: 0 0 auto;
-  width: clamp(3rem, 7vw, 4.75rem);
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border: 1px solid var(--color-line);
-  border-radius: 0.35rem;
-  background: var(--color-bg-elev);
-  cursor: pointer;
-  opacity: 0.62;
-  transition:
-    opacity 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.work-image-strip button:hover,
-.work-image-strip button.is-active {
-  border-color: var(--color-accent);
-  opacity: 1;
-}
-
-.work-image-strip button.is-active {
-  transform: translateY(-2px);
-}
-
-.work-image-strip img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.work-image-strip-play {
-  position: absolute;
-  inset: 0;
+.case-text {
   display: grid;
-  place-items: center;
-  color: #fff;
-  font-size: 0.75rem;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: 0 1rem;
+  align-items: baseline;
+  max-width: 54rem;
 }
 
-/* persistent close button — reachable on every viewport */
-.work-viewer-close {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  z-index: 4;
-  display: inline-grid;
-  width: 2.5rem;
-  height: 2.5rem;
-  place-items: center;
-  border: 1px solid var(--color-line-strong);
-  border-radius: 999px;
-  background: rgba(16, 14, 12, 0.62);
-  backdrop-filter: blur(6px);
-  color: var(--color-fg);
-  font-size: 1.45rem;
-  line-height: 1;
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease;
+.case-num {
+  color: var(--color-accent);
 }
 
-.work-viewer-close:hover {
-  background: rgba(16, 14, 12, 0.88);
-  border-color: var(--color-accent);
-}
-
-
-/* modal open animation */
-@keyframes work-viewer-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes work-panel-in {
-  from {
-    opacity: 0;
-    transform: translateY(14px) scale(0.985);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-.work-viewer {
-  animation: work-viewer-in 0.2s ease both;
-}
-
-.work-viewer-panel {
-  animation: work-panel-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.work-viewer-info {
-  display: grid;
-  grid-template-rows: auto 1fr auto auto;
-  gap: clamp(1.25rem, 2vw, 2rem);
-  min-width: 0;
-  overflow-y: auto;
-  padding: clamp(1rem, 2.4vw, 1.75rem);
-}
-
-.work-viewer-topline {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.work-icon-btn {
-  display: inline-grid;
-  width: 2.25rem;
-  height: 2.25rem;
-  place-items: center;
-  border: 1px solid var(--color-line);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--color-fg);
-  cursor: pointer;
-  font-size: 1.25rem;
-  line-height: 1;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.work-icon-btn:hover {
-  border-color: var(--color-line-strong);
-  background: rgba(237, 231, 220, 0.06);
-}
-
-.work-viewer-tag {
-  margin-bottom: 0.85rem;
-}
-
-.work-viewer-info h3 {
-  max-width: 14ch;
+.case-text h2 {
   font-family: var(--font-display);
-  font-size: clamp(1.9rem, 3.2vw, 3.4rem);
-  font-weight: 400;
-  line-height: 1.02;
-  letter-spacing: 0;
-  text-wrap: balance;
-  overflow-wrap: anywhere;
-}
-
-.work-viewer-summary {
-  margin-top: 1.25rem;
-  max-width: 34rem;
-  color: var(--color-muted);
-  font-size: clamp(1rem, 1.4vw, 1.125rem);
-  line-height: 1.6;
-}
-
-.work-viewer-meta {
-  border-top: 1px solid var(--color-line);
-  padding-top: 1rem;
-}
-
-.work-viewer-meta p {
-  margin-top: 0.35rem;
+  font-size: clamp(1.7rem, 3.6vw, 2.8rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
   color: var(--color-fg);
+  text-wrap: balance;
 }
 
-.work-viewer-nav {
+.case-text p {
+  grid-column: 2;
+  margin-top: 1rem;
+  font-size: clamp(1rem, 1.4vw, 1.12rem);
+  line-height: 1.65;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
+
+.case-media.is-pair {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+}
+
+@media (max-width: 640px) {
+  .case-text {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .case-num {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .case-text h2,
+  .case-text p {
+    grid-column: 1;
+  }
+}
+
+.case-outro {
+  padding-top: clamp(2rem, 5vw, 3rem);
+  border-top: 1px solid var(--color-line);
+}
+
+.case-outro p {
+  max-width: 46rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+  line-height: 1.4;
+  color: var(--color-fg);
+  text-wrap: pretty;
+}
+
+/* --- rails & CTA --- */
+.case-rail {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
+  gap: 1rem;
+  margin-top: clamp(3rem, 7vw, 5rem);
+  border-top: 1px solid var(--color-line);
 }
 
-.work-viewer-nav button {
-  display: inline-flex;
-  min-width: 0;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45rem;
-  min-height: 2.75rem;
-  border: 1px solid var(--color-line);
-  border-radius: 999px;
-  background: transparent;
+.case-rail-link {
+  display: block;
+  padding: 1.8rem 0.2rem;
+  transition: padding 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.case-rail-link.is-next {
+  text-align: right;
+  border-left: 1px solid var(--color-line);
+  padding-left: 1.5rem;
+}
+
+.case-rail-name {
+  display: block;
+  margin-top: 0.4rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  line-height: 1.05;
   color: var(--color-fg);
-  cursor: pointer;
-  font-size: 0.82rem;
+  transition: color 0.25s ease;
+}
+
+.case-rail-link:hover .case-rail-name {
+  color: #fff;
+}
+
+.case-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+  padding: clamp(1.5rem, 3vw, 2.2rem);
+  border: 1px solid var(--color-line);
+  border-radius: 0.75rem;
+  background: var(--color-bg-elev);
+}
+
+.case-cta p {
+  max-width: 34rem;
+  color: var(--color-muted);
+}
+
+.case-cta-links {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.case-cta-primary,
+.case-cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
   font-weight: 600;
   transition:
     background-color 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
-.work-viewer-nav button:hover {
-  border-color: var(--color-line-strong);
+.case-cta-primary {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+.case-cta-primary:hover {
+  background: #fff;
+}
+
+.case-cta-secondary {
+  border: 1px solid var(--color-line-strong);
+  color: var(--color-fg);
+}
+
+.case-cta-secondary:hover {
   background: rgba(237, 231, 220, 0.06);
 }
 
-.work-viewer-nav span {
-  font-family: var(--font-sans);
-  font-size: 1.15rem;
-  line-height: 1;
-}
-
-@media (max-width: 760px) {
-  .work-viewer {
-    align-items: stretch;
-    padding: 0.75rem;
-  }
-
-  .work-viewer-panel {
-    grid-template-columns: 1fr;
-    align-self: center;
-    max-height: calc(100svh - 1.5rem);
-    overflow-y: auto;
-  }
-
-  .work-viewer-media {
-    min-height: 0;
-  }
-
-  .work-viewer-stage {
-    aspect-ratio: 4 / 5;
-    flex: 0 0 auto;
-  }
-
-  .work-viewer-info {
-    overflow: visible;
-  }
-
-  .work-viewer-info h3 {
-    max-width: 100%;
-    font-size: clamp(1.75rem, 10vw, 3rem);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .work-row,
-  .work-index-bg img,
-  .work-image-strip button,
-  .work-icon-btn,
-  .work-viewer-nav button {
+  .case-rail-link,
+  .case-rail-name,
+  .case-cta-primary,
+  .case-cta-secondary {
     transition: none;
-  }
-
-  .work-viewer,
-  .work-viewer-panel {
-    animation: none;
   }
 }
 

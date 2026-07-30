@@ -23,11 +23,12 @@ const heroTags = [
 const statement =
   "Ten-year product designer for SaaS, fintech and dev tools — based in Paris. I work through the interface, the design system beneath it and the code that ships it, so dense products end up feeling simple.";
 
+// `slug` is set only where a case-study page exists; the others are stills.
 const brand = [
-  { img: "blacksails", name: "Black Sales", tag: "brand · product", scale: 1.22, work: "Black Sales" },
-  { img: "ple-cover", name: "Plé", tag: "audio identity", scale: 1.0, work: "Plé" },
-  { img: "plume-cover", name: "Plume", tag: "mobility identity", scale: 1.0, work: "Plume" },
-  { img: "beroe", name: "beroé", tag: "brand", scale: 1.12, work: "beroé" },
+  { img: "blacksails", name: "Black Sales", tag: "brand · product", scale: 1.22 },
+  { img: "ple-cover", name: "Plé", tag: "audio identity", scale: 1.0, slug: "ple" },
+  { img: "plume-cover", name: "Plume", tag: "mobility identity", scale: 1.0, slug: "plume" },
+  { img: "beroe", name: "beroé", tag: "brand", scale: 1.12 },
 ];
 ---
 
@@ -227,12 +228,16 @@ const brand = [
       class="grid grid-cols-2 gap-3 sm:grid-cols-4"
     >
       {
-        brand.map((b) => (
-          <button
-            type="button"
-            data-open-work={b.work}
-            aria-label={`Open ${b.name}`}
-            class="group relative aspect-[3/4] cursor-pointer overflow-hidden rounded-lg border border-line bg-bg-elev/40 text-left transition-colors hover:border-line-strong"
+        brand.map((b) => {
+          const Tile = b.slug ? "a" : "div";
+          return (
+          <Tile
+            href={b.slug ? `/work/${b.slug}` : undefined}
+            aria-label={b.slug ? `Read the ${b.name} case study` : undefined}
+            class:list={[
+              "group relative block aspect-[3/4] overflow-hidden rounded-lg border border-line bg-bg-elev/40 text-left transition-colors",
+              b.slug && "cursor-pointer hover:border-line-strong",
+            ]}
           >
             <img
               src={`/work/${b.img}.jpg`}
@@ -249,8 +254,9 @@ const brand = [
               <span class="text-sm text-fg">{b.name}</span>
               <span class="tag mt-1">{b.tag}</span>
             </figcaption>
-          </button>
-        ))
+          </Tile>
+          );
+        })
       }
     </div>
     <p data-reveal class="mt-6 max-w-2xl text-sm text-faint">
@@ -268,7 +274,9 @@ const brand = [
   >
     <p data-reveal class="mb-8 max-w-2xl text-lg text-muted">
       Ten years across product, design systems, brand and open source. Hover a
-      name and its world takes the screen — full case studies on request.
+      name and its world takes the screen; the ones marked <span class="text-fg"
+        >read</span
+      > open a case study. The rest are available on request.
     </p>
     <div data-reveal>
       <WorkGallery client:load />
