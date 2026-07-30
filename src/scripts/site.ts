@@ -14,6 +14,7 @@ const prefersReduced = window.matchMedia(
 
 type Mode = "story" | "libre";
 const STORAGE_KEY = "folio-mode";
+const THEME_KEY = "folio-theme";
 
 // ScrollTrigger.refresh can throw in its 100vh path; never let that abort us.
 function safeRefresh() {
@@ -194,6 +195,45 @@ function applyMode(mode: Mode, shouldTrack = false) {
   }
 }
 
+/* ------------------------------------------------------------- Theme switch */
+/* The head script has already set `data-theme` before first paint (no FOUC);
+   this only handles the toggle and persistence. Switching resizes the display
+   type, so ScrollTrigger has to re-measure afterwards. */
+type Theme = "dark" | "light";
+
+function applyTheme(theme: Theme, shouldTrack = false) {
+  html.dataset.theme = theme;
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-theme-btn]")
+    .forEach((b) => {
+      b.setAttribute("aria-pressed", String(theme === "light"));
+      b.setAttribute(
+        "aria-label",
+        theme === "light" ? "Switch to the dark theme" : "Switch to the light theme",
+      );
+    });
+  try {
+    localStorage.setItem(THEME_KEY, theme);
+  } catch {
+    /* private mode — the theme just won't persist */
+  }
+  safeRefresh();
+  if (shouldTrack) {
+    window.posthog?.capture("theme_toggled", { theme });
+  }
+}
+
+function wireTheme() {
+  applyTheme(html.dataset.theme === "light" ? "light" : "dark");
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-theme-btn]")
+    .forEach((b) => {
+      b.addEventListener("click", () => {
+        applyTheme(html.dataset.theme === "light" ? "dark" : "light", true);
+      });
+    });
+}
+
 /* --------------------------------------------------- "scrolled" + anchors */
 function trackScrolled() {
   const onScroll = () => {
@@ -300,6 +340,7 @@ function init() {
   trackScrolled();
   wireAnchors();
   initMotion();
+  wireTheme();
   applyMode(initial);
 
   document

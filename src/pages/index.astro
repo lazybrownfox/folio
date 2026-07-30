@@ -112,8 +112,8 @@ const brand = [
             <span>Nalo · 2023–26</span>
             <span>Fintech · Dataviz</span>
           </div>
-          <h3 class="case-title">Money, made readable.<i>live chart</i></h3>
-          <p class="case-lede">
+          <h3 class="deck-title">Money, made readable.<i>live chart</i></h3>
+          <p class="deck-lede">
             This chart splits a balance into net invested capital and gains —
             and makes a counter-intuitive case visible: invested capital can go
             negative while the balance stays positive. Switch scenarios, hover
@@ -132,8 +132,8 @@ const brand = [
             <span>Nalo · 2023–26</span>
             <span>Fintech · Projection</span>
           </div>
-          <h3 class="case-title">Twenty-five years, one glance.<i>live chart</i></h3>
-          <p class="case-lede">
+          <h3 class="deck-title">Twenty-five years, one glance.<i>live chart</i></h3>
+          <p class="deck-lede">
             A long-horizon projection with a progressive-derisking path. Toggle
             the strategy: the probability cone, IRR cards and risk score
             respond in real time.
@@ -148,8 +148,8 @@ const brand = [
             <span>SNCF · 2019–22</span>
             <span>Rail · Technical UI</span>
           </div>
-          <h3 class="case-title">Legibility is the product.<i>live board</i></h3>
-          <p class="case-lede">
+          <h3 class="deck-title">Legibility is the product.<i>live board</i></h3>
+          <p class="deck-lede">
             Real-time passenger displays designed around hierarchy, distance
             and stress. Not a screenshot — a live rebuild of the departures
             board: statuses, platforms and the clock run on their own.
@@ -250,8 +250,9 @@ const brand = [
               class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
             <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
-            <figcaption class="absolute inset-x-0 bottom-0 flex flex-col p-3">
-              <span class="text-sm text-fg">{b.name}</span>
+            {/* sits on the black gradient, so it stays light in both themes */}
+            <figcaption class="brand-cap absolute inset-x-0 bottom-0 flex flex-col p-3">
+              <span class="text-sm">{b.name}</span>
               <span class="tag mt-1">{b.tag}</span>
             </figcaption>
           </Tile>

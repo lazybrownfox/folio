@@ -30,14 +30,52 @@
   --color-line: rgba(237, 231, 220, 0.1);
   --color-line-strong: rgba(237, 231, 220, 0.2);
 
+  /* Maximum-contrast ink, for hover peaks. Theme-dependent: white on charcoal,
+     black on paper — never hardcode #fff again. */
+  --color-fg-hi: #ffffff;
+
+  /* The ground the live demos are mounted on. Charts and the SNCF board carry
+     their own dark palettes, so this stays dark in BOTH themes: on paper they
+     become mounted screens, which is the point. */
+  --color-plate: #141210;
+
   /* fluid type scale (display sizes are set for the serif voice) */
   --text-display: clamp(2.9rem, 7.4vw, 6.6rem);
   --text-h2: clamp(1.9rem, 3.8vw, 3.1rem);
 }
 
+/* ----------------------------------------------------------------------------
+   Light theme — the same art direction on paper. Tailwind emits the tokens
+   above on `:root`; this attribute selector is more specific and sits on the
+   same element, so every utility and every downstream color-mix() follows with
+   no other change. Warm paper, not pure white: #fff turns the serif clinical.
+   The accent is darkened (#c9a26a is unreadable on paper) but stays the gold.
+---------------------------------------------------------------------------- */
+html[data-theme="light"] {
+  --color-bg: #faf8f4;
+  --color-bg-elev: #ffffff;
+  --color-fg: #191612;
+  --color-muted: #6b6459;
+  --color-faint: #9c9284;
+  --color-accent: #9a6f2e;
+  --color-accent-dim: #c9a26a;
+  --color-line: rgba(25, 22, 18, 0.12);
+  --color-line-strong: rgba(25, 22, 18, 0.24);
+  --color-fg-hi: #000000;
+  --sa-theme-alt: #ece2d4;
+  --sa-board-bg: #f1ece3;
+}
+
 @layer base {
   :root {
     color-scheme: dark;
+    /* surfaces used inside the skill-card animations (see "skills" below) */
+    --sa-theme-alt: #2a2119;
+    --sa-board-bg: #100e0c;
+  }
+
+  html[data-theme="light"] {
+    color-scheme: light;
   }
 
   html {
@@ -272,7 +310,7 @@ html[data-mode="libre"] [data-connector] {
 
 .work-row:hover .work-row-name,
 .work-row:focus-visible .work-row-name {
-  color: #fff;
+  color: var(--color-fg-hi);
 }
 
 .work-row-domain {
@@ -322,7 +360,7 @@ html[data-mode="libre"] [data-connector] {
 
 .work-row:hover .work-row-read,
 .work-row:focus-visible .work-row-read {
-  color: #fff;
+  color: var(--color-fg-hi);
 }
 
 .work-row-meta {
@@ -601,7 +639,7 @@ html[data-mode="libre"] [data-connector] {
 }
 
 .case-rail-link:hover .case-rail-name {
-  color: #fff;
+  color: var(--color-fg-hi);
 }
 
 .case-cta {
@@ -647,7 +685,8 @@ html[data-mode="libre"] [data-connector] {
 }
 
 .case-cta-primary:hover {
-  background: #fff;
+  background: var(--color-fg-hi);
+  color: var(--color-bg);
 }
 
 .case-cta-secondary {
@@ -656,7 +695,7 @@ html[data-mode="libre"] [data-connector] {
 }
 
 .case-cta-secondary:hover {
-  background: rgba(237, 231, 220, 0.06);
+  background: color-mix(in srgb, var(--color-fg) 6%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -839,7 +878,7 @@ html.reveal-all .statement .st-w {
   padding: 0.5rem 0.7rem;
   border-radius: 6px;
   border: 1px solid var(--color-line);
-  background: color-mix(in srgb, var(--color-bg-elev) 80%, #000);
+  background: var(--sa-board-bg);
   font-family: var(--font-mono);
   font-size: 0.66rem;
   color: var(--color-muted);
@@ -996,7 +1035,7 @@ html.reveal-all .statement .st-w {
 
 @keyframes sa-theme {
   0%, 42% { background: var(--color-fg); color: var(--color-bg); }
-  50%, 92% { background: #2a2119; color: var(--color-fg); }
+  50%, 92% { background: var(--sa-theme-alt); color: var(--color-fg); }
   100% { background: var(--color-fg); color: var(--color-bg); }
 }
 
@@ -1120,7 +1159,7 @@ html.reveal-all .statement .st-w {
   opacity: 0.8;
 }
 
-.case-title {
+.deck-title {
   font-family: var(--font-display);
   font-size: clamp(2rem, 4.6vw, 3.5rem);
   font-weight: 400;
@@ -1128,7 +1167,7 @@ html.reveal-all .statement .st-w {
   letter-spacing: -0.01em;
 }
 
-.case-title i {
+.deck-title i {
   margin-left: 0.5em;
   font-size: 0.52em;
   font-style: italic;
@@ -1136,7 +1175,7 @@ html.reveal-all .statement .st-w {
   white-space: nowrap;
 }
 
-.case-lede {
+.deck-lede {
   margin-top: 0.9rem;
   max-width: 58ch;
   font-size: 0.98rem;
@@ -1148,7 +1187,7 @@ html.reveal-all .statement .st-w {
 .case-plate {
   margin-top: 1.4rem;
   border-radius: 10px;
-  background: var(--color-bg);
+  background: var(--color-plate);
   padding: clamp(0.9rem, 2vw, 1.5rem);
 }
 
@@ -1168,8 +1207,8 @@ html.reveal-all .statement .st-w {
 }
 
 @media (max-height: 800px) {
-  .case-title { font-size: clamp(1.7rem, 3.6vw, 2.6rem); }
-  .case-lede { font-size: 0.92rem; }
+  .deck-title { font-size: clamp(1.7rem, 3.6vw, 2.6rem); }
+  .deck-lede { font-size: 0.92rem; }
 }
 
 /* ----------------------------------------------------------------------------
@@ -1284,4 +1323,89 @@ html.reveal-all .statement .st-w {
   color: var(--color-muted);
   font-size: 0.95rem;
   line-height: 1.6;
+}
+
+/* ----------------------------------------------------------------------------
+   Light theme — the five places where "dark" was load-bearing.
+   Everything else follows the tokens on its own; these are the rules that
+   assumed a dark ground and have to be re-thought rather than re-coloured.
+---------------------------------------------------------------------------- */
+
+/* 1 · Work index. On charcoal the panel is dimmed to 0.82 so it never fights
+   the type; on paper a dimmed image just looks washed out, so it goes to full
+   opacity and gets a hairline + drop shadow to sit ON the page instead of in
+   it. The veil turns into a paper scrim, slightly heavier to hold the type. */
+html[data-theme="light"] .work-index-bg::after {
+  background: color-mix(in srgb, var(--color-bg) 72%, transparent);
+}
+
+html[data-theme="light"] .work-index-bg img {
+  border: 1px solid var(--color-line);
+  box-shadow: 0 26px 60px -28px rgba(25, 22, 18, 0.45);
+}
+
+html[data-theme="light"] .work-index-bg img.is-on {
+  opacity: 1;
+}
+
+/* 2 · The exhibits. Charts and the departures board carry their own dark
+   palettes by design, so on paper they read as mounted screens — they need a
+   shadow to land as objects, otherwise they punch holes in the page. */
+html[data-theme="light"] .case-plate {
+  box-shadow: 0 20px 45px -25px rgba(0, 0, 0, 0.55);
+}
+
+html[data-theme="light"] .case-deck .case-card {
+  box-shadow: 0 24px 60px -32px rgba(25, 22, 18, 0.5);
+}
+
+/* 3 · Case-study figures lift off the paper instead of being inset into it. */
+html[data-theme="light"] .case-stage {
+  box-shadow: 0 18px 40px -28px rgba(25, 22, 18, 0.4);
+}
+
+/* 4 · Reveals. 24px of travel reads as heavy on a light ground — the eye
+   tracks movement more on paper than on charcoal. */
+html[data-theme="light"].armed [data-reveal] {
+  transform: translateY(16px);
+}
+
+/* 5 · Typography. A dark ground eats the thin strokes of Instrument Serif, so
+   the dark sizes are held back on purpose. On paper the serif can finally run
+   at editorial scale with tighter leading — this is where most of the
+   "clean + beautiful type" feeling actually comes from. */
+html[data-theme="light"] {
+  --text-display: clamp(3rem, 7.8vw, 7rem);
+}
+
+html[data-theme="light"] .case-title {
+  font-size: clamp(3.1rem, 9.6vw, 7.2rem);
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+}
+
+html[data-theme="light"] .work-row-name {
+  font-size: clamp(2rem, 5.6vw, 4.5rem);
+  letter-spacing: -0.02em;
+}
+
+html[data-theme="light"] .case-text h2,
+html[data-theme="light"] .statement {
+  letter-spacing: -0.02em;
+}
+
+/* Sans body copy on paper wants a touch less weight-per-pixel than on
+   charcoal, where antialiasing already thins it out. */
+html[data-theme="light"] body {
+  -webkit-font-smoothing: auto;
+}
+
+/* Brand tiles: the caption sits on a black gradient over the image, so it is
+   light-on-dark whatever the page theme is. */
+.brand-cap {
+  color: #f4efe5;
+}
+
+.brand-cap .tag {
+  color: rgba(244, 239, 229, 0.7);
 }
