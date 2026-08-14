@@ -18,7 +18,7 @@
 @theme {
   --font-sans: "Rethink Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-display: "General Sans", var(--font-sans);
 
   --color-bg: #141210;
   --color-bg-elev: #1c1916;
@@ -428,9 +428,11 @@ html[data-mode="libre"] [data-connector] {
 
 .case-title {
   font-family: var(--font-display);
-  font-size: clamp(2.9rem, 9vw, 6.5rem);
-  line-height: 0.95;
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: clamp(3.2rem, 10.5vw, 8rem);
+  line-height: 0.88;
+  letter-spacing: -0.045em;
   color: var(--color-fg);
   margin-top: 0.6rem;
 }
@@ -1370,18 +1372,18 @@ html[data-theme="light"].armed [data-reveal] {
   transform: translateY(16px);
 }
 
-/* 5 · Typography. A dark ground eats the thin strokes of Instrument Serif, so
-   the dark sizes are held back on purpose. On paper the serif can finally run
-   at editorial scale with tighter leading — this is where most of the
-   "clean + beautiful type" feeling actually comes from. */
+/* 5 · Typography. A dark ground eats thin strokes, so the dark sizes are held
+   back on purpose. On paper the display voice can run at editorial scale
+   with tighter leading — this is where most of the "clean + beautiful type"
+   feeling actually comes from. */
 html[data-theme="light"] {
   --text-display: clamp(3rem, 7.8vw, 7rem);
 }
 
 html[data-theme="light"] .case-title {
-  font-size: clamp(3.1rem, 9.6vw, 7.2rem);
-  line-height: 0.92;
-  letter-spacing: -0.025em;
+  font-size: clamp(3.4rem, 10.8vw, 8.4rem);
+  line-height: 0.88;
+  letter-spacing: -0.045em;
 }
 
 html[data-theme="light"] .work-row-name {
