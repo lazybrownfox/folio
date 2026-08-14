@@ -8,6 +8,7 @@ import AlbaShowcase from "../components/AlbaShowcase.tsx";
 import WorkGallery from "../components/WorkGallery.tsx";
 import SncfBoard from "../components/SncfBoard.astro";
 import SkillsGrid from "../components/SkillsGrid.astro";
+import ApproachLedger from "../components/ApproachLedger.astro";
 
 const heroTags = [
   "+10 yrs",
@@ -22,11 +23,12 @@ const heroTags = [
 const statement =
   "Ten-year product designer for SaaS, fintech and dev tools — based in Paris. I work through the interface, the design system beneath it and the code that ships it, so dense products end up feeling simple.";
 
+// `slug` is set only where a case-study page exists; the others are stills.
 const brand = [
-  { img: "blacksails", name: "Black Sales", tag: "brand · product", scale: 1.22, work: "Black Sales" },
-  { img: "ple-cover", name: "Plé", tag: "audio identity", scale: 1.0, work: "Plé" },
-  { img: "plume-cover", name: "Plume", tag: "mobility identity", scale: 1.0, work: "Plume" },
-  { img: "beroe", name: "beroé", tag: "brand", scale: 1.12, work: "beroé" },
+  { img: "blacksails", name: "Black Sales", tag: "brand · product", scale: 1.22 },
+  { img: "ple-cover", name: "Plé", tag: "audio identity", scale: 1.0, slug: "ple" },
+  { img: "plume-cover", name: "Plume", tag: "mobility identity", scale: 1.0, slug: "plume" },
+  { img: "beroe", name: "beroé", tag: "brand", scale: 1.12 },
 ];
 ---
 
@@ -110,8 +112,8 @@ const brand = [
             <span>Nalo · 2023–26</span>
             <span>Fintech · Dataviz</span>
           </div>
-          <h3 class="case-title">Money, made readable.<i>live chart</i></h3>
-          <p class="case-lede">
+          <h3 class="deck-title">Money, made readable.<i>live chart</i></h3>
+          <p class="deck-lede">
             This chart splits a balance into net invested capital and gains —
             and makes a counter-intuitive case visible: invested capital can go
             negative while the balance stays positive. Switch scenarios, hover
@@ -130,8 +132,8 @@ const brand = [
             <span>Nalo · 2023–26</span>
             <span>Fintech · Projection</span>
           </div>
-          <h3 class="case-title">Twenty-five years, one glance.<i>live chart</i></h3>
-          <p class="case-lede">
+          <h3 class="deck-title">Twenty-five years, one glance.<i>live chart</i></h3>
+          <p class="deck-lede">
             A long-horizon projection with a progressive-derisking path. Toggle
             the strategy: the probability cone, IRR cards and risk score
             respond in real time.
@@ -146,8 +148,8 @@ const brand = [
             <span>SNCF · 2019–22</span>
             <span>Rail · Technical UI</span>
           </div>
-          <h3 class="case-title">Legibility is the product.<i>live board</i></h3>
-          <p class="case-lede">
+          <h3 class="deck-title">Legibility is the product.<i>live board</i></h3>
+          <p class="deck-lede">
             Real-time passenger displays designed around hierarchy, distance
             and stress. Not a screenshot — a live rebuild of the departures
             board: statuses, platforms and the clock run on their own.
@@ -226,12 +228,16 @@ const brand = [
       class="grid grid-cols-2 gap-3 sm:grid-cols-4"
     >
       {
-        brand.map((b) => (
-          <button
-            type="button"
-            data-open-work={b.work}
-            aria-label={`Open ${b.name}`}
-            class="group relative aspect-[3/4] cursor-pointer overflow-hidden rounded-lg border border-line bg-bg-elev/40 text-left transition-colors hover:border-line-strong"
+        brand.map((b) => {
+          const Tile = b.slug ? "a" : "div";
+          return (
+          <Tile
+            href={b.slug ? `/work/${b.slug}` : undefined}
+            aria-label={b.slug ? `Read the ${b.name} case study` : undefined}
+            class:list={[
+              "group relative block aspect-[3/4] overflow-hidden rounded-lg border border-line bg-bg-elev/40 text-left transition-colors",
+              b.slug && "cursor-pointer hover:border-line-strong",
+            ]}
           >
             <img
               src={`/work/${b.img}.jpg`}
@@ -244,12 +250,14 @@ const brand = [
               class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
             <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
-            <figcaption class="absolute inset-x-0 bottom-0 flex flex-col p-3">
-              <span class="text-sm text-fg">{b.name}</span>
+            {/* sits on the black gradient, so it stays light in both themes */}
+            <figcaption class="brand-cap absolute inset-x-0 bottom-0 flex flex-col p-3">
+              <span class="text-sm">{b.name}</span>
               <span class="tag mt-1">{b.tag}</span>
             </figcaption>
-          </button>
-        ))
+          </Tile>
+          );
+        })
       }
     </div>
     <p data-reveal class="mt-6 max-w-2xl text-sm text-faint">
@@ -267,17 +275,82 @@ const brand = [
   >
     <p data-reveal class="mb-8 max-w-2xl text-lg text-muted">
       Ten years across product, design systems, brand and open source. Hover a
-      name and its world takes the screen — full case studies on request.
+      name and its world takes the screen; the ones marked <span class="text-fg"
+        >read</span
+      > open a case study. The rest are available on request.
     </p>
     <div data-reveal>
       <WorkGallery client:load />
     </div>
   </Section>
 
-  <!-- 07 · CONTACT ----------------------------------------------------------->
+  <!-- 07 · APPROACH (AI-native practice) -------------------------------------->
+  <Section
+    id="approach"
+    index="07"
+    kicker="Approach · AI-native"
+    title="Designing with agents, not around them."
+  >
+    <p data-reveal class="mb-4 max-w-2xl text-lg text-muted">
+      The work above was made in a practice where agents handle the mechanical
+      half — driving Figma, crawling live apps, wiring prototypes, reading the
+      logs — while <span class="text-fg">the judgement stays mine</span>. It
+      isn’t a side experiment. It’s how the days actually run, and it leaves a
+      trace I can count.
+    </p>
+
+    <div class="mt-12">
+      <ApproachLedger />
+    </div>
+
+    <div class="mt-16 grid gap-3 sm:grid-cols-2">
+      <article data-reveal class="approach-card">
+        <h3 class="approach-name">Design → code, both ways</h3>
+        <p class="approach-desc">
+          A live app gets crawled, rebuilt in Figma with the design system
+          already applied, then pushed back out as tokens. The round trip takes
+          an afternoon instead of a sprint.
+        </p>
+      </article>
+      <article data-reveal data-reveal-delay="0.05" class="approach-card">
+        <h3 class="approach-name">Systems work at scale</h3>
+        <p class="approach-desc">
+          Auditing thousands of colour fills across a library, re-mapping them
+          onto semantic tokens, generating component documentation page after
+          page — the parts that used to be too expensive to do properly.
+        </p>
+      </article>
+      <article data-reveal data-reveal-delay="0.1" class="approach-card">
+        <h3 class="approach-name">Prototypes that settle arguments</h3>
+        <p class="approach-desc">
+          When a product debate stalls on a hypothesis, I build the thing and we
+          look at it. The charts higher up this page started as exactly that.
+        </p>
+      </article>
+      <article data-reveal data-reveal-delay="0.15" class="approach-card">
+        <h3 class="approach-name">Research, compressed</h3>
+        <p class="approach-desc">
+          Hundreds of user verbatims clustered, tagged and turned into a report
+          in a day — so the qualitative signal actually reaches the design
+          instead of dying in a spreadsheet.
+        </p>
+      </article>
+    </div>
+
+    <aside data-reveal class="approach-caveat">
+      <span class="approach-caveat-label">What this doesn’t prove</span>
+      <p>
+        I haven’t shipped an AI feature to end users. These numbers describe how
+        I work, not a claim to have built someone’s model into a product. Read
+        them as craft, not credentials.
+      </p>
+    </aside>
+  </Section>
+
+  <!-- 08 · CONTACT ----------------------------------------------------------->
   <Section
     id="contact"
-    index="07"
+    index="08"
     kicker="Contact"
     title="Need a founding designer with range?"
   >

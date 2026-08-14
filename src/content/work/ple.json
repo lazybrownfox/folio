@@ -1,0 +1,86 @@
+{
+  "slug": "ple",
+  "name": "Plé",
+  "tag": "branding · audio",
+  "role": "Brand identity",
+  "order": 8,
+  "images": [
+    {
+      "src": "/work/ple-cover.jpg",
+      "alt": "Plé brand image",
+      "fit": ""
+    },
+    {
+      "src": "/work/ple.jpg",
+      "alt": "Plé identity — logo and tagline",
+      "fit": "contain",
+      "bg": "#1a1714"
+    }
+  ],
+  "fit": "",
+  "study": {
+    "discriminant": true,
+    "value": {
+      "subtitle": "An identity for audio fiction — « aujourd’hui, les séries s’écoutent ».",
+      "services": [
+        "Brand identity",
+        "Art direction",
+        "Product concept"
+      ],
+      "sector": "Audio",
+      "hero": {
+        "src": "/work/ple-cover.jpg",
+        "alt": "Plé brand image — a phone outline drawn over a listener",
+        "fit": "",
+        "caption": "The phone drawn as a frame: the story happens through it, not on it."
+      },
+      "sections": [
+        {
+          "heading": "A name you can say out loud",
+          "body": "The premise fits in a sentence: series are something you listen to now. The mark takes it literally — a play triangle cut into a yellow tile, sitting next to a short, spoken name — because the identity is judged at its smallest size first.",
+          "facts": [
+            {
+              "title": "App icon",
+              "body": "A few millimetres, on a home screen full of competitors."
+            },
+            {
+              "title": "Cover thumbnail",
+              "body": "In a grid, next to artwork that is louder than it."
+            },
+            {
+              "title": "Glanced at while walking",
+              "body": "Read in motion, at arm’s length, once."
+            }
+          ],
+          "images": [
+            {
+              "src": "/work/ple.jpg",
+              "alt": "Plé logotype, tagline and play mark on black",
+              "fit": "contain",
+              "bg": "#1a1714",
+              "caption": "Mark, name and line — the whole brand in one slide."
+            }
+          ]
+        },
+        {
+          "heading": "What it looks like as a product",
+          "body": "A brand for audio fiction has to survive a library, a player and an episode page before it means anything. These concept screens put the mark under that pressure: covers side by side, a player that stays legible in one hand, and an episode list where the typography does the sorting.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/rebuilt/ple-app.svg",
+              "alt": "Plé app concept screens: library, player and series page",
+              "fit": "contain",
+              "bg": "#1f1917"
+            }
+          ]
+        }
+      ],
+      "tools": [
+        "Figma",
+        "Logotype and mark",
+        "Concept screens"
+      ]
+    }
+  }
+}

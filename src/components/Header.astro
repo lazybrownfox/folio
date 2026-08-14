@@ -1,38 +1,95 @@
 ---
+// Case-study pages live under /work/<slug>, so anchors have to point back home
+// instead of hunting for sections that only exist on the index.
+const onHome = Astro.url.pathname === "/";
+const to = (hash: string) => (onHome ? hash : `/${hash}`);
+
 const anchors = [
   { id: "#cases", label: "Cases" },
   { id: "#craft", label: "Motion" },
   { id: "#systems", label: "Systems" },
   { id: "#brand", label: "Brand" },
   { id: "#work", label: "Work" },
+  { id: "#approach", label: "Approach" },
   { id: "#contact", label: "Contact" },
 ];
 ---
 <header
   class="fixed inset-x-0 top-0 z-50 flex items-center justify-between gap-4 px-5 py-3 sm:px-8"
 >
-  <a href="#top" class="group flex items-baseline" aria-label="Back to top">
+  <a href={to("#top")} class="group flex items-baseline" aria-label="Back to top">
     <span class="font-display text-xl text-fg">fhd</span>
     <span class="font-display text-xl italic text-accent">.</span>
   </a>
 
-  <nav
-    data-anchors
-    aria-label="Sections"
-    class="pointer-events-auto hidden items-center gap-6 md:flex"
-  >
-    {
-      anchors.map((a) => (
-        <a
-          href={a.id}
-          data-nav-label={a.label}
-          class="text-sm font-semibold text-muted transition-colors hover:text-fg"
-        >
-          {a.label}
-        </a>
-      ))
+  <div class="flex items-center gap-6">
+    <nav
+      data-anchors
+      aria-label="Sections"
+      class="pointer-events-auto hidden items-center gap-6 md:flex"
+    >
+      {
+        anchors.map((a) => (
+          <a
+            href={to(a.id)}
+            data-nav-label={a.label}
+            class="text-sm font-semibold text-muted transition-colors hover:text-fg"
+          >
+            {a.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <!-- Half-filled disc: the universal "flip the ground" affordance. State is
+         driven client-side by site.ts (aria-pressed + label). -->
+    <button
+      type="button"
+      data-theme-btn
+      class="theme-btn"
+      aria-pressed="false"
+      aria-label="Switch to the light theme"
+    ></button>
+  </div>
+
+  <style>
+    .theme-btn {
+      width: 15px;
+      height: 15px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      border: 1px solid var(--color-muted);
+      background: linear-gradient(
+        90deg,
+        var(--color-muted) 0 50%,
+        transparent 50% 100%
+      );
+      cursor: pointer;
+      transition:
+        border-color 0.25s ease,
+        background 0.25s ease,
+        transform 0.25s ease;
     }
-  </nav>
+
+    .theme-btn:hover {
+      border-color: var(--color-fg);
+      background: linear-gradient(
+        90deg,
+        var(--color-fg) 0 50%,
+        transparent 50% 100%
+      );
+      transform: rotate(180deg);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .theme-btn {
+        transition: none;
+      }
+      .theme-btn:hover {
+        transform: none;
+      }
+    }
+  </style>
 
   <script is:inline>
     document.querySelectorAll('[data-nav-label]').forEach(function (link) {

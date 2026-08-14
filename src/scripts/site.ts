@@ -14,6 +14,7 @@ const prefersReduced = window.matchMedia(
 
 type Mode = "story" | "libre";
 const STORAGE_KEY = "folio-mode";
+const THEME_KEY = "folio-theme";
 
 // ScrollTrigger.refresh can throw in its 100vh path; never let that abort us.
 function safeRefresh() {
@@ -116,6 +117,45 @@ function buildStatement() {
   }
 }
 
+/* ------------------------------------------------------- Approach counters
+   Count-up on the measured ledger. Strictly additive: the final value is
+   server-rendered, so if this never runs (no JS, reduced motion, a throw) the
+   numbers are simply correct. We only ever rewrite textContent while the tween
+   is live, and always land on the exact formatted string from the markup. */
+function buildCounters() {
+  if (prefersReduced) return;
+  const cells = document.querySelectorAll<HTMLElement>("[data-count]");
+  if (!cells.length) return;
+
+  cells.forEach((el) => {
+    const target = Number(el.dataset.count);
+    const final = el.dataset.countFinal ?? String(target);
+    if (!Number.isFinite(target)) return;
+
+    try {
+      const state = { n: 0 };
+      gsap.to(state, {
+        n: target,
+        duration: 1.4,
+        ease: "power2.out",
+        scrollTrigger: { trigger: el, start: "top 85%", once: true },
+        onStart: () => {
+          el.textContent = "0";
+        },
+        onUpdate: () => {
+          el.textContent = Math.round(state.n).toLocaleString("en-US");
+        },
+        // Never let rounding leave us one off the real, audited figure.
+        onComplete: () => {
+          el.textContent = final;
+        },
+      });
+    } catch {
+      el.textContent = final;
+    }
+  });
+}
+
 /* ----------------------------------------------- Story-only scenes */
 let storyTriggers: ScrollTrigger[] = [];
 
@@ -153,6 +193,45 @@ function applyMode(mode: Mode, shouldTrack = false) {
   if (shouldTrack) {
     window.posthog?.capture("mode_toggled", { mode });
   }
+}
+
+/* ------------------------------------------------------------- Theme switch */
+/* The head script has already set `data-theme` before first paint (no FOUC);
+   this only handles the toggle and persistence. Switching resizes the display
+   type, so ScrollTrigger has to re-measure afterwards. */
+type Theme = "dark" | "light";
+
+function applyTheme(theme: Theme, shouldTrack = false) {
+  html.dataset.theme = theme;
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-theme-btn]")
+    .forEach((b) => {
+      b.setAttribute("aria-pressed", String(theme === "light"));
+      b.setAttribute(
+        "aria-label",
+        theme === "light" ? "Switch to the dark theme" : "Switch to the light theme",
+      );
+    });
+  try {
+    localStorage.setItem(THEME_KEY, theme);
+  } catch {
+    /* private mode — the theme just won't persist */
+  }
+  safeRefresh();
+  if (shouldTrack) {
+    window.posthog?.capture("theme_toggled", { theme });
+  }
+}
+
+function wireTheme() {
+  applyTheme(html.dataset.theme === "light" ? "light" : "dark");
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-theme-btn]")
+    .forEach((b) => {
+      b.addEventListener("click", () => {
+        applyTheme(html.dataset.theme === "light" ? "dark" : "light", true);
+      });
+    });
 }
 
 /* --------------------------------------------------- "scrolled" + anchors */
@@ -214,11 +293,12 @@ function initMotion() {
     });
   });
 
-  // Restore the quiet poster tiles after leaving fullscreen.
+  // Restore the quiet poster tiles after leaving fullscreen. Scoped to the
+  // click-to-fullscreen tiles: case-study clips keep their own controls.
   document.addEventListener("fullscreenchange", () => {
     if (document.fullscreenElement || prefersReduced) return;
     document
-      .querySelectorAll<HTMLVideoElement>("[data-motion]")
+      .querySelectorAll<HTMLVideoElement>("[data-fullscreen] [data-motion]")
       .forEach((v) => (v.controls = false));
   });
 
@@ -249,20 +329,6 @@ function initMotion() {
   vids.forEach((v) => io.observe(v));
 }
 
-/* ----------------- Cross-section "open project in gallery" event bridge ---- */
-function wireOpenWork() {
-  document.querySelectorAll<HTMLElement>("[data-open-work]").forEach((el) => {
-    el.addEventListener("click", () => {
-      const name = el.dataset.openWork;
-      if (name) {
-        window.dispatchEvent(
-          new CustomEvent("folio:open-work", { detail: { name } }),
-        );
-      }
-    });
-  });
-}
-
 /* --------------------------------------------------------------- Bootstrap */
 function init() {
   const saved = localStorage.getItem(STORAGE_KEY) as Mode | null;
@@ -270,10 +336,11 @@ function init() {
 
   buildReveals();
   buildStatement();
+  buildCounters();
   trackScrolled();
   wireAnchors();
   initMotion();
-  wireOpenWork();
+  wireTheme();
   applyMode(initial);
 
   document

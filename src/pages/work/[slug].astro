@@ -1,0 +1,149 @@
+---
+import Base from "../../layouts/Base.astro";
+import CaseFigure from "../../components/CaseFigure.astro";
+import { STUDIES, type Work } from "../../data/works";
+
+export function getStaticPaths() {
+  return STUDIES.map((work) => ({ params: { slug: work.slug }, props: { work } }));
+}
+
+interface Props {
+  work: Work;
+}
+
+const { work } = Astro.props;
+const study = work.study!;
+
+const index = STUDIES.findIndex((w) => w.slug === work.slug);
+const previous = STUDIES[(index - 1 + STUDIES.length) % STUDIES.length];
+const next = STUDIES[(index + 1) % STUDIES.length];
+
+const title = `${work.name} — François-Henri Dupuich`;
+---
+
+<Base title={title} description={study.subtitle}>
+  <article class="case">
+    <!-- BREADCRUMB ---------------------------------------------------------->
+    <nav class="case-crumbs" aria-label="Breadcrumb">
+      <a href="/#work">Selected work</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{work.name}</span>
+    </nav>
+
+    <!-- HERO ---------------------------------------------------------------->
+    <header class="case-hero">
+      <div class="case-hero-top">
+        <div class="case-hero-heading">
+          <p class="tag" data-reveal>{work.tag}</p>
+          <h1 class="case-title" data-reveal>{work.name}</h1>
+          <p class="case-lede" data-reveal>{study.subtitle}</p>
+        </div>
+
+        <div class="case-details" data-reveal data-reveal-delay="0.05">
+          <span class="case-label">Project details</span>
+          <div class="case-details-grid">
+            <div>
+              <span class="case-details-head">Contribution</span>
+              {study.services.map((service) => <div class="case-details-row">{service}</div>)}
+            </div>
+            <div>
+              <span class="case-details-head">Context</span>
+              {study.sector && <div class="case-details-row">{study.sector}</div>}
+              {study.year && <div class="case-details-row">{study.year}</div>}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div data-reveal data-reveal-delay="0.1">
+        <CaseFigure image={study.hero} fit={work.fit} bg={work.bg} size="hero" eager />
+      </div>
+    </header>
+
+    <!-- BLOCKS -------------------------------------------------------------->
+    {
+      study.sections.map((section, i) => (
+        <section class="case-block">
+          <div class="case-text" data-reveal>
+            <span class="case-num tag">{String(i + 1).padStart(2, "0")}</span>
+            <h2>{section.heading}</h2>
+            <p>{section.body}</p>
+            {section.facts && section.facts.length > 0 && (
+              <div class="case-facts">
+                {section.facts.map((fact) => (
+                  <div class="case-fact">
+                    <span class="case-fact-title">{fact.title}</span>
+                    <p class="case-fact-body">{fact.body}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          {section.images.length > 0 && (
+            <div
+              class:list={["case-media", section.images.length > 1 && "is-pair"]}
+              data-reveal
+              data-reveal-delay="0.05"
+            >
+              {section.images.map((image) => (
+                <CaseFigure image={image} fit={work.fit} bg={work.bg} />
+              ))}
+            </div>
+          )}
+        </section>
+      ))
+    }
+
+    {
+      study.outro && (
+        <div class="case-outro" data-reveal>
+          <p>{study.outro}</p>
+        </div>
+      )
+    }
+
+    {
+      study.tools && study.tools.length > 0 && (
+        <div class="case-rule" data-reveal>
+          <span class="case-label">Tools</span>
+          <div class="case-tools-grid">
+            <div>
+              <span class="case-details-head">Role</span>
+              <div class="case-details-row">{work.role}</div>
+            </div>
+            <div>
+              <span class="case-details-head">Used here</span>
+              {study.tools.map((tool) => <div class="case-details-row">{tool}</div>)}
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    <!-- NEXT / PREVIOUS ------------------------------------------------------>
+    <nav class="case-rail" aria-label="More projects">
+      <a href={`/work/${previous.slug}`} class="case-rail-link">
+        <span class="tag">Previous</span>
+        <span class="case-rail-name">{previous.name}</span>
+      </a>
+      <a href={`/work/${next.slug}`} class="case-rail-link is-next">
+        <span class="tag">Next</span>
+        <span class="case-rail-name">{next.name}</span>
+      </a>
+    </nav>
+
+    <!-- CTA ------------------------------------------------------------------>
+    <aside class="case-cta" data-reveal>
+      <p>
+        There is more behind each of these — process, dead ends, the files
+        themselves. Happy to walk through any of it.
+      </p>
+      <div class="case-cta-links">
+        <a href="mailto:francoishenri.dupuich@gmail.com" class="case-cta-primary">
+          Get in touch
+        </a>
+        <a href="/#work" class="case-cta-secondary">All work</a>
+      </div>
+    </aside>
+  </article>
+</Base>

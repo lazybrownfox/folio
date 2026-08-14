@@ -1,0 +1,102 @@
+{
+  "slug": "akt",
+  "name": "AKT",
+  "tag": "product · fintech",
+  "role": "Product design · fintech",
+  "order": 6,
+  "images": [
+    {
+      "src": "/work/akt.jpg",
+      "alt": "akt.io fintech app",
+      "video": "/work/video/akt.mp4",
+      "videoAspect": "768 / 1280",
+      "fit": "contain",
+      "bg": "#0a0d12"
+    }
+  ],
+  "fit": "",
+  "study": {
+    "discriminant": true,
+    "value": {
+      "subtitle": "A euro-and-crypto account — and the release where the entire product turned dark.",
+      "services": [
+        "Product design",
+        "Design system",
+        "Theming"
+      ],
+      "sector": "Fintech",
+      "year": "2022",
+      "hero": {
+        "src": "/work/akt.jpg",
+        "alt": "akt.io switching from light to dark theme",
+        "video": "/work/video/akt.mp4",
+        "videoAspect": "768 / 1280",
+        "fit": "contain",
+        "bg": "#0a0d12",
+        "caption": "The switch to dark, announced in-product — prototype recording"
+      },
+      "sections": [
+        {
+          "heading": "Two kinds of money, one balance",
+          "body": "The account holds euros and crypto at the same time, so the dashboard has to answer “how much do I have” before it answers “in what”. A single total leads, the split follows as cards, and the day’s movement is stated twice — in euros and in percent — because that is how people actually check.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/akt/image-77.png",
+              "alt": "Dashboard with total balance, euro and crypto cards and transaction history",
+              "fit": "contain",
+              "bg": "#0a0d12",
+              "caption": "Total first, composition second, movement in both units."
+            }
+          ]
+        },
+        {
+          "heading": "Market data without the theatre",
+          "body": "The asset screen holds a price history, a buy, a sell and the tabs that separate market data from your own performance. A chart in a wallet is decoration unless it answers a question, so the line keeps a readable range, a labelled value on the crosshair and timeframes that run from a day to everything.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/akt/image-78.png",
+              "alt": "Asset screen with balance, buy and sell actions and price history chart",
+              "fit": "contain",
+              "bg": "#0a0d12",
+              "caption": "Buy, sell, and a chart that answers a question."
+            }
+          ]
+        },
+        {
+          "heading": "A theme is a system question",
+          "body": "Dark mode shipped as an event: announced inside the product, with a way to decline and no consequence for saying no. Behind the modal it is design-system work — every token needs a dark counterpart, and three of them are where a fintech interface breaks quietly when the palette is inverted.",
+          "facts": [
+            {
+              "title": "Chart lines",
+              "body": "A series palette that separates on white stops separating on black."
+            },
+            {
+              "title": "Gradient cards",
+              "body": "Gradients that read as depth on paper flatten into a smudge."
+            },
+            {
+              "title": "Disabled states",
+              "body": "Dimmed grey disappears entirely once the ground is dark."
+            }
+          ],
+          "images": [
+            {
+              "src": "/work/shots/akt-darkmode.jpg",
+              "alt": "In-app modal announcing dark mode with accept and decline options",
+              "fit": "contain",
+              "bg": "#0a0d12",
+              "caption": "Announced, optional, reversible."
+            }
+          ]
+        }
+      ],
+      "tools": [
+        "Figma",
+        "Design tokens",
+        "Light and dark theming"
+      ]
+    }
+  }
+}

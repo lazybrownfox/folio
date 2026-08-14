@@ -1,0 +1,20 @@
+{
+  "slug": "snatch",
+  "name": "Snatch",
+  "tag": "open-source · Rust CLI",
+  "role": "Logo · developer tool",
+  "order": 11,
+  "images": [
+    {
+      "src": "/work/snatch.jpg",
+      "alt": "Snatch open-source CLI logo",
+      "fit": "contain",
+      "bg": "#0a2a55"
+    }
+  ],
+  "fit": "contain",
+  "bg": "#0a2a55",
+  "study": {
+    "discriminant": false
+  }
+}

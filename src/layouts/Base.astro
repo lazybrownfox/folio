@@ -43,12 +43,15 @@ const {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Rethink+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
     />
+    <!-- General Sans (Fontshare) — the display voice, everywhere --font-display is used -->
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700,800&display=swap" />
 
     <PostHog />
 
-    <!-- Anti-FOUC: set mode + arm reveals before first paint. -->
+    <!-- Anti-FOUC: set mode + theme and arm reveals before first paint. -->
     <script is:inline>
       (function () {
         try {
@@ -56,6 +59,20 @@ const {
           var m = localStorage.getItem("folio-mode");
           var r = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
           d.dataset.mode = m || (r ? "libre" : "story");
+
+          // Theme: ?theme=light|dark wins (and sticks, so it survives a jump
+          // to a case-study page), then whatever was last toggled. Dark is
+          // still the default art direction.
+          var t = null;
+          try {
+            t = new URLSearchParams(location.search).get("theme");
+          } catch (e) {}
+          if (t === "light" || t === "dark") {
+            localStorage.setItem("folio-theme", t);
+          } else {
+            t = localStorage.getItem("folio-theme");
+          }
+          d.dataset.theme = t === "light" ? "light" : "dark";
           d.classList.add("js");
           if (!r) {
             d.classList.add("armed");

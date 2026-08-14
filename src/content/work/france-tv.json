@@ -1,0 +1,116 @@
+{
+  "slug": "france-tv",
+  "name": "France TV",
+  "tag": "product · design system · broadcast",
+  "role": "Product design · design system",
+  "order": 1,
+  "images": [
+    {
+      "src": "/work/video/posters/ftv.jpg",
+      "alt": "France Télévisions Outre-mer portal app",
+      "video": "/work/video/ftv.mp4",
+      "videoAspect": "592 / 1280",
+      "fit": "contain",
+      "bg": "#0a0d12"
+    }
+  ],
+  "fit": "",
+  "study": {
+    "discriminant": true,
+    "value": {
+      "subtitle": "Notifications for France Télévisions' Outre-mer portal — many territories, one Olympic summer, and a reader who mostly wants news from their own island.",
+      "services": [
+        "Product design",
+        "Design system",
+        "Component specification"
+      ],
+      "sector": "Public broadcast",
+      "year": "2024",
+      "hero": {
+        "src": "/work/video/posters/ftv.jpg",
+        "alt": "1ère app — Olympics notification opt-in",
+        "video": "/work/video/ftv.mp4",
+        "videoAspect": "592 / 1280",
+        "fit": "contain",
+        "bg": "#0a0d12",
+        "caption": "Splash to opt-in — prototype recording"
+      },
+      "sections": [
+        {
+          "heading": "One portal, many territories",
+          "body": "The 1ère portal gathers news, live radio and television for the Outre-mer networks in a single app. The catch is that “the news” is not one feed: a reader in Guyane has little use for Martinique’s alerts, and everyone shares a handful of national moments. Personalisation here is not a growth feature, it is the basic condition for the app to be usable at all.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/shots/ftv-home.jpg",
+              "alt": "Home feed of the Outre-mer portal with headline articles",
+              "fit": "contain",
+              "bg": "#0a0d12",
+              "caption": "À la une, en continu, tv, radio — one portal per territory."
+            }
+          ]
+        },
+        {
+          "heading": "Preferences as a screen, not a settings dump",
+          "body": "Three kinds of preference, as plain toggles, with the current state readable at a glance. The failure case lives in the same screen: if system notifications are off nothing here can work, so the screen says so and offers the way to device settings instead of silently doing nothing.",
+          "facts": [
+            {
+              "title": "Default territory",
+              "body": "One home island, chosen once."
+            },
+            {
+              "title": "Secondary territories",
+              "body": "Added as needed, for readers who follow more than one."
+            },
+            {
+              "title": "Events",
+              "body": "The handful of national moments, kept in their own group."
+            }
+          ],
+          "images": [
+            {
+              "src": "/work/shots/ftv-notifs.jpg",
+              "alt": "Notification preferences: default territory, secondary territories, events",
+              "fit": "contain",
+              "bg": "#0a0d12",
+              "caption": "Default territory, secondary territories, events — and the recovery path."
+            }
+          ]
+        },
+        {
+          "heading": "Asking once, at the right moment",
+          "body": "For Paris 2024 the ask is a single modal: what you will receive, why it matters now, and two honest exits. An opt-in is an event, not a permanent nag — and whatever is chosen here stays editable in the notifications screen, so declining costs the reader nothing.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/shots/ftv-optin.jpg",
+              "alt": "Olympics notification opt-in modal with accept and decline",
+              "fit": "contain",
+              "bg": "#0a0d12",
+              "caption": "One ask, two exits, reversible afterwards."
+            }
+          ]
+        },
+        {
+          "heading": "Player rules, written down",
+          "body": "Product work like this only holds if the components are specified rather than described. The player carries a live “Direct” tag, and the progress bar behaves differently when it is present: what is drawn, what truncates, which timing labels stay. Documented that way, the rule survives handoff and the next team that touches it.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/ftv-player-spec.jpg",
+              "alt": "Player specification: progress bar with and without the live Direct tag",
+              "fit": "contain",
+              "bg": "#f2f1ee",
+              "caption": "Player specification — the Direct tag and its progress bar."
+            }
+          ]
+        }
+      ],
+      "tools": [
+        "Figma",
+        "Interactive prototype",
+        "Component specifications"
+      ]
+    }
+  }
+}

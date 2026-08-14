@@ -1,0 +1,72 @@
+{
+  "slug": "plume",
+  "name": "Plume",
+  "tag": "branding · mobility",
+  "role": "Brand identity",
+  "order": 9,
+  "images": [
+    {
+      "src": "/work/plume-cover.jpg",
+      "alt": "Plume brand image",
+      "fit": ""
+    },
+    {
+      "src": "/work/plume-slide.jpg",
+      "alt": "Plume identity — last-mile mobility",
+      "fit": "contain",
+      "bg": "#0a0d12"
+    }
+  ],
+  "fit": "",
+  "study": {
+    "discriminant": true,
+    "value": {
+      "subtitle": "« Le trait d’union ». A last-mile identity for folding scooters, between companies and public transport.",
+      "services": [
+        "Brand identity",
+        "Art direction"
+      ],
+      "sector": "Mobility",
+      "hero": {
+        "src": "/work/plume-cover.jpg",
+        "alt": "Plume brand image",
+        "fit": ""
+      },
+      "sections": [
+        {
+          "heading": "A hyphen, not a vehicle",
+          "body": "The brand does not sell a scooter; it sells the missing link between a train station and an office, and between small towns and the cities they commute to. That positioning decides the whole register: the object is folded, carried, taken up an escalator — so the imagery stays on the person and the movement, and the mark keeps out of the way. It sits small over the photograph, lower case, in the same weight as the sentence it introduces.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/plume-trait-union.jpg",
+              "alt": "Plume positioning slide: a commuter carrying a folded scooter on an escalator",
+              "fit": "contain",
+              "bg": "#ffffff",
+              "caption": "The positioning slide — the mark, then the sentence."
+            }
+          ]
+        },
+        {
+          "heading": "Useful before desirable",
+          "body": "The second promise is protection, not performance: useful first, so you are safe and free to move. Keeping the claim that plain rules out the whole vocabulary of speed and gear that this category usually reaches for — no dynamic angles, no product hero shots, no urban-warrior tone. Light, bright, and about the person.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/plume-utile.jpg",
+              "alt": "Plume slide: sunlit figure stretching, with the “useful first” line",
+              "fit": "contain",
+              "bg": "#ffffff",
+              "caption": "« Utile, d’abord » — the second half of the statement."
+            }
+          ]
+        }
+      ],
+      "tools": [
+        "Logotype and wordmark",
+        "Art direction",
+        "Photography-led layouts"
+      ]
+    }
+  }
+}

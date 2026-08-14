@@ -1,0 +1,102 @@
+{
+  "slug": "parions-sport",
+  "name": "Parions Sport",
+  "tag": "product · gaming",
+  "role": "Product design · accessibility",
+  "order": 0,
+  "images": [
+    {
+      "src": "/work/video/posters/fdj.jpg",
+      "alt": "Parions Sport live betting interface",
+      "video": "/work/video/fdj.mp4",
+      "videoAspect": "452 / 928",
+      "fit": "contain",
+      "bg": "#0a0d12"
+    }
+  ],
+  "fit": "",
+  "study": {
+    "discriminant": true,
+    "value": {
+      "subtitle": "Live sports betting, where the match itself keeps interrupting the interface.",
+      "services": [
+        "Product design",
+        "Accessibility · RGAA 4",
+        "AI-assisted ideation"
+      ],
+      "sector": "Gaming",
+      "hero": {
+        "src": "/work/video/posters/fdj.jpg",
+        "alt": "Parions Sport live betting list",
+        "video": "/work/video/fdj.mp4",
+        "videoAspect": "452 / 928",
+        "fit": "contain",
+        "bg": "#0a0d12",
+        "caption": "Live list — prototype recording"
+      },
+      "sections": [
+        {
+          "heading": "A list that is never still",
+          "body": "Everything on this screen carries a clock. Odds move, matches start, a stream plays at the top, promotions rotate. The list has to stay readable while all of that changes underneath it. The unit is the match card — competition, kick-off, two teams, three prices — repeated with enough air that the eye can skip a card it does not care about, which is most of them.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/shots/fdj-live.jpg",
+              "alt": "Match cards with competition, kick-off time and three odds",
+              "fit": "contain",
+              "bg": "#0a0d12",
+              "caption": "The match card, repeated: the only stable thing on the screen."
+            }
+          ]
+        },
+        {
+          "heading": "When a goal lands, the card says so",
+          "body": "A goal changes the value of every price on that card. Rather than leave stale odds sitting there, the card takes the event: the goal is announced across it and the three prices dim while they are recomputed, then the card returns to normal. The interface admits it does not know for a second — which is far cheaper than being confidently wrong about money.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/shots/fdj-goal.jpg",
+              "alt": "A goal notification taking over a live match card, odds dimmed",
+              "fit": "contain",
+              "bg": "#0a0d12",
+              "caption": "Goal announced, prices suspended, card restored once valid."
+            }
+          ]
+        },
+        {
+          "heading": "Dense, dark, and still accessible",
+          "body": "A dark, information-dense gaming product is exactly where accessibility gets dropped. Designing to RGAA 4 meant holding three constraints on a screen that never stops moving. They were applied during exploration — including the AI-assisted rounds — rather than audited at the end, which is the only way they survive contact with a deadline.",
+          "facts": [
+            {
+              "title": "Contrast",
+              "body": "Held on every price and label, not only on body text."
+            },
+            {
+              "title": "Never colour alone",
+              "body": "State carried by more than hue, for every status a row can take."
+            },
+            {
+              "title": "Touch targets",
+              "body": "Sized to survive a thumb on a list that moves underneath it."
+            }
+          ],
+          "images": [
+            {
+              "src": "/work/shots/fdj-list.jpg",
+              "alt": "Betting list with promotions and upcoming matches",
+              "fit": "contain",
+              "bg": "#0a0d12",
+              "caption": "Promotions and upcoming matches share the same reading rhythm."
+            }
+          ]
+        }
+      ],
+      "tools": [
+        "Figma",
+        "Interactive prototype",
+        "RGAA 4 criteria",
+        "AI-assisted ideation"
+      ]
+    }
+  }
+}

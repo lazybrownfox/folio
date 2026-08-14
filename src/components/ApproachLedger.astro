@@ -1,0 +1,62 @@
+---
+// Measured ledger of the AI-native practice. Numbers are counted from the local
+// agent logs (~/.claude/projects/**/*.jsonl, aggregating `tool_use` blocks) and
+// pasted here as literals — the site stays static, nothing is fetched at runtime.
+//
+// IMPORTANT: those logs are purged after 30 days, so this is a rolling window,
+// never a career total. Whoever refreshes these figures must move `window` and
+// `measuredOn` with them, or the caption starts lying.
+const measuredOn = "29 Jul 2026";
+const measuredWindow = "28 Jun – 29 Jul 2026";
+
+const ledger = [
+  {
+    value: 7182,
+    label: "agent tool calls",
+    note: "the mechanical half of the work, delegated",
+  },
+  {
+    value: 29,
+    label: "active days",
+    note: "not a sprint — the normal rhythm",
+  },
+  {
+    value: 1168,
+    label: "Figma operations",
+    note: "tokens, variants and screens driven programmatically",
+  },
+  {
+    value: 856,
+    label: "browser actions",
+    note: "live apps crawled, rebuilt and verified",
+  },
+];
+
+const fmt = (n: number) => n.toLocaleString("en-US");
+---
+
+<div class="ledger" data-ledger>
+  {
+    ledger.map((item, i) => (
+      <div data-reveal data-reveal-delay={String(i * 0.05)} class="ledger-cell">
+        {/* The final value is rendered server-side: if JS never runs, or motion
+            is reduced, the number is simply correct and readable. The count-up
+            in site.ts only animates from 0 when it is safe to do so. */}
+        <span
+          class="ledger-value"
+          data-count={item.value}
+          data-count-final={fmt(item.value)}
+        >
+          {fmt(item.value)}
+        </span>
+        <span class="ledger-label">{item.label}</span>
+        <span class="ledger-note">{item.note}</span>
+      </div>
+    ))
+  }
+</div>
+
+<p data-reveal class="ledger-caption">
+  measured {measuredOn} from local agent logs · {measuredWindow} · logs are purged after
+  30 days, so this is a rolling window, not a career total
+</p>
