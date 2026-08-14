@@ -52,8 +52,21 @@
         },
         {
           "heading": "Preferences as a screen, not a settings dump",
-          "body": "One default territory, secondary territories added as needed, then events kept in their own group — plain toggles, with the current state readable at a glance. The failure case lives in the same screen: if system notifications are off nothing here can work, so the screen says so and offers the way to device settings instead of silently doing nothing.",
-          "facts": [],
+          "body": "Three kinds of preference, as plain toggles, with the current state readable at a glance. The failure case lives in the same screen: if system notifications are off nothing here can work, so the screen says so and offers the way to device settings instead of silently doing nothing.",
+          "facts": [
+            {
+              "title": "Default territory",
+              "body": "One home island, chosen once."
+            },
+            {
+              "title": "Secondary territories",
+              "body": "Added as needed, for readers who follow more than one."
+            },
+            {
+              "title": "Events",
+              "body": "The handful of national moments, kept in their own group."
+            }
+          ],
           "images": [
             {
               "src": "/work/shots/ftv-notifs.jpg",
@@ -93,7 +106,11 @@
           ]
         }
       ],
-      "tools": []
+      "tools": [
+        "Figma",
+        "Interactive prototype",
+        "Component specifications"
+      ]
     }
   }
 }

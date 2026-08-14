@@ -51,8 +51,25 @@
         },
         {
           "heading": "Bluetooth, without the anxiety",
-          "body": "Searching, found, connected — then “click to test”. That last step is the one that matters: the user confirms the pairing with their own eyes, by seeing the light react, instead of trusting a spinner that claims success. When a device fails to appear, the screen says what to check rather than looping.",
-          "facts": [],
+          "body": "Four states, and the last one is what makes the flow trustworthy: the user confirms the pairing with their own eyes, by seeing the light react, instead of trusting a spinner that claims success. When a device fails to appear, the screen says what to check rather than looping.",
+          "facts": [
+            {
+              "title": "Searching",
+              "body": "Scanning for whatever is in range."
+            },
+            {
+              "title": "Found",
+              "body": "The device appears under the name printed on the box."
+            },
+            {
+              "title": "Connected",
+              "body": "Paired — which is not the same as working."
+            },
+            {
+              "title": "Click to test",
+              "body": "The light reacts, and the user sees it happen."
+            }
+          ],
           "images": [
             {
               "src": "/work/shots/cosmo-connected.jpg",
@@ -92,7 +109,11 @@
           ]
         }
       ],
-      "tools": []
+      "tools": [
+        "Figma",
+        "Interactive prototype",
+        "Line-art illustration"
+      ]
     }
   }
 }

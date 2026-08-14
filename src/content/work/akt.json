@@ -66,8 +66,21 @@
         },
         {
           "heading": "A theme is a system question",
-          "body": "Dark mode shipped as an event: announced inside the product, with a way to decline and no consequence for saying no. Behind the modal it is design-system work — every token needs a dark counterpart, including chart lines, gradient cards and disabled states, which are precisely the parts of a fintech interface that break quietly when a palette is inverted.",
-          "facts": [],
+          "body": "Dark mode shipped as an event: announced inside the product, with a way to decline and no consequence for saying no. Behind the modal it is design-system work — every token needs a dark counterpart, and three of them are where a fintech interface breaks quietly when the palette is inverted.",
+          "facts": [
+            {
+              "title": "Chart lines",
+              "body": "A series palette that separates on white stops separating on black."
+            },
+            {
+              "title": "Gradient cards",
+              "body": "Gradients that read as depth on paper flatten into a smudge."
+            },
+            {
+              "title": "Disabled states",
+              "body": "Dimmed grey disappears entirely once the ground is dark."
+            }
+          ],
           "images": [
             {
               "src": "/work/shots/akt-darkmode.jpg",
@@ -79,7 +92,11 @@
           ]
         }
       ],
-      "tools": []
+      "tools": [
+        "Figma",
+        "Design tokens",
+        "Light and dark theming"
+      ]
     }
   }
 }

@@ -65,8 +65,21 @@
         },
         {
           "heading": "Dense, dark, and still accessible",
-          "body": "A dark, information-dense gaming product is exactly where accessibility gets dropped. Designing to RGAA 4 meant contrast on every price and label, state carried by more than colour alone, and touch targets that survive a thumb on a moving list. The constraints were applied during exploration — including the AI-assisted rounds — rather than audited at the end, which is the only way they survive contact with a deadline.",
-          "facts": [],
+          "body": "A dark, information-dense gaming product is exactly where accessibility gets dropped. Designing to RGAA 4 meant holding three constraints on a screen that never stops moving. They were applied during exploration — including the AI-assisted rounds — rather than audited at the end, which is the only way they survive contact with a deadline.",
+          "facts": [
+            {
+              "title": "Contrast",
+              "body": "Held on every price and label, not only on body text."
+            },
+            {
+              "title": "Never colour alone",
+              "body": "State carried by more than hue, for every status a row can take."
+            },
+            {
+              "title": "Touch targets",
+              "body": "Sized to survive a thumb on a list that moves underneath it."
+            }
+          ],
           "images": [
             {
               "src": "/work/shots/fdj-list.jpg",
@@ -78,7 +91,12 @@
           ]
         }
       ],
-      "tools": []
+      "tools": [
+        "Figma",
+        "Interactive prototype",
+        "RGAA 4 criteria",
+        "AI-assisted ideation"
+      ]
     }
   }
 }

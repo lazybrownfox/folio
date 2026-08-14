@@ -47,8 +47,25 @@
         },
         {
           "heading": "The markers carry the fleet",
-          "body": "One pin component, four readings: available, low battery, reserved, out of service. Colour does the sorting at a glance and the count takes over when the map zooms out and pins merge. The touch target stays at 44 px whatever the scale, because the map is used while standing in the street, not at a desk.",
-          "facts": [],
+          "body": "One pin component, four readings. Colour does the sorting at a glance and the count takes over when the map zooms out and pins merge. The touch target stays at 44 px whatever the scale, because the map is used while standing in the street, not at a desk.",
+          "facts": [
+            {
+              "title": "Available",
+              "body": "Ready to book, right now."
+            },
+            {
+              "title": "Low battery",
+              "body": "Still on the map, with the range it has left."
+            },
+            {
+              "title": "Reserved",
+              "body": "Held by a booking, briefly off the market."
+            },
+            {
+              "title": "Out of service",
+              "body": "Shown, so you do not walk to it, but not bookable."
+            }
+          ],
           "images": [
             {
               "src": "/work/rebuilt/cityscoot-markers.svg",
@@ -73,7 +90,11 @@
         }
       ],
       "outro": "The source files for this project are long gone. The three panels above are honest reconstructions, redrawn as vector from the surviving screens — the work is real, only the files were lost.",
-      "tools": []
+      "tools": [
+        "Mobile prototype",
+        "Component library",
+        "Redrawn as SVG for this page"
+      ]
     }
   }
 }

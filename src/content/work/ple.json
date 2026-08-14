@@ -37,8 +37,21 @@
       "sections": [
         {
           "heading": "A name you can say out loud",
-          "body": "The premise fits in a sentence: series are something you listen to now. The mark takes it literally — a play triangle cut into a yellow tile, sitting next to a short, spoken name — because the identity is judged at its smallest size first: an app icon, a cover thumbnail, a screen glanced at while walking.",
-          "facts": [],
+          "body": "The premise fits in a sentence: series are something you listen to now. The mark takes it literally — a play triangle cut into a yellow tile, sitting next to a short, spoken name — because the identity is judged at its smallest size first.",
+          "facts": [
+            {
+              "title": "App icon",
+              "body": "A few millimetres, on a home screen full of competitors."
+            },
+            {
+              "title": "Cover thumbnail",
+              "body": "In a grid, next to artwork that is louder than it."
+            },
+            {
+              "title": "Glanced at while walking",
+              "body": "Read in motion, at arm’s length, once."
+            }
+          ],
           "images": [
             {
               "src": "/work/ple.jpg",
@@ -63,7 +76,11 @@
           ]
         }
       ],
-      "tools": []
+      "tools": [
+        "Figma",
+        "Logotype and mark",
+        "Concept screens"
+      ]
     }
   }
 }
