@@ -397,9 +397,31 @@ html[data-mode="libre"] [data-connector] {
    hero plate, then heading → explanation → visual blocks, prev/next, CTA.
 ---------------------------------------------------------------------------- */
 .case {
-  max-width: 72rem;
+  max-width: 84rem;
   margin: 0 auto;
   padding: 7.5rem clamp(1.25rem, 4vw, 2rem) 6rem;
+}
+
+/* Pill label + full-width hairline — the module header used to introduce a
+   structured block (project details, a fact grid, tools) rather than a
+   narrative step. Never wraps the numbered story sections. */
+.case-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.32rem 0.9rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.case-rule {
+  margin-top: 0.9rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--color-line);
 }
 
 .case-crumbs {
@@ -426,40 +448,120 @@ html[data-mode="libre"] [data-connector] {
   margin-top: clamp(2rem, 5vw, 3.5rem);
 }
 
+.case-hero-top {
+  display: grid;
+  gap: clamp(2rem, 4vw, 4rem);
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 24rem);
+  align-items: start;
+}
+
+.case-hero-heading {
+  min-width: 0;
+}
+
 .case-title {
   font-family: var(--font-display);
   font-weight: 800;
   text-transform: uppercase;
-  font-size: clamp(3.2rem, 10.5vw, 8rem);
-  line-height: 0.88;
-  letter-spacing: -0.045em;
+  font-size: clamp(2.2rem, 5.4vw, 4.2rem);
+  line-height: 0.94;
+  letter-spacing: -0.03em;
   color: var(--color-fg);
   margin-top: 0.6rem;
 }
 
 .case-lede {
-  max-width: 46rem;
+  max-width: 32rem;
   margin-top: 1.2rem;
-  font-size: clamp(1.05rem, 1.8vw, 1.4rem);
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
   line-height: 1.5;
   color: var(--color-muted);
   text-wrap: pretty;
 }
 
-.case-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2.5rem;
-  margin: 2.2rem 0 2.8rem;
-  padding-top: 1.4rem;
-  border-top: 1px solid var(--color-line);
+@media (max-width: 860px) {
+  .case-hero-top {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
-.case-meta dd {
-  margin-top: 0.4rem;
-  max-width: 22rem;
+.case-details {
+  margin-top: 0.3rem;
+}
+
+@media (max-width: 860px) {
+  .case-details {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+}
+
+.case-details-grid {
+  display: grid;
+  gap: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  margin-top: 1rem;
+}
+
+.case-details-head {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+
+.case-details-row {
+  padding: 0.65rem 0;
+  border-top: 1px solid var(--color-line);
   font-size: 0.95rem;
   color: var(--color-fg);
+}
+
+/* --- fact grid: flat cards, no border/shadow, for a short enumerable list
+   already present in the copy (e.g. "three commitments") --- */
+.case-facts {
+  grid-column: 2;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  margin-top: 1.6rem;
+}
+
+@media (max-width: 640px) {
+  .case-facts {
+    grid-column: 1;
+  }
+}
+
+.case-fact {
+  padding: 1.4rem 1.5rem;
+  border-radius: 0.6rem;
+  background: var(--color-bg-elev);
+}
+
+.case-fact-title {
+  display: block;
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.6rem;
+  border-bottom: 1px solid var(--color-line);
+  font-weight: 600;
+  color: var(--color-fg);
+}
+
+.case-fact-body {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--color-muted);
+}
+
+/* --- tools: label + hairline, two columns (role / tools) --- */
+.case-tools-grid {
+  display: grid;
+  gap: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  margin-top: 1rem;
 }
 
 /* --- figures --- */
@@ -1378,12 +1480,6 @@ html[data-theme="light"].armed [data-reveal] {
    feeling actually comes from. */
 html[data-theme="light"] {
   --text-display: clamp(3rem, 7.8vw, 7rem);
-}
-
-html[data-theme="light"] .case-title {
-  font-size: clamp(3.4rem, 10.8vw, 8.4rem);
-  line-height: 0.88;
-  letter-spacing: -0.045em;
 }
 
 html[data-theme="light"] .work-row-name {

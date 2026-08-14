@@ -1,0 +1,98 @@
+{
+  "slug": "cosmo-connected",
+  "name": "CosmoConnected",
+  "tag": "product · connected mobility",
+  "role": "Product design · mobile app",
+  "order": 5,
+  "images": [
+    {
+      "src": "/work/video/posters/cosmoconnected.jpg",
+      "alt": "COSMO Connected app pairing flow",
+      "video": "/work/video/cosmoconnected.mp4",
+      "videoAspect": "498 / 1080",
+      "fit": "contain",
+      "bg": "#0a0d12"
+    }
+  ],
+  "fit": "",
+  "study": {
+    "discriminant": true,
+    "value": {
+      "subtitle": "Pairing a connected light with a phone — the part of a hardware product where people quietly give up.",
+      "services": [
+        "Product design",
+        "Onboarding",
+        "Mobile app"
+      ],
+      "sector": "Connected mobility",
+      "hero": {
+        "src": "/work/video/posters/cosmoconnected.jpg",
+        "alt": "COSMO Connected onboarding and pairing flow",
+        "video": "/work/video/cosmoconnected.mp4",
+        "videoAspect": "498 / 1080",
+        "fit": "contain",
+        "bg": "#0a0d12",
+        "caption": "The full pairing flow — prototype recording"
+      },
+      "sections": [
+        {
+          "heading": "Which device is in your hand?",
+          "body": "The range covers several products, and a pairing flow that guesses will fail for the wrong reason — leaving the user convinced the hardware is broken. So the first question is the plain one, asked once, in the words printed on the box.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/shots/cosmo-device.jpg",
+              "alt": "Device selection screen asking which Cosmo product is being paired",
+              "fit": "contain",
+              "bg": "#0a0d12",
+              "caption": "Ask first, in the words on the box."
+            }
+          ]
+        },
+        {
+          "heading": "Bluetooth, without the anxiety",
+          "body": "Searching, found, connected — then “click to test”. That last step is the one that matters: the user confirms the pairing with their own eyes, by seeing the light react, instead of trusting a spinner that claims success. When a device fails to appear, the screen says what to check rather than looping.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/shots/cosmo-connected.jpg",
+              "alt": "Connection screen confirming the device is connected, with a test action",
+              "fit": "contain",
+              "bg": "#0a0d12",
+              "caption": "Confirmation you can see, not a spinner you must believe."
+            }
+          ]
+        },
+        {
+          "heading": "The physical half of the flow",
+          "body": "Half of this onboarding happens with two hands on a bike: mounting the unit, aligning it, checking visibility. Those steps are drawn rather than photographed, because line art stays legible on a phone held in the street, in daylight, at arm’s length.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/shots/cosmo-install.jpg",
+              "alt": "Line-art illustration of the light unit clipping onto its saddle mount, above the installation screen heading",
+              "fit": "contain",
+              "bg": "#0a0d12",
+              "caption": "Drawn, not photographed — legibility beats realism outdoors."
+            }
+          ]
+        },
+        {
+          "heading": "Then the remote, the same way",
+          "body": "The handlebar remote reuses the pattern exactly: same sequence, same wording, same confirmation. Learning the flow once should be enough to add any device in the range — including the ones that did not exist when it was designed.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/shots/cosmo-remote.jpg",
+              "alt": "Remote control pairing confirmation screen",
+              "fit": "contain",
+              "bg": "#0a0d12",
+              "caption": "One pattern, reused for every device."
+            }
+          ]
+        }
+      ],
+      "tools": []
+    }
+  }
+}

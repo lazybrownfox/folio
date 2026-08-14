@@ -1,0 +1,79 @@
+{
+  "slug": "cityscoot",
+  "name": "Cityscoot",
+  "tag": "product · mobility",
+  "role": "Product design · mobile flows",
+  "order": 4,
+  "images": [
+    {
+      "src": "/work/cityscoot.jpg",
+      "alt": "Cityscoot app onboarding and booking screens",
+      "fit": "contain",
+      "bg": "#f5f4ef"
+    }
+  ],
+  "fit": "contain",
+  "bg": "#f5f4ef",
+  "study": {
+    "discriminant": true,
+    "value": {
+      "subtitle": "Free-floating scooter sharing in Paris: find one nearby, book it, ride — three steps that all happen on a pavement, one-handed.",
+      "services": [
+        "Product design",
+        "Mobile flows",
+        "Component library"
+      ],
+      "sector": "Mobility",
+      "hero": {
+        "src": "/work/cityscoot.jpg",
+        "alt": "Cityscoot onboarding screen and map with a selected scooter",
+        "fit": "contain",
+        "bg": "#f5f4ef",
+        "caption": "Onboarding, then the map — the app is really one screen."
+      },
+      "sections": [
+        {
+          "heading": "Everything happens on the map",
+          "body": "Finding a scooter, checking it and paying for it are not three destinations in a menu — they are one continuous move on a map. The sheet slides up over it with the address, the walking time, the remaining range, the plate and the payment method, and commits with a single button. Nothing sends you elsewhere and back.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/rebuilt/cityscoot-mapflow.svg",
+              "alt": "Booking flow: find, book, ride — map, vehicle sheet and confirmation",
+              "fit": "contain",
+              "bg": "#f5f4ef"
+            }
+          ]
+        },
+        {
+          "heading": "The markers carry the fleet",
+          "body": "One pin component, four readings: available, low battery, reserved, out of service. Colour does the sorting at a glance and the count takes over when the map zooms out and pins merge. The touch target stays at 44 px whatever the scale, because the map is used while standing in the street, not at a desk.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/rebuilt/cityscoot-markers.svg",
+              "alt": "Map marker states, clustering behaviour and pin template",
+              "fit": "contain",
+              "bg": "#f5f4ef"
+            }
+          ]
+        },
+        {
+          "heading": "A small library, in the product’s own voice",
+          "body": "Buttons, fields, filters and the anatomy of the vehicle sheet, with the palette that separates action from availability from low battery. The labels are written in the first person — « Je réserve mon Cityscoot » — so the interface speaks the way the brand does rather than in verbs from a component library.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/rebuilt/cityscoot-components.svg",
+              "alt": "Interface elements: buttons, inputs, filters, colours and sheet anatomy",
+              "fit": "contain",
+              "bg": "#f5f4ef"
+            }
+          ]
+        }
+      ],
+      "outro": "The source files for this project are long gone. The three panels above are honest reconstructions, redrawn as vector from the surviving screens — the work is real, only the files were lost.",
+      "tools": []
+    }
+  }
+}

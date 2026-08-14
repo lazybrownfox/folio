@@ -1,0 +1,112 @@
+{
+  "slug": "sncf",
+  "name": "SNCF · station UX",
+  "tag": "technical UI",
+  "role": "Information design · technical UI",
+  "order": 2,
+  "images": [
+    {
+      "src": "/work/sncf.jpg",
+      "alt": "SNCF passenger information work",
+      "fit": ""
+    }
+  ],
+  "fit": "",
+  "study": {
+    "discriminant": true,
+    "value": {
+      "subtitle": "Departure boards, status rules and train composition for stations — an interface read at thirty metres, in a hurry, usually by someone who is already late.",
+      "services": [
+        "Information design",
+        "Technical UI",
+        "Design tokens"
+      ],
+      "sector": "Rail",
+      "year": "2019–22",
+      "hero": {
+        "src": "/work/sncf/folio-ux-16.png",
+        "alt": "Travellers reading departure and arrival boards in a station concourse",
+        "fit": "contain",
+        "bg": "#f2f1ee",
+        "caption": "The real reading conditions: distance, crowd, glare, hurry."
+      },
+      "sections": [
+        {
+          "heading": "The brief was the station, not the screen",
+          "body": "The programme started as three commitments. Nothing about pixels. But the departure board is where those promises are kept or broken: it has roughly four seconds to say whether the train exists, when it leaves and where to stand.",
+          "facts": [
+            {
+              "title": "Open market",
+              "body": "Adapt to a rail market opening to competition."
+            },
+            {
+              "title": "Accessible",
+              "body": "Be more accessible, to every traveller."
+            },
+            {
+              "title": "Every situation",
+              "body": "Support travellers whatever is happening on the platform."
+            }
+          ],
+          "images": [
+            {
+              "src": "/work/sncf.jpg",
+              "alt": "Programme framing slides: adapt, support, be accessible",
+              "fit": "contain",
+              "bg": "#f2f1ee",
+              "caption": "Three commitments that all land on the same screen."
+            }
+          ]
+        },
+        {
+          "heading": "A palette built for distance",
+          "body": "These screens hang above a concourse: glare, oblique viewing angles, people reading while walking. The scale runs from blue-900 down to blue-50, with a single cyan accent held in reserve for live information — anything that moves, updates or is about to happen. Because the accent is rare, it carries meaning instead of decoration.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/sncf/folio-ux-23.png",
+              "alt": "Colour scale from blue-900 to blue-50 with a cyan live accent",
+              "fit": "contain",
+              "bg": "#0f0f3b",
+              "caption": "One ramp, one accent, reserved for what is live."
+            }
+          ]
+        },
+        {
+          "heading": "Status is the whole design",
+          "body": "A row is never just a destination and a time. It is on time, approaching, delayed, cancelled or replaced by a coach — and each state has to survive glare, colour blindness and a glance from across the hall. So state is carried three times over: a mark, a colour and a word. A cancellation breaks the row’s entire promise, so the destination is struck through and the platform slot is emptied rather than left showing a number nobody should walk to.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/sncf/info-train.png",
+              "alt": "Departure and arrival rows carrying status marks",
+              "fit": "contain",
+              "bg": "#0f0f3b",
+              "caption": "Departures in blue, arrivals in green — same status vocabulary."
+            }
+          ]
+        },
+        {
+          "heading": "Which carriage, and where to stand",
+          "body": "Composition strips map the train onto the platform: numbered carriages, occupancy, the train number repeated so it can be matched with the board overhead. It is the piece that turns “the train is here” into “walk that way” — the difference between information and help.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/sncf/train.png",
+              "alt": "Train composition strips with numbered carriages and occupancy",
+              "fit": "contain",
+              "bg": "#0f0f3b",
+              "caption": "Composition and occupancy, in both reading contexts."
+            }
+          ]
+        }
+      ],
+      "outro": "The departures board on the home page is a live rebuild of this work, running in your browser — statuses, split-flap and clock included.",
+      "tools": [
+        "Figma",
+        "Design tokens",
+        "Astro + GSAP (the live rebuild above)"
+      ]
+    }
+  }
+}

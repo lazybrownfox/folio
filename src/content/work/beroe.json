@@ -1,0 +1,19 @@
+{
+  "slug": "beroe",
+  "name": "beroé",
+  "tag": "branding",
+  "role": "Brand identity",
+  "order": 10,
+  "images": [
+    {
+      "src": "/work/beroe.jpg",
+      "alt": "beroé brand identity",
+      "fit": ""
+    }
+  ],
+  "fit": "contain",
+  "bg": "#cfcfcf",
+  "study": {
+    "discriminant": false
+  }
+}

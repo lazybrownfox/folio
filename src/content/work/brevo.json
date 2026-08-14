@@ -1,0 +1,18 @@
+{
+  "slug": "brevo",
+  "name": "Brevo",
+  "tag": "systems · ops",
+  "role": "Design ops · systems",
+  "order": 3,
+  "images": [
+    {
+      "src": "/work/brevo.jpg",
+      "alt": "Brevo design ops work",
+      "fit": ""
+    }
+  ],
+  "fit": "",
+  "study": {
+    "discriminant": false
+  }
+}

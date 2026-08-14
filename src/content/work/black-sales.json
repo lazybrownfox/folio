@@ -1,0 +1,18 @@
+{
+  "slug": "black-sales",
+  "name": "Black Sales",
+  "tag": "branding",
+  "role": "Brand identity",
+  "order": 7,
+  "images": [
+    {
+      "src": "/work/blacksails.jpg",
+      "alt": "Black Sales brand identity",
+      "fit": ""
+    }
+  ],
+  "fit": "",
+  "study": {
+    "discriminant": false
+  }
+}

@@ -32,20 +32,28 @@ const title = `${work.name} — François-Henri Dupuich`;
 
     <!-- HERO ---------------------------------------------------------------->
     <header class="case-hero">
-      <p class="tag" data-reveal>{work.tag}</p>
-      <h1 class="case-title" data-reveal>{work.name}</h1>
-      <p class="case-lede" data-reveal>{study.subtitle}</p>
+      <div class="case-hero-top">
+        <div class="case-hero-heading">
+          <p class="tag" data-reveal>{work.tag}</p>
+          <h1 class="case-title" data-reveal>{work.name}</h1>
+          <p class="case-lede" data-reveal>{study.subtitle}</p>
+        </div>
 
-      <dl class="case-meta" data-reveal data-reveal-delay="0.05">
-        <div>
-          <dt class="tag">Contribution</dt>
-          <dd>{study.services.join(", ")}</dd>
+        <div class="case-details" data-reveal data-reveal-delay="0.05">
+          <span class="case-label">Project details</span>
+          <div class="case-details-grid">
+            <div>
+              <span class="case-details-head">Contribution</span>
+              {study.services.map((service) => <div class="case-details-row">{service}</div>)}
+            </div>
+            <div>
+              <span class="case-details-head">Context</span>
+              {study.sector && <div class="case-details-row">{study.sector}</div>}
+              {study.year && <div class="case-details-row">{study.year}</div>}
+            </div>
+          </div>
         </div>
-        <div>
-          <dt class="tag">Context</dt>
-          <dd>{[study.sector, study.year].filter(Boolean).join(" · ")}</dd>
-        </div>
-      </dl>
+      </div>
 
       <div data-reveal data-reveal-delay="0.1">
         <CaseFigure image={study.hero} fit={work.fit} bg={work.bg} size="hero" eager />
@@ -60,6 +68,16 @@ const title = `${work.name} — François-Henri Dupuich`;
             <span class="case-num tag">{String(i + 1).padStart(2, "0")}</span>
             <h2>{section.heading}</h2>
             <p>{section.body}</p>
+            {section.facts && section.facts.length > 0 && (
+              <div class="case-facts">
+                {section.facts.map((fact) => (
+                  <div class="case-fact">
+                    <span class="case-fact-title">{fact.title}</span>
+                    <p class="case-fact-body">{fact.body}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           {section.images.length > 0 && (
             <div
@@ -80,6 +98,24 @@ const title = `${work.name} — François-Henri Dupuich`;
       study.outro && (
         <div class="case-outro" data-reveal>
           <p>{study.outro}</p>
+        </div>
+      )
+    }
+
+    {
+      study.tools && study.tools.length > 0 && (
+        <div class="case-rule" data-reveal>
+          <span class="case-label">Tools</span>
+          <div class="case-tools-grid">
+            <div>
+              <span class="case-details-head">Role</span>
+              <div class="case-details-row">{work.role}</div>
+            </div>
+            <div>
+              <span class="case-details-head">Used here</span>
+              {study.tools.map((tool) => <div class="case-details-row">{tool}</div>)}
+            </div>
+          </div>
         </div>
       )
     }

@@ -1,0 +1,20 @@
+{
+  "slug": "perceptron",
+  "name": "perceptron",
+  "tag": "open-source · Erlang",
+  "role": "Logo · open source",
+  "order": 12,
+  "images": [
+    {
+      "src": "/work/mlp.jpg",
+      "alt": "perceptron open-source Erlang logo",
+      "fit": "contain",
+      "bg": "#082a4f"
+    }
+  ],
+  "fit": "contain",
+  "bg": "#082a4f",
+  "study": {
+    "discriminant": false
+  }
+}
