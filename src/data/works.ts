@@ -202,8 +202,8 @@ export const WORKS: Work[] = [
           body: "Product work like this only holds if the components are specified rather than described. The player carries a live “Direct” tag, and the progress bar behaves differently when it is present: what is drawn, what truncates, which timing labels stay. Documented that way, the rule survives handoff and the next team that touches it.",
           images: [
             {
-              src: "/work/ftv.jpg",
-              alt: "Player specification board: Direct tag and progress bar states",
+              src: "/work/ftv-player-spec.jpg",
+              alt: "Player specification: progress bar with and without the live Direct tag",
               fit: "contain",
               bg: SLIDE_BG,
               caption: "Player specification — the Direct tag and its progress bar.",
@@ -428,7 +428,7 @@ export const WORKS: Work[] = [
           images: [
             {
               src: "/work/shots/cosmo-install.jpg",
-              alt: "Installation instructions drawn as line art with numbered steps",
+              alt: "Line-art illustration of the light unit clipping onto its saddle mount, above the installation screen heading",
               fit: "contain",
               bg: PHONE_BG,
               caption: "Drawn, not photographed — legibility beats realism outdoors.",

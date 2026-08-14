@@ -113,15 +113,32 @@ export function caption(w, h, label, { fill = "#fff", dim = 0.42 } = {}) {
   });
 }
 
-/** Rounded phone body with a clipped screen area. `id` must be unique. */
+/** Rounded phone body with a clipped screen area and a notch + side buttons,
+ *  so it reads as an actual device rather than a generic rounded rect —
+ *  matches the bezel of the real cover-shot screenshots used as hero images.
+ *  `id` must be unique. */
 export function phone(x, y, w, h, { id, screen, body = "#000", radius = 34 }) {
   const inset = 8;
+  const notchW = w * 0.34;
+  const notchH = 22;
+  const notchX = (w - notchW) / 2;
+  const buttons =
+    rect(-2, h * 0.145, 2.5, h * 0.045, { fill: "#2c2c2e", r: 1 }) +
+    rect(-2, h * 0.205, 2.5, h * 0.09, { fill: "#2c2c2e", r: 1 }) +
+    rect(-2, h * 0.305, 2.5, h * 0.09, { fill: "#2c2c2e", r: 1 }) +
+    rect(w - 0.5, h * 0.175, 2.5, h * 0.12, { fill: "#2c2c2e", r: 1 });
+  const notch =
+    rect(notchX, inset, notchW, notchH, { fill: "#0b0b0d", r: notchH / 2 }) +
+    circle(notchX + notchW - 17, inset + notchH / 2, 3, { fill: "#1c2733" }) +
+    circle(notchX + notchW - 17, inset + notchH / 2, 1.3, { fill: "#33465c" });
   return `<g transform="translate(${x} ${y})">
   <clipPath id="${id}"><rect x="${inset}" y="${inset}" width="${w - inset * 2}" height="${
     h - inset * 2
   }" rx="${radius - inset}"/></clipPath>
+  ${buttons}
   ${rect(0, 0, w, h, { fill: body, r: radius })}
   <g clip-path="url(#${id})">${screen}</g>
+  ${notch}
   ${rect(0.5, 0.5, w - 1, h - 1, { r: radius, stroke: "rgba(255,255,255,0.14)", sw: 1 })}
 </g>`;
 }

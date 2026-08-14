@@ -30,8 +30,10 @@ const GREY = "#8a93a4";
 
 /* ---------------------------------------------------------------- map plate */
 /** A plausible Paris-ish street grid. Deliberately generic: it reads as the
- *  product's map layer without copying any real cartography. */
-function mapPlate(w, h, { seedShift = 0 } = {}) {
+ *  product's map layer without copying any real cartography. Block shades
+ *  and a couple of street labels vary the texture so it doesn't read as a
+ *  flat diagram next to the photographic cover shot. */
+function mapPlate(w, h, { seedShift = 0, labels = true } = {}) {
   const roads = [
     `M${-40 + seedShift} ${h * 0.22} L${w + 40} ${h * 0.17}`,
     `M${-40} ${h * 0.52} L${w + 40} ${h * 0.58}`,
@@ -42,33 +44,66 @@ function mapPlate(w, h, { seedShift = 0 } = {}) {
     `M${-40} ${h * 0.95} L${w * 0.7} ${h * 0.1}`,
   ];
   const blocks = [
-    [w * 0.06, h * 0.26, w * 0.13, h * 0.2],
-    [w * 0.36, h * 0.24, w * 0.2, h * 0.22],
-    [w * 0.68, h * 0.3, w * 0.16, h * 0.16],
-    [w * 0.1, h * 0.6, w * 0.15, h * 0.14],
-    [w * 0.42, h * 0.62, w * 0.14, h * 0.13],
-    [w * 0.7, h * 0.64, w * 0.18, h * 0.15],
+    [w * 0.06, h * 0.26, w * 0.13, h * 0.2, "#dfdcd4"],
+    [w * 0.36, h * 0.24, w * 0.2, h * 0.22, "#e3e0d8"],
+    [w * 0.68, h * 0.3, w * 0.16, h * 0.16, "#d8d5cc"],
+    [w * 0.1, h * 0.6, w * 0.15, h * 0.14, "#e3e0d8"],
+    [w * 0.42, h * 0.62, w * 0.14, h * 0.13, "#dfdcd4"],
+    [w * 0.7, h * 0.64, w * 0.18, h * 0.15, "#d8d5cc"],
   ];
+  const streetLabels = labels
+    ? text(w * 0.16, h * 0.485, "Rue Darcet", {
+        fill: "#a9a49a",
+        size: 9.5,
+        family: SANS,
+        transform: `rotate(-8 ${w * 0.16} ${h * 0.485})`,
+      }) +
+      text(w * 0.3, h * 0.775, "Bd des Batignolles", {
+        fill: "#a9a49a",
+        size: 9.5,
+        family: SANS,
+        transform: `rotate(-4 ${w * 0.3} ${h * 0.775})`,
+      })
+    : "";
   return (
     rect(0, 0, w, h, { fill: MAP }) +
     blocks
-      .map(([x, y, bw, bh]) =>
-        rect(x, y, bw, bh, { fill: "#dedbd3", r: 3 }),
+      .map(([x, y, bw, bh, fill]) =>
+        rect(x, y, bw, bh, { fill, r: 3 }),
       )
       .join("") +
     roads.map((d) => path(d, { stroke: ROAD, sw: 11, cap: "butt" })).join("") +
     roads
       .slice(0, 3)
       .map((d) => path(d, { stroke: "#f7f6f3", sw: 17, cap: "butt" }))
-      .join("")
+      .join("") +
+    streetLabels
   );
+}
+
+/** iOS-style signal/wifi/battery cluster, right-aligned at (x, y) — the
+ *  detail that reads "device screenshot" rather than "diagram". */
+function statusIcons(x, y, { fill = INK } = {}) {
+  const bars = [0, 1, 2, 3]
+    .map((i) => rect(x - 66 + i * 5, y - 3 - i * 2.4, 3, 4 + i * 2.4, { fill, r: 0.6 }))
+    .join("");
+  const wifi = path(
+    `M${x - 44} ${y - 4} q7 -7 14 0 M${x - 41} ${y - 1} q4 -4 8 0`,
+    { stroke: fill, sw: 1.6 },
+  ) + circle(x - 37, y + 2, 1.1, { fill });
+  const battery =
+    rect(x - 28, y - 8, 22, 11, { fill: "none", stroke: fill, sw: 1.2, r: 2.5 }) +
+    rect(x - 6, y - 5, 1.6, 5, { fill, r: 0.8 }) +
+    rect(x - 26, y - 6, 18, 7, { fill, r: 1.2 });
+  return bars + wifi + battery;
 }
 
 /** Available-scooter pin: the round "C" marker from the live map. */
 function pin(x, y, { fill = GREEN, label = "C", scale = 1, count } = {}) {
   const r = 17 * scale;
   return group(
-    circle(0, 0, r, { fill }) +
+    circle(0, r * 0.85, r * 0.7, { fill: "#000", opacity: 0.14 }) +
+      circle(0, 0, r, { fill }) +
       circle(0, 0, r, { fill: "none", stroke: "rgba(0,0,0,0.12)", sw: 1 }) +
       path(`M0 ${r} L${-5 * scale} ${r - 4} L${5 * scale} ${r - 4} Z`, { fill }) +
       text(0, 6 * scale, count ?? label, {
@@ -101,6 +136,7 @@ export function mapflow() {
     // top chrome
     rect(0, 0, pw, 96, { fill: "#fff", opacity: 0.95 }) +
     text(24, 40, "9:41", { fill: INK, size: 15, weight: 700 }) +
+    statusIcons(pw - 24, 40) +
     rect(96, 56, 128, 30, { fill: "#eceaf3", r: 15 }) +
     rect(98, 58, 62, 26, { fill: BLUE, r: 13 }) +
     text(129, 76, "Plan", { fill: "#fff", size: 13, weight: 700, anchor: "middle" }) +
@@ -118,6 +154,9 @@ export function mapflow() {
     pin(150, 250, { scale: 1.25 }) +
     circle(150, 250, 44, { fill: GREEN, opacity: 0.15 }) +
     rect(0, 0, pw, ph, { fill: "#0b1220", opacity: 0.12 }) +
+    // status bar, over the tinted map
+    text(24, 40, "9:41", { fill: "#fff", size: 15, weight: 700 }) +
+    statusIcons(pw - 24, 40, { fill: "#fff" }) +
     // sheet
     rect(0, sheetTop, pw, ph - sheetTop, { fill: "#fff", r: 18 }) +
     rect(pw / 2 - 20, sheetTop + 12, 40, 4, { fill: "#d7d9de", r: 2 }) +
