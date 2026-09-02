@@ -73,6 +73,17 @@ const {
             t = localStorage.getItem("folio-theme");
           }
           d.dataset.theme = t === "light" ? "light" : "dark";
+
+          // A successful password check leaves a one-navigation flag. The
+          // destination consumes it before first paint so the private gate and
+          // the portfolio feel like one continuous transition.
+          try {
+            if (sessionStorage.getItem("folio-entry") === "1") {
+              sessionStorage.removeItem("folio-entry");
+              if (!r) d.classList.add("from-login");
+            }
+          } catch (e) {}
+
           d.classList.add("js");
           if (!r) {
             d.classList.add("armed");
@@ -91,6 +102,10 @@ const {
   </head>
 
   <body>
+    <div class="entry-curtain" aria-hidden="true">
+      <span><i></i>fhd.xyz</span>
+    </div>
+
     <a
       href="#top"
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded focus:bg-accent focus:px-3 focus:py-2 focus:text-bg"

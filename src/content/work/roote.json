@@ -1,0 +1,87 @@
+{
+  "slug": "roote",
+  "name": "Roote",
+  "tag": "product · travel",
+  "role": "Product design · 0-to-1",
+  "order": 1.5,
+  "images": [
+    {
+      "src": "/work/roote/roote-hero.jpg",
+      "alt": "Roote's world map with France selected, ready to compose",
+      "fit": "cover"
+    }
+  ],
+  "fit": "cover",
+  "study": {
+    "discriminant": true,
+    "value": {
+      "subtitle": "A travel planner that composes an itinerary from two answers — a place, a duration — then hands it back as a notebook, not a booking engine.",
+      "services": ["Product design", "Interaction design", "Content tooling"],
+      "sector": "Travel",
+      "year": "2026",
+      "hero": {
+        "src": "/work/roote/roote-hero.jpg",
+        "alt": "Roote's world map with France selected, ready to compose",
+        "fit": "contain",
+        "bg": "#efeee9",
+        "caption": "One country, one duration — that's the whole brief."
+      },
+      "sections": [
+        {
+          "heading": "Every stop opens as a floating photograph",
+          "body": "Click a pin and the destination surfaces as a card, not a page: a dominant image sets the atmosphere, three lines — atmosphère, à goûter, à voir — offer to go deeper, one explicit action leads to the city itself. Underneath, a banner called \"le cadre\" lines up three anchors for the stay — where to sleep, the signature moment, how to reach the next stop — and keeps the count of free half-days visible the whole time. The empty time is part of the plan, not an absence of information.",
+          "facts": [
+            { "title": "Dormir", "body": "A neighbourhood, never a named hotel." },
+            { "title": "Le moment signature", "body": "One thing worth building the day around." },
+            { "title": "Rejoindre l'étape", "body": "How, and how long, to the next stop." }
+          ],
+          "images": [
+            {
+              "src": "/work/roote/roote-country-map.jpg",
+              "video": "/work/roote/video/roote-transition.mp4",
+              "videoAspect": "1200 / 588",
+              "alt": "Opening a destination card, then diving from the country map into Paris",
+              "fit": "contain",
+              "bg": "#efeee9",
+              "caption": "The zoom starts from the pin — prototype recording."
+            }
+          ]
+        },
+        {
+          "heading": "The map holds still so the city can move",
+          "body": "Inside a city, the plan pins itself to the side of the screen and stays there. Scrolling through the chapter lights up the matching landmark and recentres the legend; clicking a landmark — or a line of the legend — scrolls back to the place. Photography carries most of the argument: full colour, never cropped by a filter, never repeated twice in the same itinerary. The opening shot loads first, the rest waits its turn.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/roote/roote-chapter.jpg",
+              "alt": "Scrollytelling chapter for Paris with the city plan fixed on the right",
+              "fit": "contain",
+              "bg": "#efeee9",
+              "caption": "The plan repins itself to every place named in the text."
+            }
+          ]
+        },
+        {
+          "heading": "The photographs have their own back office",
+          "body": "Ten countries, roughly thirty cities: every photo needed a source, a licence and a credit, without a paid API and without becoming a second job. The curation tool reviews them one at a time, Tinder-style — confirm, reject, or pull an alternative from Wikimedia Commons, Openverse or a free Pexels key, without leaving the card. Whatever comes in — a search result, a dropped file, a pasted URL — lands at the same 1800px, JPEG quality 82, credited automatically in the codebase that ships.",
+          "facts": [
+            { "title": "Confirmer / rejeter", "body": "Y or N — the two outcomes that matter, one keystroke each." },
+            { "title": "Alternatives", "body": "Commons, Openverse or Pexels, searched from inside the card." },
+            { "title": "Recadrage automatique", "body": "Every image lands at 1800px, JPEG q82, credited in code." }
+          ],
+          "images": [
+            {
+              "src": "/work/roote/roote-curation.jpg",
+              "alt": "Curation tool in focus mode reviewing a Hong Kong hero photo",
+              "fit": "contain",
+              "bg": "#141210",
+              "caption": "The review pass nobody sees, run before every photo ships."
+            }
+          ]
+        }
+      ],
+      "outro": "Ten countries are traced so far, from Paris to Chongqing — the live version keeps growing most weekends.",
+      "tools": ["React + D3-geo", "Vite", "Vercel", "Wikimedia Commons / Openverse — no paid API"]
+    }
+  }
+}

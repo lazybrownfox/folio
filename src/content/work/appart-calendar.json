@@ -1,0 +1,86 @@
+{
+  "slug": "appart-calendar",
+  "name": "Appart calendar",
+  "tag": "product · ops tool",
+  "role": "Product design · 0-to-1",
+  "order": 1.7,
+  "images": [
+    {
+      "src": "/work/appart-calendar/appart-calendar-planning.jpg",
+      "alt": "Planning view: booking bars laid out on a shared timeline",
+      "fit": "contain",
+      "bg": "#efeee9"
+    }
+  ],
+  "fit": "contain",
+  "bg": "#efeee9",
+  "study": {
+    "discriminant": true,
+    "value": {
+      "subtitle": "A personal booking tracker for a Paris rental — one calendar reading both as a timeline and as a month, so every inbound request has one obvious next step.",
+      "services": ["Product design", "Full-stack build", "Data modelling"],
+      "sector": "Personal rental ops",
+      "year": "2026",
+      "hero": {
+        "src": "/work/appart-calendar/appart-calendar-planning.jpg",
+        "alt": "Planning view: booking bars laid out on a shared timeline",
+        "fit": "contain",
+        "bg": "#efeee9",
+        "caption": "Every guest gets a row; overlaps and gaps read at a glance."
+      },
+      "sections": [
+        {
+          "heading": "One calendar, two questions",
+          "body": "\"Who's in the flat, and when\" and \"what's free this month\" are different questions, so the calendar answers them as two views instead of one compromise. Planning lays every guest on their own row against a shared timeline — the shape overlaps and gaps take is the whole point. Mois flips the same data into a grid built for a different question: what does next Tuesday look like. Switching is instant, no reload, because it's the same bookings re-read, not two screens.",
+          "facts": [
+            { "title": "Planning", "body": "One row per guest, bars on a shared timeline — built for overlaps." },
+            { "title": "Mois", "body": "The same bookings, read as a grid — built for a single date." },
+            { "title": "Revenu du mois", "body": "Prorated income for the visible range, always in view." }
+          ],
+          "images": [
+            {
+              "src": "/work/appart-calendar/appart-calendar-planning.jpg",
+              "alt": "Planning view: booking bars laid out on a shared timeline",
+              "fit": "contain",
+              "bg": "#efeee9",
+              "caption": "Planning — built for overlaps."
+            },
+            {
+              "src": "/work/appart-calendar/appart-calendar-month.jpg",
+              "alt": "Mois view: the same bookings shown as a calendar grid",
+              "fit": "contain",
+              "bg": "#efeee9",
+              "caption": "Mois — built for a single date."
+            }
+          ]
+        },
+        {
+          "heading": "A request opens as a working panel, not a modal",
+          "body": "Every inbound message — imported from an Airbnb CSV export, dates parsed locally rather than sent to an LLM — lands as a request with an obvious next step. Clicking one slides in the original message, the requested dates, an editable price estimate and three actions: accept, refuse, or edit. Nothing routes to a separate page, because the calendar underneath is exactly what the decision needs to see.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/appart-calendar/appart-calendar-panel.jpg",
+              "alt": "Request detail panel open beside the calendar, with message, price and actions",
+              "fit": "contain",
+              "bg": "#efeee9",
+              "caption": "The message, the price and the decision — one panel, no page change."
+            }
+          ]
+        },
+        {
+          "heading": "Guarded like it holds something worth guarding",
+          "body": "It's a two-person tool, not a public product, but the guest data inside it is real, so the defenses are real too: sign-in is required, and an email allowlist sits in front of the app itself as a second gate independent of whoever has an account. Nothing in the stack is more machinery than the job needs — a serverless Postgres for the data, a local parser for the CSV imports, one dashboard, one calendar.",
+          "facts": [
+            { "title": "Auth + allowlist", "body": "Clerk sign-in, plus an email allowlist as a second, independent gate." },
+            { "title": "CSV import", "body": "Airbnb exports parsed and deduplicated locally — no LLM in the loop." },
+            { "title": "Neon + Drizzle", "body": "Serverless Postgres, typed end to end, no ORM ceremony beyond it." }
+          ],
+          "images": []
+        }
+      ],
+      "outro": "In daily use since mid-2026 — the calendar a two-person household actually checks before answering a booking request.",
+      "tools": ["Next.js 16 (Turbopack)", "Drizzle + Neon Postgres", "Clerk auth", "Vercel"]
+    }
+  }
+}
