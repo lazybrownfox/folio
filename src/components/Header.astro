@@ -10,15 +10,20 @@ const anchors = [
   { id: "#systems", label: "Systems" },
   { id: "#brand", label: "Brand" },
   { id: "#work", label: "Work" },
-  { id: "#approach", label: "Approach" },
   { id: "#contact", label: "Contact" },
 ];
+
+const email = "francoishenri.dupuich@gmail.com";
 ---
 <header
-  class="fixed inset-x-0 top-0 z-50 flex items-center justify-between gap-4 px-5 py-3 sm:px-8"
+  class="site-header fixed inset-x-0 top-0 z-50 flex items-center justify-between gap-4 px-5 py-3 sm:px-8"
 >
-  <a href={to("#top")} class="group flex items-baseline" aria-label="Back to top">
-    <span class="font-display text-xl text-fg">fhd</span>
+  <a
+    href={to("#top")}
+    class="group relative z-10 flex items-baseline"
+    aria-label="Back to top"
+  >
+    <span class="font-display text-xl text-fg" data-scramble="fhd">fhd</span>
     <span class="font-display text-xl italic text-accent">.</span>
   </a>
 
@@ -33,7 +38,7 @@ const anchors = [
           <a
             href={to(a.id)}
             data-nav-label={a.label}
-            class="text-sm font-semibold text-muted transition-colors hover:text-fg"
+            class="nav-link text-sm font-semibold text-muted transition-colors hover:text-fg"
           >
             {a.label}
           </a>
@@ -50,10 +55,65 @@ const anchors = [
       aria-pressed="false"
       aria-label="Switch to the light theme"
     ></button>
+
+    <!-- Below md the anchors are gone, so this is the only way through a
+         15 000px page. -->
+    <button
+      type="button"
+      data-menu-btn
+      class="menu-btn"
+      aria-expanded="false"
+      aria-controls="site-menu"
+      aria-label="Open the menu"
+    >
+      <span class="menu-bars" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <!-- MOBILE MENU ------------------------------------------------------------
+       Same anchors as the desktop nav, plus the email, so contact is one tap
+       away from anywhere instead of 11 664px of scrolling. -->
+  <div id="site-menu" class="menu-panel" data-menu-panel hidden>
+    <nav class="menu-links" aria-label="Sections">
+      {
+        anchors.map((a) => (
+          <a href={to(a.id)} data-nav-label={a.label} data-menu-link>
+            {a.label}
+          </a>
+        ))
+      }
+    </nav>
+    <a class="menu-mail" href={`mailto:${email}`} data-menu-link>{email}</a>
   </div>
 
   <style>
+    /* The header sits fixed over 15 000px of scrolling content — without a
+       ground of its own, whatever is underneath (dark case cards included)
+       shows straight through it. Frosted rather than flat, to keep the same
+       glass treatment used elsewhere (case-stage-fs, the theme disc). */
+    .site-header {
+      background: color-mix(in srgb, var(--color-bg) 82%, transparent);
+      backdrop-filter: blur(10px);
+    }
+
+    /* --- tap targets ------------------------------------------------------
+       The type stays exactly where it is; only an invisible overlay grows to
+       44px. Anchors are 20px tall and the theme disc is 15px — both were well
+       under the WCAG floor, and the disc is the only header control on mobile.
+    ---------------------------------------------------------------------- */
+    .nav-link {
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      inset: -12px -6px;
+    }
+
     .theme-btn {
+      position: relative;
+      z-index: 1;
       width: 15px;
       height: 15px;
       flex: 0 0 auto;
@@ -81,8 +141,141 @@ const anchors = [
       transform: rotate(180deg);
     }
 
+    .theme-btn::after {
+      content: "";
+      position: absolute;
+      inset: -15px;
+    }
+
+    /* --- mobile menu -----------------------------------------------------
+       The breakpoint lives here, not in a `md:hidden` utility: scoped rules
+       carry the component attribute, so `.menu-btn` outweighs the utility and
+       the burger would sit next to the desktop anchors. Same query as the
+       matchMedia in the script below.
+    ---------------------------------------------------------------------- */
+    .menu-btn {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      /* the target grows inward, so the icon keeps its optical margin */
+      margin-right: -0.75rem;
+      border: 0;
+      background: none;
+      color: var(--color-fg);
+      cursor: pointer;
+    }
+
+    @media (min-width: 768px) {
+      .menu-btn {
+        display: none;
+      }
+    }
+
+    .menu-bars,
+    .menu-bars::before,
+    .menu-bars::after {
+      display: block;
+      width: 20px;
+      height: 1.5px;
+      background: currentColor;
+      transition:
+        transform 0.25s ease,
+        background 0.2s ease;
+    }
+
+    .menu-bars {
+      position: relative;
+    }
+
+    .menu-bars::before,
+    .menu-bars::after {
+      content: "";
+      position: absolute;
+      left: 0;
+    }
+
+    .menu-bars::before {
+      top: -6px;
+    }
+
+    .menu-bars::after {
+      top: 6px;
+    }
+
+    [aria-expanded="true"] .menu-bars {
+      background: transparent;
+    }
+
+    [aria-expanded="true"] .menu-bars::before {
+      transform: translateY(6px) rotate(45deg);
+    }
+
+    [aria-expanded="true"] .menu-bars::after {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+
+    .menu-panel {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2.5rem;
+      padding: 5.5rem 1.5rem 2.5rem;
+      background: var(--color-bg);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .menu-panel[hidden] {
+      display: none;
+    }
+
+    .menu-panel.is-open {
+      opacity: 1;
+    }
+
+    .menu-links {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-links a {
+      display: flex;
+      align-items: center;
+      min-height: 3rem;
+      font-family: var(--font-display);
+      font-size: clamp(1.9rem, 9vw, 2.6rem);
+      line-height: 1.1;
+      color: var(--color-fg);
+    }
+
+    .menu-links a:active {
+      color: var(--color-accent);
+    }
+
+    .menu-mail {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--color-line);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.02em;
+      color: var(--color-muted);
+    }
+
     @media (prefers-reduced-motion: reduce) {
-      .theme-btn {
+      .theme-btn,
+      .menu-bars,
+      .menu-bars::before,
+      .menu-bars::after,
+      .menu-panel {
         transition: none;
       }
       .theme-btn:hover {
@@ -92,6 +285,60 @@ const anchors = [
   </style>
 
   <script is:inline>
+    (function () {
+      var btn = document.querySelector('[data-menu-btn]');
+      var panel = document.querySelector('[data-menu-panel]');
+      if (!btn || !panel) return;
+      var open = false;
+
+      function setOpen(next) {
+        if (next === open) return;
+        open = next;
+        btn.setAttribute('aria-expanded', String(next));
+        btn.setAttribute('aria-label', next ? 'Close the menu' : 'Open the menu');
+        document.documentElement.classList.toggle('menu-open', next);
+
+        if (next) {
+          panel.hidden = false;
+          // Flush layout between display and opacity, or the transition is
+          // skipped. A forced reflow, not requestAnimationFrame: rAF can be
+          // throttled, and the panel opening invisible is a dead end.
+          void panel.offsetWidth;
+          panel.classList.add('is-open');
+          var first = panel.querySelector('a');
+          if (first) first.focus();
+          window.posthog?.capture('menu_opened');
+        } else {
+          panel.classList.remove('is-open');
+          window.setTimeout(function () {
+            if (!open) panel.hidden = true;
+          }, 250);
+        }
+      }
+
+      btn.addEventListener('click', function () {
+        setOpen(!open);
+      });
+
+      // A tap on a link, or anywhere on the ground behind them, closes.
+      panel.addEventListener('click', function (e) {
+        if (e.target === panel || e.target.closest('[data-menu-link]')) setOpen(false);
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && open) {
+          setOpen(false);
+          btn.focus();
+        }
+      });
+
+      // Rotating to landscape brings the desktop anchors back: don't leave a
+      // full-screen panel stranded over them.
+      window.matchMedia('(min-width: 768px)').addEventListener('change', function (e) {
+        if (e.matches) setOpen(false);
+      });
+    })();
+
     document.querySelectorAll('[data-nav-label]').forEach(function (link) {
       link.addEventListener('click', function () {
         window.posthog?.capture('nav_section_clicked', {

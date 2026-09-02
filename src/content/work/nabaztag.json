@@ -1,0 +1,82 @@
+{
+  "slug": "nabaztag",
+  "name": "Nabaztag",
+  "tag": "hardware · physical computing",
+  "role": "Interaction design · physical computing",
+  "order": 11.5,
+  "images": [
+    {
+      "src": "/work/nabaztag/nabaztag-hero.jpg",
+      "alt": "A Nabaztag, the original Wi-Fi connected rabbit",
+      "fit": "contain",
+      "bg": "#cfcfcf"
+    }
+  ],
+  "fit": "contain",
+  "bg": "#cfcfcf",
+  "study": {
+    "discriminant": true,
+    "value": {
+      "subtitle": "A discontinued connected rabbit, brought back with a Mac bridge, a rebuilt audio driver and a light editor of its own.",
+      "services": ["Interaction design", "Hardware revival", "Product design"],
+      "sector": "Physical computing",
+      "year": "2026",
+      "hero": {
+        "src": "/work/nabaztag/nabaztag-hero.jpg",
+        "alt": "A Nabaztag, the original Wi-Fi connected rabbit",
+        "fit": "contain",
+        "bg": "#cfcfcf",
+        "caption": "Discontinued in 2011. Still on the network."
+      },
+      "sections": [
+        {
+          "heading": "A light editor, designed like the rabbit talks",
+          "body": "The rabbit's whole vocabulary is ears, LEDs and sound, so its light editor follows the same design principles as any other interface here: show the result while it's being composed, not after; offer a simple gesture before an advanced setting; keep every change reversible so testing one choreography never risks another that already works. A sequence is built from a handful of named moments — an appearance, a breath, a fade — previewed live on the simulator or the real rabbit, then assigned to a system state.",
+          "facts": [
+            { "title": "Montre le résultat", "body": "The rabbit previews live while you compose, never after." },
+            { "title": "Gestes simples d'abord", "body": "Named moments before timing curves and advanced controls." },
+            { "title": "Réversible", "body": "Any choreography can be tried without risking what already works." }
+          ],
+          "images": [
+            {
+              "src": "/work/nabaztag/nabaztag-light-studio.jpg",
+              "alt": "The Light Studio timeline editor composing a choreography",
+              "fit": "contain",
+              "bg": "#141210",
+              "caption": "Composed live, previewed on the same screen."
+            }
+          ]
+        },
+        {
+          "heading": "The hardware was the actual bug",
+          "body": "The audio board that keeps this rabbit alive — an open-hardware revival of the original electronics — has a faulty clock: the native sample rates glitch, but four unrelated rates stay perfectly clean on the very same chip. The fix ships as a permanent setting, not a workaround: every clip is resampled before it plays, and never encoded as VBR, because the old decoder segfaults on it. None of that would matter if the rabbit weren't reachable in the first place — a bidirectional SSH tunnel connects the Mac to the Pi, both bound to localhost only, so nothing is ever exposed to the Wi-Fi network the rabbit sits on.",
+          "facts": [],
+          "images": [
+            {
+              "src": "/work/rebuilt/nabaztag-hardware.svg",
+              "alt": "Diagram of the audio sample-rate fix and the SSH tunnel network path",
+              "fit": "contain",
+              "bg": "#ede7dc",
+              "caption": "The two decisions no screenshot could show."
+            }
+          ]
+        },
+        {
+          "heading": "One rabbit, one voice, a lot of things wanting it",
+          "body": "A single rabbit has one pair of ears and one belt of LEDs, and six unrelated automatisms all want them at once — a coding-assistant notification, an internet radio, a mood that shifts every couple of hours, a light choreography playing for the fun of it. Nothing here is scheduled; it's ranked. A strict priority order decides who gets the rabbit's body right now, and everything below that line simply waits its turn or gets pre-empted mid-gesture.",
+          "facts": [
+            { "title": "1 · Notifications", "body": "A coding-assistant alert always cuts through." },
+            { "title": "2 · Radio / musique", "body": "Owns the voice for up to an hour once started." },
+            { "title": "3 · Focus", "body": "Explicit, on request, same priority as radio." },
+            { "title": "4 · Chorégraphies", "body": "Only when the rabbit is otherwise free." },
+            { "title": "5 · Présence ambiante", "body": "Rare on purpose — about once every 90 minutes." },
+            { "title": "6 · Veille lumineuse", "body": "The default state, interrupted by everything above it." }
+          ],
+          "images": []
+        }
+      ],
+      "outro": "In daily use since July 2026 — a discontinued product, a Mac, and a Raspberry Pi, kept alive over a tunnel instead of a cloud service.",
+      "tools": ["Node.js bridge (TypeScript)", "SSH tunnel + LaunchAgents", "Piper — local text-to-speech", "pynab / nabd"]
+    }
+  }
+}

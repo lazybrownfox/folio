@@ -4,25 +4,32 @@ interface Props {
   index: string;
   kicker: string;
   title: string;
+  hideTitle?: boolean;
 }
-const { id, index, kicker, title } = Astro.props;
+const { id, index, kicker, title, hideTitle = false } = Astro.props;
 ---
 <section
   id={id}
   class="relative scroll-mt-20 border-t border-line px-5 py-24 sm:px-8 sm:py-32"
 >
   <div class="mx-auto w-full max-w-6xl">
-    <div data-reveal class="mb-8 flex items-baseline justify-between gap-4">
-      <span class="kicker">{kicker}</span>
-      <span class="font-mono text-[0.62rem] text-faint">{index}</span>
-    </div>
-    <h2
-      data-reveal
-      class="font-display mb-10 max-w-3xl font-normal leading-[1.1] tracking-[-0.01em] text-balance"
-      style="font-size: var(--text-h2)"
-    >
-      {title}
-    </h2>
+    {
+      !hideTitle && (
+        <>
+          <div data-reveal class="mb-8 flex items-baseline justify-between gap-4">
+            <span class="kicker">{kicker}</span>
+            <span class="font-mono text-[0.62rem] text-faint">{index}</span>
+          </div>
+          <h2
+            data-reveal
+            class="font-display mb-10 max-w-3xl font-normal leading-[1.1] tracking-[-0.01em] text-balance"
+            style="font-size: var(--text-h2)"
+          >
+            {title}
+          </h2>
+        </>
+      )
+    }
     <slot />
   </div>
 </section>

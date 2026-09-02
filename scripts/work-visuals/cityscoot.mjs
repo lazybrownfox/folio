@@ -251,9 +251,9 @@ export function mapflow() {
     });
 
   const steps = [
-    ["01", "Trouver", "Scooters disponibles autour de soi"],
-    ["02", "Réserver", "Fiche véhicule, paiement, CGU"],
-    ["03", "Rouler", "15 minutes de réservation offertes"],
+    ["01", "Find", "Scooters available around you"],
+    ["02", "Book", "Vehicle details, payment, terms"],
+    ["03", "Ride", "Fifteen minutes of booking, free"],
   ];
 
   const cols = steps
@@ -282,7 +282,7 @@ export function mapflow() {
     h: H,
     bg: PAPER,
     children:
-      text(48, 56, "Cityscoot · réservation", {
+      text(48, 56, "Cityscoot · booking", {
         fill: INK,
         size: 15,
         weight: 700,
@@ -295,7 +295,7 @@ export function mapflow() {
       phone(150, top, pw, ph, { id: "cs-a", screen: screenA }) +
       phone(600, top, pw, ph, { id: "cs-b", screen: screenB }) +
       phone(1050, top, pw, ph, { id: "cs-c", screen: screenC }) +
-      caption(W, H, "reconstruction · flow de réservation", { fill: INK, dim: 0.38 }),
+      caption(W, H, "reconstruction · booking flow", { fill: INK, dim: 0.38 }),
   });
 }
 
@@ -305,10 +305,10 @@ export function markers() {
   const H = 1000;
 
   const states = [
-    ["Disponible", GREEN, "C", "batterie > 30 %"],
-    ["Batterie faible", AMBER, "C", "20–30 %, trajet court"],
-    ["Réservé", GREY, "C", "tenu 15 min pour un client"],
-    ["Indisponible", "#c2c6cf", "C", "maintenance ou hors service"],
+    ["Available", GREEN, "C", "battery above 30%"],
+    ["Low battery", AMBER, "C", "20–30%, short trip"],
+    ["Reserved", GREY, "C", "held 15 min for a rider"],
+    ["Out of service", "#c2c6cf", "C", "maintenance or fault"],
   ];
 
   const stateRow = states
@@ -327,8 +327,8 @@ export function markers() {
   const clusterY = 640;
   const cluster =
     rect(70, clusterY - 60, 640, 300, { fill: "#fff", r: 14, stroke: "#e6e4dd", sw: 1 }) +
-    text(102, clusterY - 22, "Agrégation", { fill: INK, size: 16, weight: 700 }) +
-    text(102, clusterY, "Au dézoom, les pins fusionnent et portent le compte.", {
+    text(102, clusterY - 22, "Clustering", { fill: INK, size: 16, weight: 700 }) +
+    text(102, clusterY, "Zoom out and the pins merge, carrying the count.", {
       fill: GREY,
       size: 13,
     }) +
@@ -343,8 +343,8 @@ export function markers() {
   /* the pin itself, dimensioned */
   const anat =
     rect(760, clusterY - 60, 770, 300, { fill: "#fff", r: 14, stroke: "#e6e4dd", sw: 1 }) +
-    text(792, clusterY - 22, "Gabarit du pin", { fill: INK, size: 16, weight: 700 }) +
-    text(792, clusterY, "Cible tactile de 44 px conservée à toutes les échelles.", {
+    text(792, clusterY - 22, "Pin geometry", { fill: INK, size: 16, weight: 700 }) +
+    text(792, clusterY, "A 44px tap target, held at every scale.", {
       fill: GREY,
       size: 13,
     }) +
@@ -357,15 +357,15 @@ export function markers() {
       family: MONO,
       anchor: "middle",
     }) +
-    text(1010, clusterY + 96, "· ombre portée légère, jamais de contour dur", {
+    text(1010, clusterY + 96, "· a soft drop shadow, never a hard outline", {
       fill: GREY,
       size: 13,
     }) +
-    text(1010, clusterY + 124, "· la couleur porte l’état, le chiffre la densité", {
+    text(1010, clusterY + 124, "· colour carries the state, the number the density", {
       fill: GREY,
       size: 13,
     }) +
-    text(1010, clusterY + 152, "· le glyphe reste lisible dès 24 px", {
+    text(1010, clusterY + 152, "· the glyph stays legible from 24px", {
       fill: GREY,
       size: 13,
     });
@@ -375,7 +375,7 @@ export function markers() {
     h: H,
     bg: PAPER,
     children:
-      text(48, 56, "Cityscoot · couche carto", {
+      text(48, 56, "Cityscoot · map layer", {
         fill: INK,
         size: 15,
         weight: 700,
@@ -383,15 +383,15 @@ export function markers() {
         spacing: 2,
         upper: true,
       }) +
-      text(70, 150, "États du marqueur", { fill: INK, size: 30, weight: 700 }) +
-      text(70, 182, "Un seul composant, quatre lectures — la couleur suffit à trancher.", {
+      text(70, 150, "Marker states", { fill: INK, size: 30, weight: 700 }) +
+      text(70, 182, "One component, four readings — colour alone settles it.", {
         fill: GREY,
         size: 15,
       }) +
       stateRow +
       cluster +
       anat +
-      caption(W, H, "reconstruction · système de marqueurs", { fill: INK, dim: 0.38 }),
+      caption(W, H, "reconstruction · marker system", { fill: INK, dim: 0.38 }),
   });
 }
 
@@ -406,28 +406,28 @@ export function components() {
 
   /* buttons */
   const btns =
-    card(70, 130, 460, 330, "Boutons") +
+    card(70, 130, 460, 330, "Buttons") +
     rect(98, 176, 300, 50, { fill: BLUE, r: 25 }) +
     text(248, 207, "Je réserve", { fill: "#fff", size: 14.5, weight: 700, anchor: "middle" }) +
     rect(98, 240, 300, 50, { fill: "none", stroke: BLUE, sw: 1.8, r: 25 }) +
     text(248, 271, "Je me connecte", { fill: BLUE, size: 14.5, weight: 700, anchor: "middle" }) +
     rect(98, 304, 300, 50, { fill: "#eceef2", r: 25 }) +
     text(248, 335, "Indisponible", { fill: "#a8aebb", size: 14.5, weight: 700, anchor: "middle" }) +
-    text(420, 207, "primaire", { fill: GREY, size: 12.5, family: MONO }) +
-    text(420, 271, "secondaire", { fill: GREY, size: 12.5, family: MONO }) +
-    text(420, 335, "désactivé", { fill: GREY, size: 12.5, family: MONO }) +
-    text(98, 400, "Hauteur 50 px · rayon plein · libellé à la 1ʳᵉ personne", {
+    text(420, 207, "primary", { fill: GREY, size: 12.5, family: MONO }) +
+    text(420, 271, "secondary", { fill: GREY, size: 12.5, family: MONO }) +
+    text(420, 335, "disabled", { fill: GREY, size: 12.5, family: MONO }) +
+    text(98, 400, "50px tall · fully rounded · first-person label", {
       fill: GREY,
       size: 13,
     }) +
-    text(98, 426, "— la voix du produit, pas un verbe d’interface.", {
+    text(98, 426, "— the voice of the product, not an interface verb.", {
       fill: GREY,
       size: 13,
     });
 
   /* form + chips */
   const forms =
-    card(560, 130, 460, 330, "Saisie & filtres") +
+    card(560, 130, 460, 330, "Input & filters") +
     rect(588, 176, 404, 52, { fill: "#f5f6f8", r: 10, stroke: "#e2e5ea", sw: 1 }) +
     text(608, 208, "Où allez-vous ?", { fill: "#9aa1ae", size: 14 }) +
     circle(958, 202, 11, { fill: "none", stroke: GREY, sw: 2 }) +
@@ -444,15 +444,15 @@ export function components() {
 
   /* tokens */
   const swatches = [
-    ["blue/600", BLUE, "action, sélection"],
-    ["green/500", GREEN, "scooter disponible"],
-    ["amber/500", AMBER, "batterie faible"],
-    ["ink/900", INK, "texte principal"],
-    ["grey/500", GREY, "texte secondaire"],
-    ["paper/000", "#f5f6f8", "fonds de champ"],
+    ["blue/600", BLUE, "action, selection"],
+    ["green/500", GREEN, "scooter available"],
+    ["amber/500", AMBER, "low battery"],
+    ["ink/900", INK, "primary text"],
+    ["grey/500", GREY, "secondary text"],
+    ["paper/000", "#f5f6f8", "field grounds"],
   ];
   const tokens =
-    card(1050, 130, 480, 330, "Couleurs") +
+    card(1050, 130, 480, 330, "Colour") +
     swatches
       .map(([name, hex, use], i) => {
         // Starts below the card title (y + 38) — 178 collided with it.
@@ -473,7 +473,7 @@ export function components() {
 
   /* bottom sheet anatomy */
   const sheet =
-    card(70, 500, 700, 380, "Anatomie de la feuille") +
+    card(70, 500, 700, 380, "Sheet anatomy") +
     rect(110, 556, 300, 290, { fill: "#f7f7f5", r: 12, stroke: "#e6e4dd", sw: 1 }) +
     rect(240, 570, 40, 4, { fill: "#d7d9de", r: 2 }) +
     circle(146, 606, 20, { fill: "#eaf3ff" }) +
@@ -486,11 +486,11 @@ export function components() {
     rect(126, 730, 268, 22, { fill: "#f1f2f5", r: 4 }) +
     rect(126, 780, 268, 44, { fill: BLUE, r: 22 }) +
     [
-      [576, "poignée — la feuille est déplaçable", 1],
-      [606, "identité du véhicule, toujours en tête", 2],
-      [678, "métadonnées secondaires, en puces", 3],
-      [741, "engagements (paiement, CGU)", 4],
-      [802, "action unique, jamais concurrencée", 5],
+      [576, "grabber — the sheet can be dragged", 1],
+      [606, "vehicle identity, always first", 2],
+      [678, "secondary metadata, as chips", 3],
+      [741, "commitments (payment, terms)", 4],
+      [802, "one action, never competed with", 5],
     ]
       .map(([y, label, n]) => {
         return (
@@ -509,22 +509,22 @@ export function components() {
 
   /* type */
   const type =
-    card(800, 500, 730, 380, "Typographie") +
+    card(800, 500, 730, 380, "Type") +
     text(830, 596, "Aa", { fill: INK, size: 74, weight: 700 }) +
-    text(946, 566, "Titre · 700", { fill: GREY, size: 12.5, family: MONO }) +
+    text(946, 566, "Display · 700", { fill: GREY, size: 12.5, family: MONO }) +
     text(946, 596, "Cityscoot, la liberté sans bornes", {
       fill: INK,
       size: 22,
       weight: 700,
     }) +
-    text(946, 626, "Corps · 500", { fill: GREY, size: 12.5, family: MONO }) +
+    text(946, 626, "Body · 500", { fill: GREY, size: 12.5, family: MONO }) +
     text(946, 654, "32 avenue de Ségur, 75007 Paris", { fill: INK, size: 16, weight: 500 }) +
     line(830, 690, 1500, 690, { stroke: "#eceae4", sw: 1 }) +
-    text(830, 726, "Chiffres tabulaires pour le numéro de scooter et le compte à rebours,", {
+    text(830, 726, "Tabular figures for the scooter number and the countdown,", {
       fill: GREY,
       size: 13.5,
     }) +
-    text(830, 750, "afin que rien ne tremble pendant que le temps défile.", {
+    text(830, 750, "so nothing wobbles while the time runs down.", {
       fill: GREY,
       size: 13.5,
     }) +
@@ -536,7 +536,7 @@ export function components() {
     h: H,
     bg: PAPER,
     children:
-      text(48, 56, "Cityscoot · éléments d’interface", {
+      text(48, 56, "Cityscoot · interface elements", {
         fill: INK,
         size: 15,
         weight: 700,
@@ -549,7 +549,7 @@ export function components() {
       tokens +
       sheet +
       type +
-      caption(W, H, "reconstruction · bibliothèque de composants", {
+      caption(W, H, "reconstruction · component library", {
         fill: INK,
         dim: 0.38,
       }),

@@ -33,11 +33,18 @@ export default function WorkGallery() {
                 alt=""
                 loading="lazy"
                 decoding="async"
-                style={
-                  contain && (image.bg ?? work.bg)
+                style={{
+                  ...(contain && (image.bg ?? work.bg)
                     ? { backgroundColor: image.bg ?? work.bg }
-                    : undefined
-                }
+                    : undefined),
+                  // Poster stills grabbed from a video frame often carry the
+                  // video's own canvas (pillarboxed) rather than the phone
+                  // content alone. Where the true ratio is known, crop to it
+                  // instead of letterboxing inside `contain`.
+                  ...(image.videoAspect
+                    ? { aspectRatio: image.videoAspect, objectFit: "cover" }
+                    : undefined),
+                }}
                 className={[
                   contain ? "is-contain" : "",
                   index === hoverIndex ? "is-on" : "",
@@ -51,10 +58,7 @@ export default function WorkGallery() {
 
         <ul className="work-index">
           {WORKS.map((work, index) => {
-            const [domain, ...tagRest] = work.tag
-              .split("·")
-              .map((part) => part.trim());
-            const meta = tagRest.join(" · ") || work.role;
+            const [domain] = work.tag.split("·").map((part) => part.trim());
             const openable = hasPage(work);
 
             const enter = () => setHoverIndex(index);
@@ -74,15 +78,11 @@ export default function WorkGallery() {
                   {work.name}
                   {domain && <i className="work-row-domain">{domain}</i>}
                 </span>
-                <span className="work-row-meta">
-                  {meta}
-                  {openable && (
-                    <>
-                      {" · "}
-                      <i className="work-row-read">read</i>
-                    </>
-                  )}
-                </span>
+                {openable && (
+                  <span className="work-row-meta">
+                    <i className="work-row-read">read</i>
+                  </span>
+                )}
               </>
             );
 

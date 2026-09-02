@@ -171,9 +171,9 @@ export function app() {
       .join("");
 
   const labels = [
-    ["Bibliothèque", "Reprendre là où on s’est arrêté"],
-    ["Lecteur", "L’onde révèle ce qui reste à écouter"],
-    ["Série", "Le sommaire, pas un mur de vignettes"],
+    ["Library", "Pick up where you stopped"],
+    ["Player", "The waveform shows what is left to hear"],
+    ["Series", "A table of contents, not a wall of thumbnails"],
   ];
 
   return svg({
@@ -181,7 +181,7 @@ export function app() {
     h: H,
     bg: NIGHT_2,
     children:
-      text(48, 56, "Plé · application", {
+      text(48, 56, "Plé · product screens", {
         fill: "#fff",
         size: 15,
         weight: 700,
@@ -207,7 +207,7 @@ export function app() {
       phone(150, top, pw, ph, { id: "ple-a", screen: screenA }) +
       phone(600, top, pw, ph, { id: "ple-b", screen: screenB }) +
       phone(1050, top, pw, ph, { id: "ple-c", screen: screenC }) +
-      caption(W, H, "reconstruction · écrans produit", { fill: "#fff", dim: 0.32 }),
+      caption(W, H, "reconstruction · product screens", { fill: "#fff", dim: 0.32 }),
   });
 }
 

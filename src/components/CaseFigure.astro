@@ -27,20 +27,33 @@ const stageStyle = [
   <div
     class:list={["case-stage", contain && "is-contain", image.video && "is-video"]}
     style={stageStyle}
+    data-fullscreen={image.video ? "" : undefined}
+    role={image.video ? "button" : undefined}
+    tabindex={image.video ? 0 : undefined}
+    aria-label={image.video ? `Play fullscreen — ${image.alt}` : undefined}
   >
     {
       image.video ? (
-        <video
-          data-motion
-          src={image.video}
-          poster={image.src}
-          preload="metadata"
-          muted
-          loop
-          playsinline
-          controls
-          aria-label={image.alt}
-        />
+        <>
+          {/* No native controls: these clips are rendered inside a phone
+              mock-up, and a browser control bar painted across the device
+              screen breaks the illusion it exists to sell. Same
+              click-to-fullscreen affordance as the motion grid on the home. */}
+          <video
+            data-motion
+            class="pointer-events-none"
+            src={image.video}
+            poster={image.src}
+            preload="metadata"
+            muted
+            loop
+            playsinline
+            aria-label={image.alt}
+          />
+          <span class="case-stage-fs" aria-hidden="true">
+            ⤢
+          </span>
+        </>
       ) : (
         <img
           src={image.src}

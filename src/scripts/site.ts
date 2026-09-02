@@ -117,45 +117,6 @@ function buildStatement() {
   }
 }
 
-/* ------------------------------------------------------- Approach counters
-   Count-up on the measured ledger. Strictly additive: the final value is
-   server-rendered, so if this never runs (no JS, reduced motion, a throw) the
-   numbers are simply correct. We only ever rewrite textContent while the tween
-   is live, and always land on the exact formatted string from the markup. */
-function buildCounters() {
-  if (prefersReduced) return;
-  const cells = document.querySelectorAll<HTMLElement>("[data-count]");
-  if (!cells.length) return;
-
-  cells.forEach((el) => {
-    const target = Number(el.dataset.count);
-    const final = el.dataset.countFinal ?? String(target);
-    if (!Number.isFinite(target)) return;
-
-    try {
-      const state = { n: 0 };
-      gsap.to(state, {
-        n: target,
-        duration: 1.4,
-        ease: "power2.out",
-        scrollTrigger: { trigger: el, start: "top 85%", once: true },
-        onStart: () => {
-          el.textContent = "0";
-        },
-        onUpdate: () => {
-          el.textContent = Math.round(state.n).toLocaleString("en-US");
-        },
-        // Never let rounding leave us one off the real, audited figure.
-        onComplete: () => {
-          el.textContent = final;
-        },
-      });
-    } catch {
-      el.textContent = final;
-    }
-  });
-}
-
 /* ----------------------------------------------- Story-only scenes */
 let storyTriggers: ScrollTrigger[] = [];
 
@@ -329,14 +290,63 @@ function initMotion() {
   vids.forEach((v) => io.observe(v));
 }
 
+/* ------------------------------------------------------- Wordmark scramble */
+/* The wordmark periodically decodes out of noise instead of sitting static.
+   The scramble pool is "complexity"'s own letters — complexity resolving
+   into the plain three-letter mark. Repeats on a fixed interval so it stays
+   a background detail, not a one-off intro flourish. */
+const SCRAMBLE_INTERVAL = 5000;
+
+function scrambleReveal(el: HTMLElement) {
+  const target = el.dataset.scramble ?? el.textContent ?? "";
+  const pool = [...new Set("complexity")];
+  const speed = 45;
+  const iterations = 12;
+  let frame = 0;
+
+  // Random glyphs rarely measure the same width as the real word, which can
+  // reflow whatever sits after it (e.g. "disappear" wrapping to the next
+  // line mid-scramble). Lock the box to its settled width for the duration.
+  const width = el.getBoundingClientRect().width;
+  el.style.display = "inline-block";
+  el.style.width = `${width}px`;
+  el.style.overflow = "hidden";
+
+  const tick = () => {
+    frame++;
+    el.textContent = target
+      .split("")
+      .map(() => pool[Math.floor(Math.random() * pool.length)])
+      .join("");
+    if (frame >= iterations) {
+      el.textContent = target;
+      el.style.display = "";
+      el.style.width = "";
+      el.style.overflow = "";
+      return;
+    }
+    setTimeout(tick, speed);
+  };
+  tick();
+}
+
+function initScramble() {
+  if (prefersReduced) return;
+  const els = document.querySelectorAll<HTMLElement>("[data-scramble]");
+  els.forEach((el) => {
+    scrambleReveal(el);
+    setInterval(() => scrambleReveal(el), SCRAMBLE_INTERVAL);
+  });
+}
+
 /* --------------------------------------------------------------- Bootstrap */
 function init() {
   const saved = localStorage.getItem(STORAGE_KEY) as Mode | null;
   const initial: Mode = saved ?? (prefersReduced ? "libre" : "story");
 
+  initScramble();
   buildReveals();
   buildStatement();
-  buildCounters();
   trackScrolled();
   wireAnchors();
   initMotion();

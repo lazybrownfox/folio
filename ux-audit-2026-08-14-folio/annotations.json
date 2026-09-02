@@ -1,0 +1,166 @@
+[
+ {
+  "image": "assets/c-mobile-header.png",
+  "out": "assets/c-mobile-header-annotated.png",
+  "marks": [
+   {
+    "id": "F-01",
+    "sev": 3,
+    "x": 0.02,
+    "y": 0.005,
+    "w": 0.83,
+    "h": 0.06
+   },
+   {
+    "id": "F-03",
+    "sev": 3,
+    "x": 0.885,
+    "y": 0.008,
+    "w": 0.095,
+    "h": 0.053
+   }
+  ]
+ },
+ {
+  "image": "assets/c-deck-terracotta.png",
+  "out": "assets/c-deck-terracotta-annotated.png",
+  "marks": [
+   {
+    "id": "F-02",
+    "sev": 3,
+    "x": 0.04,
+    "y": 0.035,
+    "w": 0.92,
+    "h": 0.045
+   },
+   {
+    "id": "F-02",
+    "sev": 3,
+    "x": 0.04,
+    "y": 0.225,
+    "w": 0.48,
+    "h": 0.1
+   }
+  ]
+ },
+ {
+  "image": "assets/c-work-rows.png",
+  "out": "assets/c-work-rows-annotated.png",
+  "marks": [
+   {
+    "id": "F-02",
+    "sev": 3,
+    "x": 0.7,
+    "y": 0.535,
+    "w": 0.21,
+    "h": 0.045
+   }
+  ]
+ },
+ {
+  "image": "assets/c-ledger.png",
+  "out": "assets/c-ledger-annotated.png",
+  "marks": [
+   {
+    "id": "F-02",
+    "sev": 3,
+    "x": 0.04,
+    "y": 0.8,
+    "w": 0.78,
+    "h": 0.1
+   }
+  ]
+ },
+ {
+  "image": "assets/c-details-head.png",
+  "out": "assets/c-details-head-annotated.png",
+  "marks": [
+   {
+    "id": "F-02",
+    "sev": 3,
+    "x": 0.08,
+    "y": 0.2,
+    "w": 0.84,
+    "h": 0.075
+   }
+  ]
+ },
+ {
+  "image": "assets/c-cta.png",
+  "out": "assets/c-cta-annotated.png",
+  "marks": [
+   {
+    "id": "F-02",
+    "sev": 3,
+    "x": 0.6,
+    "y": 0.42,
+    "w": 0.18,
+    "h": 0.24
+   }
+  ]
+ },
+ {
+  "image": "assets/c-facts-orphan.png",
+  "out": "assets/c-facts-orphan-annotated.png",
+  "marks": [
+   {
+    "id": "F-04",
+    "sev": 2,
+    "x": 0.03,
+    "y": 0.51,
+    "w": 0.3,
+    "h": 0.4
+   },
+   {
+    "id": "F-04",
+    "sev": 2,
+    "x": 0.34,
+    "y": 0.51,
+    "w": 0.62,
+    "h": 0.4
+   }
+  ]
+ },
+ {
+  "image": "assets/c-brand-grid.png",
+  "out": "assets/c-brand-grid-annotated.png",
+  "marks": [
+   {
+    "id": "F-06",
+    "sev": 2,
+    "x": 0.095,
+    "y": 0.79,
+    "w": 0.2,
+    "h": 0.07
+   }
+  ]
+ },
+ {
+  "image": "assets/c-contact.png",
+  "out": "assets/c-contact-annotated.png",
+  "marks": [
+   {
+    "id": "F-08",
+    "sev": 2,
+    "x": 0.095,
+    "y": 0.68,
+    "w": 0.2,
+    "h": 0.1
+   }
+  ]
+ },
+ {
+  "image": "assets/c-motion.png",
+  "out": "assets/c-motion-annotated.png",
+  "marks": [
+   {
+    "id": "F-09",
+    "sev": 1,
+    "x": 0.36,
+    "y": 0.845,
+    "w": 0.28,
+    "h": 0.065
+   }
+  ]
+ }
+]

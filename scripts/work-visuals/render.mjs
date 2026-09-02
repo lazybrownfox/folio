@@ -12,11 +12,12 @@ import { fileURLToPath } from "node:url";
 
 import { panels as cityscoot } from "./cityscoot.mjs";
 import { panels as ple } from "./ple.mjs";
+import { panels as nabaztag } from "./nabaztag.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const outDir = join(here, "..", "..", "public", "work", "rebuilt");
 
-const all = [...cityscoot, ...ple];
+const all = [...cityscoot, ...ple, ...nabaztag];
 
 mkdirSync(outDir, { recursive: true });
 
